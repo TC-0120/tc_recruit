@@ -11,6 +11,9 @@
 		<tr>
 			<td th:each="SelectionStatusRepository : ${selection}" th:object="${SelectionStatusRepository}" th:text="*{slcStatusName}"></td>
 		</tr>
+		<tr>
+			<td th:text="${first}"></td>
+		</tr>
 	</table>
 </body>
 </html>
