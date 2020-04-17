@@ -41,7 +41,8 @@ public class RecruitmentManagementController {
 
 	@GetMapping
 	public String index(Model model) {
-		model.addAttribute("candidates", candidateService.list(candidateService.findAll()));
+		model.addAttribute("candidates", candidateService.findAll());
+		model.addAttribute("selections", selectionService.findAll());
 		model.addAttribute("slcStatusList", slcStatusService.findAll());
 		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
 		return "top";
@@ -49,19 +50,12 @@ public class RecruitmentManagementController {
 
 	@GetMapping("filter")
 	public String filter(@RequestParam("SlcStatusF") Integer ssId, @RequestParam("SlcStatusDtlF") Integer ssdId, Model model) {
-		model.addAttribute("candidates", candidateService.list(candidateService.findBySlcStatusIdAndSlcStatudDtlId(ssId, ssdId)));
+		model.addAttribute("candidates", candidateService.findBySlcStatusIdAndSlcStatudDtlId(ssId, ssdId));
+		model.addAttribute("selections", selectionService.findAll());
 		model.addAttribute("slcStatusList", slcStatusService.findAll());
 		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
 		return "top";
 	}
-
-	//@GetMapping("sort")
-	//public String sort(@RequestParam("order") Integer order, @RequestParam("direction") Integer direction,  @ModelAttribute List<CandidateView> cv, Model model) {
-	//	model.addAttribute("candidates", candidateService.sort(order, direction, cv));
-	//	model.addAttribute("slcStatusList", slcStatusService.findAll());
-	//	model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
-	//	return "top";
-	//}
 
 	@GetMapping("regist")
 	public String registInput(Model model) {
