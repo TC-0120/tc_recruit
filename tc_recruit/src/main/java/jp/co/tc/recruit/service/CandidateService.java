@@ -142,7 +142,20 @@ public class CandidateService {
 
 
 	public List<CandidateView> sort(Integer order, Integer dir, List<CandidateView> cv) {
-		Collections.sort(cv, new SlcStatusComparator());
+
+		if (order == 1) {
+			Collections.sort(cv, new CandidateIdComparator());
+		} else if (order == 2) {
+			Collections.sort(cv, new SlcStatusComparator());
+		} else if (order == 3) {
+			Collections.sort(cv, new SlcStatusDtlComparator());
+		} else {
+			//Collections.sort(cv, new SlcDateComparator());
+		}
+
+		if(dir == 2) {
+			Collections.reverse(cv);
+		}
 		return cv;
 	}
 
@@ -153,6 +166,12 @@ public class CandidateService {
 		}
 	}
 
+	public class CandidateIdComparator implements Comparator<CandidateView> {
+		public int compare(CandidateView c1, CandidateView c2) {
+			return Integer.compare(c1.getCandidate().getCandidateId(), c2.getCandidate().getCandidateId());
+		}
+	}
+
 
 	public class SlcStatusComparator implements Comparator<CandidateView> {
 		public int compare(CandidateView cv1, CandidateView cv2) {
@@ -160,4 +179,13 @@ public class CandidateService {
 		}
 
 	}
+
+	public class SlcStatusDtlComparator implements Comparator<CandidateView> {
+		public int compare(CandidateView cv1, CandidateView cv2) {
+			return Integer.compare(cv1.getCandidate().getSlcStatusDtl().getSlcStatusDtlId(), cv2.getCandidate().getSlcStatusDtl().getSlcStatusDtlId());
+		}
+	}
+
+	//public class SlcDateComparator implements Comparator<CandidateView> {
+	//}
 }

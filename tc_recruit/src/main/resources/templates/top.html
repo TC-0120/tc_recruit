@@ -33,6 +33,25 @@
 			<input type="submit" value="送信">
 		</form>
 
+			<form th:action="@{/recruit/candidates/sort}" th:method="get">
+			<div>
+				<label>項目</label>
+				<select name="order">
+					<option value="1">ID</option>
+					<option value="2">選考ステータス</option>
+					<option value="3">選考ステータス詳細</option>
+				</select>
+			</div>
+			<div>
+				<label>順番</label>
+				<select name="direction">
+					<option value="1">昇順</option>
+					<option value="2">降順</option>
+				</select>
+			</div>
+			<input type="submit" value="送信">
+		</form>
+
 	<table border="1">
 		<tr>
 			<th>ID</th>
