@@ -12,10 +12,10 @@ import jp.co.tc.recruit.repository.SelectionStatusRepository;
 public class SelectionStatusService {
 
 	@Autowired
-	SelectionStatusRepository selRepo;
+	SelectionStatusRepository slcStatusRepo;
 
 	public List<SelectionStatus> findAll() {
-		return selRepo.findAll();
+		return slcStatusRepo.findAll();
 	}
 
 
