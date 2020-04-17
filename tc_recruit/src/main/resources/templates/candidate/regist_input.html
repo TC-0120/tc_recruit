@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Login page</title>
+<style>
+.alert-danger {
+	color: red;
+}
+</style>
+</head>
+<body>
+	<h2>候補者登録画面</h2>
+
+	<form th:action="@{/recruit/candidates}" th:method="post">
+		<div>
+			<label>候補者</label>
+			<input type="text" name="candidateName" />
+		</div>
+		<div>
+			<label>性別</label>
+			<input type="radio" name="gender" value="1"/>男性
+			<input type="radio" name="gender" value="2"/>女性
+		</div>
+		<div>
+			<label>学歴</label>
+			<input type="text" name="eduBack" />
+		</div>
+		<div>
+			<label>選考ステータス</label>
+			<select name="slcStatus.slcStatusId">
+				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
+			</select>
+		</div>
+		<div>
+			<label>選考ステータス詳細</label>
+			<select name="slcStatusDtl.slcStatusDtlId">
+				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
+			</select>
+		</div>
+		<div>
+			<label>採用エージェント</label>
+			<select name="agent.agentId">
+				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
+			</select>
+		</div>
+		<div>
+			<label>紹介元</label>
+			<select name="referrer.referrerId">
+				<option th:each="referrer: ${referrerList}" th:value="${referrer.referrerId}" th:text="${referrer.referrerName}">
+			</select>
+		</div>
+		<input type="submit" value="登録"/>
+	</form>
+
+
+
+	<br>
+
+
+</body>
+</html>

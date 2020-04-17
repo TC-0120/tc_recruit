@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Login page</title>
+<style>
+.alert-danger {
+	color: red;
+}
+</style>
+ <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+</head>
+<body>
+	<h2>候補者一覧画面</h2>
+
+	<a th:href="@{/recruit/candidates/regist}">新規登録</a>
+		<form th:action="@{/recruit/candidates/filter}" th:method="get">
+			<div>
+				<label>選考ステータス</label>
+				<select name="SlcStatusF">
+					<option value="0">一覧</option>
+					<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
+				</select>
+			</div>
+			<div>
+				<label>選考ステータス詳細</label>
+				<select name="SlcStatusDtlF">
+					<option value="0">一覧</option>
+					<option value="-1">要調整</option>
+					<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
+				</select>
+			</div>
+			<input type="submit" value="送信">
+		</form>
+
+	<table border="1">
+		<tr>
+			<th>ID</th>
+			<th>氏名</th>
+			<th>性別</th>
+			<th>学歴</th>
+			<th>採用エージェント</th>
+			<th>紹介元</th>
+			<th colspan="2">選考ステータス</th>
+			<th>選考日程</th>
+		</tr>
+		<tr th:each="candidate: ${candidates}" th:object="${candidate}">
+			<td th:text="*{candidate.candidateId}"></td>
+			<td><a th:text="*{candidate.candidateName}" th:href="@{/recruit/candidates/{id}(id=*{candidate.candidateId})}"></a></td>
+			<td th:text="*{candidate.gender == 1} ? 男性 : 女性"></td>
+			<td th:text="*{candidate.eduBack}"></td>
+			<td th:text="*{candidate.agent.agentName}"></td>
+			<td th:text="*{candidate.referrer.referrerName}"></td>
+			<td th:text="*{candidate.slcStatus.slcStatusName}"></td>
+			<td th:text="*{candidate.slcStatusDtl.slcStatusDtlName}"></td>
+			<td >
+				<a th:text="*{slcDate}" th:href="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidate.candidateId}, sId=*{candidate.slcStatus.slcStatusId})}"></a>
+
+
+				<!--  <div th:switch="*{slcStatusDtl.slcStatusDtlId}">
+					<a th:case="1" th:href="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=*{slcStatus.slcStatusId})}">調整中</a>
+					<a th:case="3" th:href="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=*{slcStatus.slcStatusId + 1})}">調整</a>
+					<div th:case="2" >
+						<div th:each="selection: ${selections}">
+							<div th:if="${candidate.candidateId == selection.slcPK.candidateId}">
+								<div th:if="${candidate.slcStatus.slcStatusId == selection.slcPK.slcStatusId}">
+									<a th:text=${selection.slcDate} th:href="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=*{slcStatus.slcStatusId})}"></a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div th:case="*"></div>
+				</div>
+				-->
+			</td>
+		</tr>
+	</tbody>
+	</table>
+</body>
+</html>

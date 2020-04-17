@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>DashBoard</title>
+</head>
+<body>
+	<h2>ダッシュボード</h2>
+	<p th:text="${authentication}"></p>
+	<table>
+		<tr>
+			<td th:each="SelectionStatusRepository : ${selection}" th:object="${SelectionStatusRepository}" th:text="*{slcStatusName}"></td>
+		</tr>
+	</table>
+</body>
+</html>

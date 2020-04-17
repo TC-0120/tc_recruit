@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Login page</title>
+<style>
+.alert-danger {
+	color: red;
+}
+</style>
+</head>
+<body>
+	<h2>選考日程変更画面</h2>
+
+	<form th:action="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=${selection.slcPK.slcStatusId})}" th:method="post" th:object="${candidate}">
+		<div>
+			<label>候補者</label>
+			<div th:text="*{candidateName}">/</div>
+		</div>
+		<div>
+			<label>採用エージェント</label>
+			<div th:text="*{agent.agentName}"></div>
+		</div>
+		<div>
+			<label>選考ステータス</label>
+			<div th:text="*{slcStatus.slcStatusName}"></div>
+		</div>
+		<div>
+			<label>選考日程</label>
+			<input type="text" name="slcDateString" th:value="${slcDateString}" />
+		</div>
+		<div>
+			<label>選考結果</label>
+			<input type="text" th:field="${selection.slcResult}" />
+		</div>
+		<input type="submit" value="更新"/>
+	</form>
+</body>
+</html>
