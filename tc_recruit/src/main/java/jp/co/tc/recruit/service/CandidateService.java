@@ -75,7 +75,7 @@ public class CandidateService {
 		return candidateRepo.findByCandidateId(id);
 	}
 
-	public List<Candidate> findBySlcStatusIdAndSlcStatudDtlId(Integer ssId, Integer ssdId) {
+	/*public List<Candidate> findBySlcStatusIdAndSlcStatudDtlId(Integer ssId, Integer ssdId) {
 		List<Candidate> candidates = new ArrayList<Candidate>();
 
 		if (ssdId == 0) {
@@ -138,7 +138,7 @@ public class CandidateService {
 		candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(slcStatusDtlId));
 		save(candidate);
 	}
-
+	*/
 
 
 	public List<CandidateView> sort(Integer order, Integer dir, List<CandidateView> cv) {

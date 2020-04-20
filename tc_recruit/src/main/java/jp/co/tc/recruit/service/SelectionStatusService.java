@@ -20,13 +20,11 @@ public class SelectionStatusService {
 	@Autowired
 	SelectionRepository repository;
 
-
 	public List<SelectionStatus> findAll() {
 		return slcStatusRepo.findAll();
 	}
 
-
-	/*メソッド名一緒なのでエラーになってます。引数入れますか？？*/
+	/*メソッド名一緒なのでエラーになってます。引数入れますか？？
 	public List<SelectionStatus> findAll() {
 		return slcStatusRepo.findAll(Sort.by("slcStatusId"));
 	}
@@ -38,7 +36,7 @@ public class SelectionStatusService {
 	public SelectionRepository save(SelectionRepository selection) {
 		return repository.save(selection);
 	}
-
+	*/
 	public String getStringDate(Date date) {
 		return new SimpleDateFormat("yyyy/MM/dd hh:mm").format(date);
 	}

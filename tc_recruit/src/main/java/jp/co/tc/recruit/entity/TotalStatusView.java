@@ -1,10 +1,9 @@
-package jp.co.tc.recruit.view;
+package jp.co.tc.recruit.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.springframework.data.annotation.Id;
 
 import lombok.Data;
 

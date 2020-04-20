@@ -6,13 +6,27 @@
 </head>
 <body>
 	<h2>ダッシュボード</h2>
-	<p th:text="${authentication}"></p>
-	<table>
+	<table border="1">
 		<tr>
-			<td th:each="SelectionStatusRepository : ${selection}" th:object="${SelectionStatusRepository}" th:text="*{slcStatusName}"></td>
+			<th th:text="${underSelection}"></th>
 		</tr>
 		<tr>
-			<td th:text="${first}"></td>
+			<td th:text="${allStatus}"></td>
+		</tr>
+	</table>
+	<table border="1" >
+		<tr>
+			<th th:each="SelectionStatusRepository : ${selection}" th:object="${SelectionStatusRepository}" th:text="*{slcStatusName}"></th>
+		</tr>
+		<tr>
+			<td th:text="${ttlEntry.count}"></td>
+			<td th:text="${ttlDocument.count}"></td>
+			<td th:text="${ttlAptitude.count}"></td>
+			<td th:text="${ttlFirst.count}"></td>
+			<td th:text="${ttlSecond.count}"></td>
+			<td th:text="${ttlFinal.count}"></td>
+			<td th:text="${ttlSecretlyDetermin.count}"></td>
+			<td th:text="${ttlBriefing.count}"></td>
 		</tr>
 	</table>
 </body>

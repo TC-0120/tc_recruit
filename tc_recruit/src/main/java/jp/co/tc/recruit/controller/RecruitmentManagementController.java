@@ -1,20 +1,11 @@
 package jp.co.tc.recruit.controller;
 
-import java.text.ParseException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import jp.co.tc.recruit.entity.Candidate;
-import jp.co.tc.recruit.entity.Selection;
-import jp.co.tc.recruit.entity.Selection.SelectionPK;
 import jp.co.tc.recruit.service.AgentService;
 import jp.co.tc.recruit.service.CandidateService;
 import jp.co.tc.recruit.service.ReferrerService;
@@ -48,7 +39,7 @@ public class RecruitmentManagementController {
 		return "top";
 	}
 
-	@GetMapping("filter")
+	/*@GetMapping("filter")
 	public String filter(@RequestParam("SlcStatusF") Integer ssId, @RequestParam("SlcStatusDtlF") Integer ssdId, Model model) {
 		model.addAttribute("candidates", candidateService.findBySlcStatusIdAndSlcStatudDtlId(ssId, ssdId));
 		model.addAttribute("selections", selectionService.findAll());
@@ -134,6 +125,6 @@ public class RecruitmentManagementController {
 		}
 		return "redirect:/recruit/candidates";
 	}
-
+	*/
 
 }

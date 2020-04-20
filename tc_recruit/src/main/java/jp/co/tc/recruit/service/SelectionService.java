@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jp.co.tc.recruit.entity.Selection;
-import jp.co.tc.recruit.entity.Selection.SelectionPK;
 import jp.co.tc.recruit.repository.CandidateRepository;
 import jp.co.tc.recruit.repository.SelectionRepository;
 
@@ -25,7 +24,7 @@ public class SelectionService {
 		return slcRepo.findAll();
 	}
 
-	public Selection findById(SelectionPK slcPK) {
+	/*public Selection findById(SelectionPK slcPK) {
 		Selection slc = slcRepo.findBySlcPK(slcPK);
 		if (slc == null) {
 			Selection slcNew = new Selection(slcPK);
@@ -34,7 +33,7 @@ public class SelectionService {
 		}
 		return slc;
 	}
-
+	*/
 	public Selection save(Selection slc) {
 		return slcRepo.save(slc);
 	}
