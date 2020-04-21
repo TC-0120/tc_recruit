@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import jp.co.tc.recruit.view.CandidatesView;
 
 @Repository
-public interface CandidatesViewRepository extends JpaRepository<CandidatesView, Integer> {
+public interface CandidatesViewRepository extends JpaRepository<CandidatesView, Integer>, CandidatesViewRepositoryCustom {
 
 	public List<CandidatesView> findBySlcStatusIdAndSlcStatusDtlId(Integer ssId, Integer ssdId);
 
@@ -19,5 +19,6 @@ public interface CandidatesViewRepository extends JpaRepository<CandidatesView, 
 	public List<CandidatesView> findBySlcStatusDtlIdOrSlcStatusDtlId(Integer ssdId1, Integer ssdId2);
 
 	public List<CandidatesView> findBySlcStatusIdAndSlcStatusDtlIdOrSlcStatusDtlId(Integer ssId, Integer ssdId1, Integer ssdId2);
+
 }
 

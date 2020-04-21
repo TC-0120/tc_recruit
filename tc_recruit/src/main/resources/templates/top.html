@@ -46,6 +46,15 @@
 					<option value="2">降順</option>
 				</select>
 			</div>
+			<div>
+				<label>期間</label>
+				<select th:field="*{period}">
+					<option value="all">一覧</option>
+					<option value="a week">1週間</option>
+					<option value="two week">2週間</option>
+					<option value="a month">1ヶ月間</option>
+				</select>
+			</div>
 			<input type="submit" value="送信">
 	</form>
 

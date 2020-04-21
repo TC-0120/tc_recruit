@@ -16,6 +16,7 @@ import jp.co.tc.recruit.entity.Candidate;
 import jp.co.tc.recruit.entity.Selection;
 import jp.co.tc.recruit.entity.Selection.SelectionPK;
 import jp.co.tc.recruit.form.ConditionsForm;
+import jp.co.tc.recruit.repository.CandidatesViewRepository;
 import jp.co.tc.recruit.service.AgentService;
 import jp.co.tc.recruit.service.CandidateService;
 import jp.co.tc.recruit.service.CandidatesViewService;
@@ -44,6 +45,9 @@ public class RecruitmentManagementController {
 	ReferrerService referrerService;
 	@Autowired
 	CandidatesViewService candidatesViewService;
+	//消す
+	@Autowired
+	CandidatesViewRepository cvRepo;
 
 	@GetMapping
 	public String filter(@ModelAttribute("conditionsForm") ConditionsForm conditionsForm, Model model) {

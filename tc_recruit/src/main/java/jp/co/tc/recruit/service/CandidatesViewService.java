@@ -28,6 +28,7 @@ public class CandidatesViewService {
 		Integer ssdId = cf.getSlcStatusDtlId();
 		Integer order = cf.getOrder();
 		Integer dir = cf.getDirection();
+		String period = cf. getPeriod();
 
 
 		if (ssdId == 0) {
@@ -50,19 +51,23 @@ public class CandidatesViewService {
 			}
 		}
 
-		if (order == 1) {
+		if(!period.equals("all")) {
+			cv = repo.findBySlcDate(period);
+		}
 
-		} else if (order == 2) {
+
+		if (order == 2) {
 			Collections.sort(cv, new SlcStatusComparator());
 		} else if (order == 3) {
 			Collections.sort(cv, new SlcStatusDtlComparator());
-		} else {
+		} else if (order == 4) {
 			Collections.sort(cv, new SlcDateComparator());
 		}
 
 		if(dir == 2) {
 			Collections.reverse(cv);
 		}
+
 		return cv;
 	}
 

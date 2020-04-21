@@ -47,7 +47,7 @@ public class SelectionService {
 		if (date == null) {
 			return null;
 		} else {
-			return new SimpleDateFormat("yyyy/MM/dd hh:mm").format(date);
+			return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(date);
 		}
 	}
 
@@ -55,7 +55,7 @@ public class SelectionService {
 		if (stringDate.isEmpty() || stringDate == null) {
 			return null;
 		} else {
-			return new SimpleDateFormat("yyyy/MM/dd hh:mm").parse(stringDate);
+			return new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(stringDate);
 		}
 	}
 
