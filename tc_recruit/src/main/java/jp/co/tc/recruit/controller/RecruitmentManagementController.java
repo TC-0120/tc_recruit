@@ -67,10 +67,9 @@ public class RecruitmentManagementController {
 	}
 
 	@PostMapping
-	public String registComplete(@ModelAttribute Candidate candidate) {
-		candidateService.save(candidate);
-		//SelectionPK slcPK = new SelectionPK(candidate.getCandidateId(), candidate.getSlcStatus().getSlcStatusId());
-		//selectionService.save(new Selection(slcPK));
+	public String registComplete(@ModelAttribute Candidate candidate, @RequestParam("slcDate") String slcDate) {
+		candidateService.regist(candidate, slcDate);
+		selectionService.regist(candidate.getCandidateId(), candidate.getSlcStatus().getSlcStatusId(), slcDate);
 		return "redirect:/recruit/candidates";
 	}
 
@@ -114,24 +113,23 @@ public class RecruitmentManagementController {
 		slc.setSlcPK(slcPK);
 		slc.setSlcDate(selectionService.setDate(slcDate));
 		selectionService.save(slc);
+		candidateService.slcStatusManagement(cId, slcDate, slc.getSlcResult());
 
 		//自動管理
 		//マジックナンバー
-		if (slcDate.isEmpty() || slcDate == null) {
-			candidateService.slcStatusManagement(cId, 1);
-		} else {
-			candidateService.slcStatusManagement(cId, 2);
-		}
-
-		if (slc.getSlcResult() != null) {
-			if (slc.getSlcResult() == 0) {
-				candidateService.slcStatusManagement(cId, 4);
-			} else if (slc.getSlcResult() == 1) {
-				candidateService.slcStatusManagement(cId, 3);
-				//次のステータスの選考情報を登録
-				//selectionService.save(new Selection(new SelectionPK(cId, sId + 1)));
-			}
-		}
+		//if (slcDate.isEmpty() || slcDate == null) {
+		//	candidateService.slcStatusManagement(cId, 1);
+		//} else {
+		//	candidateService.slcStatusManagement(cId, 2);
+		//}
+        //
+		//if (slc.getSlcResult() != null) {
+		//	if (slc.getSlcResult() == 0) {
+		//		candidateService.slcStatusManagement(cId, 4);
+		//	} else if (slc.getSlcResult() == 1) {
+		//		candidateService.slcStatusManagement(cId, 3);
+		//	}
+		//}
 		return "redirect:/recruit/candidates";
 	}
 

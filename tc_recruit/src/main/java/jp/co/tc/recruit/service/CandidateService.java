@@ -25,8 +25,25 @@ public class CandidateService {
 		return candidateRepo.findByCandidateId(id);
 	}
 
-	public Candidate save(Candidate candidate) {
-		return candidateRepo.save(candidate);
+	public void save(Candidate candidate) {
+		candidateRepo.save(candidate);
+	}
+
+	//マジックナンバー
+	public void regist(Candidate candidate, String slcDate) {
+		Integer slcStatusDtlId = null;
+
+		if (candidate.getSlcStatus().getSlcStatusId() == 1) {
+			slcStatusDtlId = 7;
+		} else if (candidate.getSlcStatus().getSlcStatusId() == 2) {
+			if (slcDate.isEmpty() || slcDate == null) {
+				slcStatusDtlId = 1;
+			} else {
+				slcStatusDtlId = 2;
+			}
+		}
+		candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(slcStatusDtlId));
+		save(candidate);
 	}
 
 	public void delete(Integer candidateId) {
@@ -34,13 +51,44 @@ public class CandidateService {
 		candidateRepo.deleteByCandidtaeId(candidateId);
 	}
 
-	public void slcStatusManagement(Integer candidateId, Integer slcStatusDtlId) {
-		Candidate candidate = findById(candidateId);
+	//マジックナンバー
+	//public void slcStatusManagement(Integer candidateId, Integer slcStatusDtlId) {
+	//	Candidate candidate = findById(candidateId);
+    //
+	//	//ステータス詳細が合格の場合、ステータスを繰り上げる
+	//	if (candidate.getSlcStatusDtl().getSlcStatusDtlId() == 3) {
+	//		Integer slcStatusId = candidate.getSlcStatus().getSlcStatusId();
+	//		candidate.setSlcStatus(slcStatusRepo.findBySlcStatusId(slcStatusId + 1));
+	//	}
+    //
+	//	candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(slcStatusDtlId));
+	//	save(candidate);
+	//}
 
-		//ステータス詳細が合格の場合、ステータスを繰り上げる
+	//自動管理
+	//マジックナンバー
+	public void slcStatusManagement(Integer candidateId, String slcDate, Integer slcResult) {
+		Candidate candidate = findById(candidateId);
+		Integer slcStatusDtlId = null;
+
+		//変更前のステータス詳細が合格の場合、ステータスを繰り上げる
 		if (candidate.getSlcStatusDtl().getSlcStatusDtlId() == 3) {
 			Integer slcStatusId = candidate.getSlcStatus().getSlcStatusId();
 			candidate.setSlcStatus(slcStatusRepo.findBySlcStatusId(slcStatusId + 1));
+		}
+
+		if (slcDate.isEmpty() || slcDate == null) {
+			slcStatusDtlId = 1;
+		} else {
+			slcStatusDtlId = 2;
+		}
+
+		if (slcResult != null) {
+			if (slcResult == 0) {
+				slcStatusDtlId = 4;
+			} else if (slcResult == 1) {
+				slcStatusDtlId = 3;
+			}
 		}
 
 		candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(slcStatusDtlId));

@@ -35,8 +35,14 @@ public class SelectionService {
 		return slc;
 	}
 
-	public Selection save(Selection slc) {
-		return slcRepo.save(slc);
+	public void save(Selection slc) {
+		slcRepo.save(slc);
+	}
+
+	public void regist(Integer cId, Integer sId, String slcDate) {
+		Selection slc = findById(new SelectionPK(cId, sId));
+		slc.setSlcDate(setDate(slcDate));
+		save(slc);
 	}
 
 	public void deleteByCandidateId(Integer id) {
@@ -51,11 +57,16 @@ public class SelectionService {
 		}
 	}
 
-	public Date setDate(String stringDate) throws ParseException {
+	public Date setDate(String stringDate){
 		if (stringDate.isEmpty() || stringDate == null) {
 			return null;
 		} else {
-			return new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(stringDate);
+			try {
+				return new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(stringDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 	}
 
