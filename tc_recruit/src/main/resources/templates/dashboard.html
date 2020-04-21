@@ -16,18 +16,43 @@
 	</table>
 	<table border="1" >
 		<tr>
-			<th th:each="SelectionStatusRepository : ${selection}" th:object="${SelectionStatusRepository}" th:text="*{slcStatusName}"></th>
+			<!-- <th th:each="SelectionStatusRepository : ${selection}" th:object="${SelectionStatusRepository}" th:text="*{slcStatusName}"></th> -->
+			<th th:text=${document}></th>
+			<th th:text=${aptitude}></th>
+			<th th:text=${first}></th>
+			<th th:text=${second}></th>
+			<th th:text=${last}></th>
+			<th th:text=${offer}></th>
+			<th th:text=${briefing}></th>
 		</tr>
 		<tr>
-			<td th:text="${ttlEntry.count}"></td>
 			<td th:text="${ttlDocument.count}"></td>
 			<td th:text="${ttlAptitude.count}"></td>
 			<td th:text="${ttlFirst.count}"></td>
 			<td th:text="${ttlSecond.count}"></td>
-			<td th:text="${ttlFinal.count}"></td>
-			<td th:text="${ttlSecretlyDetermin.count}"></td>
+			<td th:text="${ttlLast.count}"></td>
+			<td th:text="${ttlOffer.count}"></td>
 			<td th:text="${ttlBriefing.count}"></td>
 		</tr>
 	</table>
+	<table border="1">
+		<tr>
+			<th th:text="${adjustment}"></th>
+		</tr>
+		<tr>
+			<td th:text="${allCheck}"></td>
+		</tr>
+	</table>
+	<table border="1" >
+		<tr>
+			<th th:each="CheckMessageRepository : ${chkMsg}" th:object="${CheckMessageRepository}" th:text="*{message}"></th>
+		</tr>
+		<tr>
+			<td  th:each="TotalCheckRepository : ${ttlChk}" th:object="${TotalCheckRepository}" th:text="*{count}"></td>
+		</tr>
+	</table>
+
+
+
 </body>
 </html>
