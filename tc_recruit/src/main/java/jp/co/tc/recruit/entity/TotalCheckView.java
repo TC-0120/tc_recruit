@@ -13,9 +13,14 @@ import lombok.Data;
 public class TotalCheckView {
 	@Id
 	@Column(name = "message_id")
-	private Integer messageId;
+	private Integer msgId;
 
-	private String message;
+	@Column(name = "message")
+	private String msg;
 
-	private Integer count;
+	@Column(name = "total_except_assessment")
+	private Integer ttlExcAsm;
+
+	@Column(name = "total_assessment")
+	private Integer ttlAsm;
 }

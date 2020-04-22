@@ -5,7 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import jp.co.tc.recruit.entity.MessageStatus;
+import jp.co.tc.recruit.entity.TotalCheckView;
+import jp.co.tc.recruit.entity.TotalStatusView;
 import jp.co.tc.recruit.repository.CheckMessageRepository;
+import jp.co.tc.recruit.repository.MessageStatusRepository;
 import jp.co.tc.recruit.repository.TotalCheckRepository;
 import jp.co.tc.recruit.repository.TotalStatusRepository;
 
@@ -24,13 +28,21 @@ public class DashBoardController {
 	@Autowired
 	CheckMessageRepository chkMsgRepo;
 
+	@Autowired
+	MessageStatusRepository msgSttRepo;
+
+
 
 	@GetMapping("/dashboard")
 	public String getLogin(Model model) {
 
-		/*全選考ステータス名称を取得　→　エントリーは不要
-		model.addAttribute("selection", slcStatusRepo.findAll());
-		*/
+		/*全ステータス名称を取得*/
+		Integer i;
+		MessageStatus status;
+		for(i = 1; i < 19; i++) {
+		status = msgSttRepo.findByStatusMessageId(i);
+		model.addAttribute("status", status);
+		}
 
 		/*選考中の候補者全数*/
 		Integer k;
@@ -42,38 +54,26 @@ public class DashBoardController {
 		}
 		model.addAttribute("allStatus", allStatus);
 
-
 		/*選考ステータスごとの人数を集計*/
-		Integer i = 1;
-		String totalStatus[] = { "ttlDocument", "ttlAptitude", "ttlFirst", "ttlSecond", "ttlLast",
-				"ttlOffer", "ttlBriefing" };
-
-		for (String ttl : totalStatus) {
-			model.addAttribute(ttl, ttlStatusRepo.findBySelectionStatusId(i));
-			i++;
+		Integer slcSttId;
+		TotalStatusView ttlSttViw;
+		for(slcSttId = 1; slcSttId < 9; slcSttId++) {
+			ttlSttViw = ttlStatusRepo.findBySelectionStatusId(slcSttId);
+			model.addAttribute("ttlSttViw", ttlSttViw);
 		}
 
-		/*要対応事項のステータス名称をメッセージマスタから取得*/
-		model.addAttribute("chkMsg", chkMsgRepo.findAll());
-		
 		/*要対応ステータスごとの人数を集計*/
-		model.addAttribute("ttlChk", ttlChkRepo.findAll());
+		Integer msgId;
+		TotalCheckView ttlCheck;
+		for(msgId = 1; msgId < 10; msgId++) {
+			ttlCheck = ttlChkRepo.findByMessageId(msgId);
+		model.addAttribute("ttlChk", ttlCheck);
+		}
+
 		/*Integer n = 1;
 		String totalCheckStatus [] = {"chkBriefingAdjust", "chkBriefingAssesment", "checkDocument",
 				"chkFirstAdjust", "chkFirstAssesment", "chkSecondAdjust", "chkSecondAssesment", "chkLastAdjust", "chkLastAssesment"};
 		*/
-
-		/*メッセージマスタで管理予定*/
-		model.addAttribute("underSelection", "選考中");
-		model.addAttribute("adjustment", "要対応");
-
-		model.addAttribute("document", "書類選考");
-		model.addAttribute("aptitude", "適性検査");
-		model.addAttribute("first", "1次面接");
-		model.addAttribute("second", "2次面接");
-		model.addAttribute("last", "最終面接");
-		model.addAttribute("offer", "内定");
-		model.addAttribute("briefing", "説明会");
 
 
 		return "/dashboard";
