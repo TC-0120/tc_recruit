@@ -1,5 +1,6 @@
 package jp.co.tc.recruit.view;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -153,8 +154,8 @@ public class CandidatesView {
 		this.referrerName = referrerName;
 	}
 
-	public Date getSlcDate() {
-		return slcDate;
+	public String getSlcDate() {
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(slcDate);
 	}
 
 	public void setSlcDate(Date slcDate) {

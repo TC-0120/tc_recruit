@@ -5,5 +5,5 @@ import java.util.List;
 import jp.co.tc.recruit.view.CandidatesView;
 
 public interface CandidatesViewRepositoryCustom {
-	List<CandidatesView> findBySlcDate(String period);
+	List<CandidatesView> findBySlcDate(String from, String to);
 }

@@ -5,14 +5,16 @@ public class ConditionsForm {
 	private Integer slcStatusDtlId;
 	private Integer order;
 	private Integer direction;
-	private String period;
+	private String from;
+	private String to;
 
 	public ConditionsForm() {
 		slcStatusId = 0;
 		slcStatusDtlId = 0;
 		order = 1;
 		direction = 1;
-		period = "all";
+		from = "";
+		to = "";
 	}
 
 	public Integer getOrder() {
@@ -44,11 +46,19 @@ public class ConditionsForm {
 		this.slcStatusDtlId = slcStatusDtlId;
 	}
 
-	public String getPeriod() {
-		return period;
+	public String getFrom() {
+		return from;
 	}
 
-	public void setPeriod(String period) {
-		this.period = period;
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+	public String getTo() {
+		return to;
+	}
+
+	public void setTo(String to) {
+		this.to = to;
 	}
 }

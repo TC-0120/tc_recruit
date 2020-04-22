@@ -8,59 +8,67 @@
 	color: red;
 }
 </style>
+<script type="text/javascript">
+	function conditionsFormSubmit() {
+		document.conditionsForm.submit();
+	}
+</script>
 </head>
 <body>
 	<h2>候補者一覧画面</h2>
 
-	<a th:href="@{/recruit/candidates/regist}">新規登録</a>
-	 <form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
-			<div>
-				<label>選考ステータス</label>
-				<select th:field="*{slcStatusId}">
-					<option value="0">一覧</option>
-					<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
-				</select>
-			</div>
-			<div>
-				<label>選考ステータス詳細</label>
-				<select th:field="*{slcStatusDtlId}">
-					<option value="0">一覧</option>
-					<option value="-1">要調整</option>
-					<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
-				</select>
-			</div>
+	<a th:href="@{/recruit/candidates/regist}">新規登録</a><br/><br/>
 
-			<div>
-				<label>項目</label>
-				<select th:field="*{order}">
-					<option value="1">ID</option>
-					<option value="2">選考ステータス</option>
-					<option value="3">選考ステータス詳細</option>
-					<option value="4">選考日程</option>
-				</select>
-			</div>
-			<div>
-				<label>順番</label>
-				<select th:field="*{direction}">
-					<option value="1">昇順</option>
-					<option value="2">降順</option>
-				</select>
-			</div>
-			<div>
-				<label>期間</label>
-				<select th:field="*{period}">
-					<option value="all">一覧</option>
-					<option value="a week">1週間</option>
-					<option value="two week">2週間</option>
-					<option value="a month">1ヶ月間</option>
-				</select>
-			</div>
-			<input type="submit" value="送信">
-	</form>
+	<form name="conditionsForm" th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
+		<div>
+			<label>選考ステータス</label>
+			<select th:field="*{slcStatusId}" onchange="conditionsFormSubmit()">
+				<option value="0">一覧</option>
+				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
+			</select>
+		</div>
+		<div>
+			<label>選考ステータス詳細</label>
+			<select th:field="*{slcStatusDtlId}" onchange="conditionsFormSubmit()">
+				<option value="0">一覧</option>
+				<option value="-1">要調整</option>
+				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
+			</select>
+		</div>
+
+		<div>
+			<label>項目</label>
+			<select th:field="*{order}" onchange="conditionsFormSubmit()">
+				<option value="1">ID</option>
+				<option value="2">選考ステータス</option>
+				<option value="3">選考ステータス詳細</option>
+				<option value="4">選考日程</option>
+			</select>
+		</div>
+		<div>
+			<label>順番</label>
+			<select th:field="*{direction}" onchange="conditionsFormSubmit()">
+				<option value="1">昇順</option>
+				<option value="2">降順</option>
+			</select>
+		</div>
+	</form><br/>
+
+	<form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
+		<div>
+			<label>日付検索</label>
+			<input type="text" th:field="*{from}">～
+			<input type="text" th:field="*{to}">（yyyy/MM/dd）
+			<input type="submit" value="検索">
+		</div>
+	</form><br/>
 
 
+	<form th:action="@{/recruit/candidates/selection}" th:method="get">
+	<input type="submit" value="選考情報変更">
 	<table border="1">
 		<tr>
+			<th>  </th>
 			<th>ID</th>
 			<th>氏名</th>
 			<th>性別</th>
@@ -71,6 +79,9 @@
 			<th>選考日程</th>
 		</tr>
 		<tr th:each="candidate: ${candidates}" th:object="${candidate}">
+			<td>
+				<input type="radio" name="candidateId" th:value="*{candidateId}">
+			</td>
 			<td th:text="*{candidateId}"></td>
 			<td><a th:text="*{candidateName}" th:href="@{/recruit/candidates/{id}(id=*{candidateId})}"></a></td>
 			<td th:text="*{gender == 1} ? 男性 : 女性"></td>
@@ -79,20 +90,13 @@
 			<td th:text="*{referrerName}"></td>
 			<td th:text="*{slcStatusName}"></td>
 			<td th:text="*{slcStatusDtlName}"></td>
-			<td>
-				<div th:if="*{slcStatusDtlId == 3}">
-					<a th:href="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=*{slcStatusId + 1})}">調整</a>
-				</div>
-				<div th:if="*{slcStatusDtlId == 1}">
-					<a th:href="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=*{slcStatusId})}">調整中</a>
-				</div>
-				<div th:if="*{slcStatusDtlId != 1 && slcStatusDtlId != 3}">
-					<a th:text="*{slcDate}" th:href="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=*{slcStatusId})}"></a>
-				</div>
-			</td>
+			<td><div th:if="*{slcStatusDtlId == 2}" th:text="*{slcDate}"></div></td>
 		</tr>
 
 	</table>
+	</form><br/>
+
+	<a th:href="@{/recruit/candidates}">TOPに戻る</a>
 
 </body>
 </html>

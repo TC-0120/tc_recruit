@@ -50,7 +50,7 @@ public class RecruitmentManagementController {
 	CandidatesViewRepository cvRepo;
 
 	@GetMapping
-	public String filter(@ModelAttribute("conditionsForm") ConditionsForm conditionsForm, Model model) {
+	public String index(@ModelAttribute("conditionsForm") ConditionsForm conditionsForm, Model model) {
 		model.addAttribute("candidates", candidatesViewService.findBySlcStatusIdAndSlcStatudDtlId(conditionsForm));
 		model.addAttribute("slcStatusList", slcStatusService.findAll());
 		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
@@ -86,7 +86,7 @@ public class RecruitmentManagementController {
 	@PostMapping("{id}")
 	public String updateComplete(@PathVariable Integer id, @ModelAttribute Candidate candidate) {
 		candidate.setCandidateId(id);
-		candidateService.save(candidate);
+		candidateService.update(candidate);
 		return "redirect:/recruit/candidates";
 	}
 
@@ -97,41 +97,32 @@ public class RecruitmentManagementController {
 		return "redirect:/recruit/candidates";
 	}
 
-	@GetMapping("/selection/{cId}/{sId}")
-	public String slcDateUpdate(@PathVariable Integer cId, @PathVariable Integer sId, Model model) {
+	@GetMapping("/selection")
+	public String slcUpdateInput(@RequestParam("candidateId") Integer cId, Model model) {
+		//候補者IDから候補者情報、選考情報を取得
+		Candidate candidate = candidateService.findById(cId);
+		Integer sId = candidate.getSlcStatus().getSlcStatusId();
+		//if (candidate.getSlcStatusDtl().getSlcStatusDtlId() == 3) {
+		//	//ステータス詳細が合格の場合、ステータスを繰り上げ
+		//	sId += 1;
+		//}
 		SelectionPK slcPK = new SelectionPK(cId, sId);
 		Selection slc = selectionService.findById(slcPK);
-		model.addAttribute("candidate", candidateService.findById(cId));
+
+		model.addAttribute("candidate", candidate);
 		model.addAttribute("selection", slc);
 		model.addAttribute("slcDateString", selectionService.getStringDate(slc.getSlcDate()));
+		model.addAttribute("slcResult", candidate.getSlcStatusDtl().getSlcStatusDtlId());
 		return "selection/update_input";
 	}
 
-	@PostMapping("/selection/{cId}/{sId}")
-	public String update(@PathVariable Integer cId, @PathVariable Integer sId, @ModelAttribute Selection slc, @RequestParam("slcDateString") String slcDate) throws ParseException {
-		SelectionPK slcPK = new SelectionPK(cId, sId);
-		slc.setSlcPK(slcPK);
+	@PostMapping("/selection")
+	public String slcUpdateComplete(@RequestParam("slcResult") Integer slcResult, @ModelAttribute Selection slc, @RequestParam("slcDateString") String slcDate) throws ParseException {
 		slc.setSlcDate(selectionService.setDate(slcDate));
 		selectionService.save(slc);
-		candidateService.slcStatusManagement(cId, slcDate, slc.getSlcResult());
+		candidateService.slcStatusManagement(slc.getSlcPK().getCandidateId(), slcResult, slcDate);
 
-		//自動管理
-		//マジックナンバー
-		//if (slcDate.isEmpty() || slcDate == null) {
-		//	candidateService.slcStatusManagement(cId, 1);
-		//} else {
-		//	candidateService.slcStatusManagement(cId, 2);
-		//}
-        //
-		//if (slc.getSlcResult() != null) {
-		//	if (slc.getSlcResult() == 0) {
-		//		candidateService.slcStatusManagement(cId, 4);
-		//	} else if (slc.getSlcResult() == 1) {
-		//		candidateService.slcStatusManagement(cId, 3);
-		//	}
-		//}
 		return "redirect:/recruit/candidates";
 	}
-
 
 }

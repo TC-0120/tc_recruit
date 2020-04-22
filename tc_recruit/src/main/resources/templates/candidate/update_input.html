@@ -10,9 +10,13 @@
 </style>
 </head>
 <body>
-	<h2>候補者登録画面</h2>
+	<h2>候補者情報変更画面</h2>
 
 	<form th:action="@{/recruit/candidates/{id}(id=*{candidateId})}" th:method="post" th:object="${candidate}">
+		<div>
+			<label>ID:</label>
+			<span th:text="*{candidateId}"></span>
+		</div>
 		<div>
 			<label>候補者:</label>
 			<input type="text" th:field="*{candidateName}" />
@@ -26,34 +30,28 @@
 			<label>学歴:</label>
 			<input type="text" th:field="*{eduBack}" />
 		</div>
-		<!--
-		<div>
-			<label>選考ステータス</label>
-			<select th:field="*{slcStatus.slcStatusId}">
-				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
-			</select>
-		</div>
-		-->
 
-		<div>
-			<label>選考ステータス:</label>
-			<span th:if="*{slcStatus.slcStatusId != 1}">
+		<div th:if="*{slcStatus.slcStatusId != 1}">
+			<div>
+				<label>選考ステータス:</label>
 				<span th:text="*{slcStatus.slcStatusName}"></span>
-			</span>
-			<span th:if="*{slcStatus.slcStatusId == 1}">
-				<select th:field="*{slcStatus.slcStatusId}">
-					<option th:value="1">説明会
-					<option th:value="2">書類選考
-				</select>
-			</span>
+				<input type="hidden" th:field="*{slcStatus.slcStatusId}">
+			</div>
+			<div>
+				<label>選考ステータス詳細:</label>
+				<span th:text="*{slcStatusDtl.slcStatusDtlName}"></span>
+				<input type="hidden" th:field="*{slcStatusDtl.slcStatusDtlId}">
+			</div>
+		</div>
+		<div th:if="*{slcStatus.slcStatusId == 1}">
+			<label>選考ステータス:</label>
+			<select th:field="*{slcStatus.slcStatusId}">
+				<option th:value="1">説明会
+				<option th:value="2">書類選考
+			</select>
+			<input type="hidden" th:field="*{slcStatusDtl.slcStatusDtlId}">
 		</div>
 
-		<div>
-			<label>選考ステータス詳細:</label>
-			<select th:field="*{slcStatusDtl.slcStatusDtlId}">
-				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
-			</select>
-		</div>
 		<div>
 			<label>採用エージェント:</label>
 			<select th:field="*{agent.agentId}" >

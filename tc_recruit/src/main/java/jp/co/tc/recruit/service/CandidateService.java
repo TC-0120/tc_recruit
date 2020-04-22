@@ -25,10 +25,6 @@ public class CandidateService {
 		return candidateRepo.findByCandidateId(id);
 	}
 
-	public void save(Candidate candidate) {
-		candidateRepo.save(candidate);
-	}
-
 	//マジックナンバー
 	public void regist(Candidate candidate, String slcDate) {
 		Integer slcStatusDtlId = null;
@@ -43,7 +39,15 @@ public class CandidateService {
 			}
 		}
 		candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(slcStatusDtlId));
-		save(candidate);
+		candidateRepo.save(candidate);
+	}
+
+	public void update(Candidate candidate) {
+		if ((candidate.getSlcStatus().getSlcStatusId() != 1 && candidate.getSlcStatusDtl().getSlcStatusDtlId() == 7)) {
+			candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(1));
+		}
+
+		candidateRepo.save(candidate);
 	}
 
 	public void delete(Integer candidateId) {
@@ -51,47 +55,28 @@ public class CandidateService {
 		candidateRepo.deleteByCandidtaeId(candidateId);
 	}
 
-	//マジックナンバー
-	//public void slcStatusManagement(Integer candidateId, Integer slcStatusDtlId) {
-	//	Candidate candidate = findById(candidateId);
-    //
-	//	//ステータス詳細が合格の場合、ステータスを繰り上げる
-	//	if (candidate.getSlcStatusDtl().getSlcStatusDtlId() == 3) {
-	//		Integer slcStatusId = candidate.getSlcStatus().getSlcStatusId();
-	//		candidate.setSlcStatus(slcStatusRepo.findBySlcStatusId(slcStatusId + 1));
-	//	}
-    //
-	//	candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(slcStatusDtlId));
-	//	save(candidate);
-	//}
-
 	//自動管理
 	//マジックナンバー
-	public void slcStatusManagement(Integer candidateId, String slcDate, Integer slcResult) {
-		Candidate candidate = findById(candidateId);
-		Integer slcStatusDtlId = null;
+	public void slcStatusManagement(Integer cId, Integer slcResult, String slcDate) {
+		Candidate candidate = findById(cId);
+
 
 		//変更前のステータス詳細が合格の場合、ステータスを繰り上げる
-		if (candidate.getSlcStatusDtl().getSlcStatusDtlId() == 3) {
-			Integer slcStatusId = candidate.getSlcStatus().getSlcStatusId();
-			candidate.setSlcStatus(slcStatusRepo.findBySlcStatusId(slcStatusId + 1));
-		}
+		//if (candidate.getSlcStatusDtl().getSlcStatusDtlId() == 3) {
+		//	Integer slcStatusId = candidate.getSlcStatus().getSlcStatusId();
+		//	candidate.setSlcStatus(slcStatusRepo.findBySlcStatusId(slcStatusId + 1));
+		//}
 
-		if (slcDate.isEmpty() || slcDate == null) {
-			slcStatusDtlId = 1;
-		} else {
-			slcStatusDtlId = 2;
-		}
-
-		if (slcResult != null) {
-			if (slcResult == 0) {
-				slcStatusDtlId = 4;
-			} else if (slcResult == 1) {
-				slcStatusDtlId = 3;
+		if (slcResult == 0) {
+			if (slcDate.isEmpty() || slcDate == null) {
+				candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(1));
+			} else {
+				candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(2));
 			}
+		} else {
+			candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(slcResult));
 		}
 
-		candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(slcStatusDtlId));
-		save(candidate);
+		candidateRepo.save(candidate);
 	}
 }

@@ -120,13 +120,5 @@ public class Candidate implements Serializable {
 		this.remarks = remarks;
 	}
 
-	//public Selection getSlc() {
-	//	return slc;
-	//}
-    //
-	//public void setSlc(Selection slc) {
-	//	this.slc = slc;
-	//}
-
 
 }

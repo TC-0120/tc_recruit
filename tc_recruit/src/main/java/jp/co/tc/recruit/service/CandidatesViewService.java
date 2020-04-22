@@ -28,7 +28,8 @@ public class CandidatesViewService {
 		Integer ssdId = cf.getSlcStatusDtlId();
 		Integer order = cf.getOrder();
 		Integer dir = cf.getDirection();
-		String period = cf. getPeriod();
+		String from = cf.getFrom();
+		String to = cf.getTo();
 
 
 		if (ssdId == 0) {
@@ -51,10 +52,9 @@ public class CandidatesViewService {
 			}
 		}
 
-		if(!period.equals("all")) {
-			cv = repo.findBySlcDate(period);
+		if (!from.isEmpty() || !to.isEmpty()) {
+			cv = repo.findBySlcDate(from, to);
 		}
-
 
 		if (order == 2) {
 			Collections.sort(cv, new SlcStatusComparator());
