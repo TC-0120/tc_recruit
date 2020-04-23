@@ -8,6 +8,57 @@
 	color: red;
 }
 </style>
+<style type="text/css">
+	table {
+		 text-align: center;
+ 		 border-collapse: collapse;
+	}
+	th, td {
+  		border: solid 2px black;
+  	}
+	thead, tbody {
+  		display: block;
+	}
+	tbody {
+  		overflow-x: hidden;
+  		overflow-y: scroll;
+ 		height: 100px;
+	}
+
+	.table_radio {
+		width: 20px;
+	}
+	.candidate_id {
+		width: 20px;
+	}
+	.candidate_name {
+		width: 140px;
+	}
+	.gender {
+		width: 40px;
+	}
+	.edu_back {
+		width: 200px;
+	}
+	.agent {
+		width: 80px;
+	}
+	.referrer {
+		width: 80px;
+	}
+	.slc_status_title {
+		width: 164px;
+	}
+	.slc_status {
+		width: 80px;
+	}
+	.slc_status_dtl {
+		width: 80px;
+	}
+	.slc_date {
+		width: 140px;
+	}
+</style>
 <script type="text/javascript">
 	function conditionsFormSubmit() {
 		document.conditionsForm.submit();
@@ -65,38 +116,42 @@
 
 
 	<form th:action="@{/recruit/candidates/selection}" th:method="get">
-	<input type="submit" value="選考情報変更">
-	<table border="1">
+	<table>
+		<thead>
 		<tr>
-			<th>  </th>
-			<th>ID</th>
-			<th>氏名</th>
-			<th>性別</th>
-			<th>学歴</th>
-			<th>採用エージェント</th>
-			<th>紹介元</th>
-			<th colspan="2">選考ステータス</th>
-			<th>選考日程</th>
+			<th class="table_radio"></th>
+			<th class="candidate_id">ID</th>
+			<th class="candidate_name">氏名</th>
+			<th class="gender">性別</th>
+			<th class="edu_back">学歴</th>
+			<th class="agent">採用Agent</th>
+			<th class="referrer">紹介元</th>
+			<th class="slc_status_title" colspan="2">選考ステータス</th>
+			<th class="slc_date">選考日程</th>
 		</tr>
+		</thead>
+		<tbody>
 		<tr th:each="candidate: ${candidates}" th:object="${candidate}">
-			<td>
+			<td class="table_radio">
 				<input type="radio" name="candidateId" th:value="*{candidateId}">
 			</td>
-			<td th:text="*{candidateId}"></td>
-			<td><a th:text="*{candidateName}" th:href="@{/recruit/candidates/{id}(id=*{candidateId})}"></a></td>
-			<td th:text="*{gender == 1} ? 男性 : 女性"></td>
-			<td th:text="*{eduBack}"></td>
-			<td th:text="*{agentName}"></td>
-			<td th:text="*{referrerName}"></td>
-			<td th:text="*{slcStatusName}"></td>
-			<td th:text="*{slcStatusDtlName}"></td>
-			<td><div th:if="*{slcStatusDtlId == 2}" th:text="*{slcDate}"></div></td>
+			<td class="candidate_id" th:text="*{candidateId}"></td>
+			<td class="candidate_name"><a th:text="*{candidateName}" th:href="@{/recruit/candidates/{id}(id=*{candidateId})}"></a></td>
+			<td class="gender" th:text="*{gender == 1} ? 男性 : 女性"></td>
+			<td class="edu_back" th:text="*{eduBack}"></td>
+			<td class="agent" th:text="*{agentName}"></td>
+			<td class="referrer" th:text="*{referrerName}"></td>
+			<td class="slc_status" th:text="*{slcStatusName}"></td>
+			<td class="slc_status_dtl" th:text="*{slcStatusDtlName}"></td>
+			<td class="slc_date"><div th:if="*{slcStatusDtlId == 2}" th:text="*{slcDate}"></div></td>
 		</tr>
-
+		</tbody>
 	</table>
-	</form><br/>
+		<input type="submit" value="選考情報変更">
+	</form>
+	<br/>
 
 	<a th:href="@{/recruit/candidates}">TOPに戻る</a>
-
 </body>
 </html>
+

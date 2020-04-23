@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.co.tc.recruit.entity.Candidate;
 import jp.co.tc.recruit.entity.Selection;
@@ -102,10 +103,6 @@ public class RecruitmentManagementController {
 		//候補者IDから候補者情報、選考情報を取得
 		Candidate candidate = candidateService.findById(cId);
 		Integer sId = candidate.getSlcStatus().getSlcStatusId();
-		//if (candidate.getSlcStatusDtl().getSlcStatusDtlId() == 3) {
-		//	//ステータス詳細が合格の場合、ステータスを繰り上げ
-		//	sId += 1;
-		//}
 		SelectionPK slcPK = new SelectionPK(cId, sId);
 		Selection slc = selectionService.findById(slcPK);
 
@@ -123,6 +120,14 @@ public class RecruitmentManagementController {
 		candidateService.slcStatusManagement(slc.getSlcPK().getCandidateId(), slcResult, slcDate);
 
 		return "redirect:/recruit/candidates";
+	}
+
+	@PostMapping("/seleciton/nextStatus")
+	public String nextStatus(@RequestParam("candidateId") Integer cId, RedirectAttributes redirectAttributes) {
+		candidateService.SlcStatusUp(cId);
+		redirectAttributes.addAttribute("candidateId", cId);
+
+		return "redirect:/recruit/candidates/selection";
 	}
 
 }

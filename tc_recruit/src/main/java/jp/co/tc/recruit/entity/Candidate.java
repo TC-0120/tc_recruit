@@ -48,6 +48,12 @@ public class Candidate implements Serializable {
 	@Column(name="remarks")
 	private String remarks;
 
+	@Column(name="aptitude_flag")
+	private Integer aptitudeFlag;
+
+	@Column(name="aptitude_score")
+	private Integer aptitudeScore;
+
 	public Integer getCandidateId() {
 		return candidateId;
 	}
@@ -120,5 +126,19 @@ public class Candidate implements Serializable {
 		this.remarks = remarks;
 	}
 
+	public Integer getAptitudeFlag() {
+		return aptitudeFlag;
+	}
 
+	public void setAptitudeFlag(Integer aptitudeFlag) {
+		this.aptitudeFlag = aptitudeFlag;
+	}
+
+	public Integer getAptitudeScore() {
+		return aptitudeScore;
+	}
+
+	public void setAptitudeScore(Integer aptitudeScore) {
+		this.aptitudeScore = aptitudeScore;
+	}
 }

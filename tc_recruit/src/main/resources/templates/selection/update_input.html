@@ -59,5 +59,11 @@
 		<input type="hidden" th:field="${selection.slcPK.slcStatusId}" />
 		<input type="submit" value="更新"/>
 	</form>
+	<div th:if="${candidate.slcStatusDtl.slcStatusDtlId == 3 && candidate.slcStatus.slcStatusId != 6}">
+		<form th:action="@{/recruit/candidates/seleciton/nextStatus}" th:method="post">
+			<input type="hidden" name="candidateId" th:value="${candidate.candidateId}">
+			<input type="submit" value="次の選考へ"/>
+		</form>
+	</div>
 </body>
 </html>

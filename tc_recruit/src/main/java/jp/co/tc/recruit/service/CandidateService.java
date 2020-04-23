@@ -79,4 +79,17 @@ public class CandidateService {
 
 		candidateRepo.save(candidate);
 	}
+
+	public void SlcStatusUp(Integer cId) {
+		Candidate candidate = findById(cId);
+		Integer slcStatusId = candidate.getSlcStatus().getSlcStatusId();
+
+
+		if (candidate.getSlcStatusDtl().getSlcStatusDtlId() == 3 && slcStatusId != 6) {
+			candidate.setSlcStatus(slcStatusRepo.findBySlcStatusId(slcStatusId + 1));
+			candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(1));
+		}
+
+		candidateRepo.save(candidate);
+	}
 }

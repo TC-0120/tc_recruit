@@ -22,9 +22,6 @@ public class Selection implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date slcDate;
 
-	@Column(name="selection_result")
-	private Integer slcResult;
-
 	public Selection() {
 	}
 
@@ -46,14 +43,6 @@ public class Selection implements Serializable {
 
 	public void setSlcDate(Date slcDate) {
 		this.slcDate = slcDate;
-	}
-
-	public Integer getSlcResult() {
-		return slcResult;
-	}
-
-	public void setSlcResult(Integer slcResult) {
-		this.slcResult = slcResult;
 	}
 
 	@Embeddable
