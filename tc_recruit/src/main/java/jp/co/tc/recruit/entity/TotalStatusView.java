@@ -13,7 +13,7 @@ import lombok.Data;
 public class TotalStatusView{
 	@Id
 	@Column(name="selection_status_id")
-	private Integer selectionStatusId;
+	private Integer slcSttId;
 
 	private Integer count;
 }

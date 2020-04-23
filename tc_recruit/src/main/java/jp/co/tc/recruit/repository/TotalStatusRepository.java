@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import jp.co.tc.recruit.entity.TotalStatusView;
 
 public interface TotalStatusRepository extends JpaRepository<TotalStatusView, Integer>{
-	public TotalStatusView findBySelectionStatusId(Integer selectionStatusId);
+	public TotalStatusView findBySelectionStatusId(Integer slcSttId);
 }

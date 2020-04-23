@@ -1,7 +1,5 @@
 package jp.co.tc.recruit.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +12,8 @@ public class TotalCheckService {
 	@Autowired
 	TotalCheckRepository ttlChkRepo;
 
-	public List<TotalCheckView> findAll() {
-		return ttlChkRepo.findAll();
+	public TotalCheckView findByMessageId(Integer msgId) {
+		return ttlChkRepo.findByMessageId(msgId);
 	}
 
 }

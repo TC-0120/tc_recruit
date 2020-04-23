@@ -34,7 +34,7 @@ public class RecruitmentManagementController {
 	public String index(Model model) {
 		model.addAttribute("candidates", candidateService.findAll());
 		model.addAttribute("selections", selectionService.findAll());
-		model.addAttribute("slcStatusList", slcStatusService.findAll());
+		/*	model.addAttribute("slcStatusList", slcStatusService.findAll());*/
 		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
 		return "top";
 	}
