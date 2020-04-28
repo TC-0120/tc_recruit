@@ -26,12 +26,6 @@ public class CandidatesViewService {
 	//マジックナンバー
 	public List<CandidatesView> findBySlcStatusIdAndSlcStatudDtlId(ConditionsForm cf) {
 		List<CandidatesView> cv = new ArrayList<CandidatesView>();
-		//Integer ssId = cf.getSlcStatusId();
-		//Integer ssdId = cf.getSlcStatusDtlId();
-		//Integer order = cf.getOrder();
-		//Integer dir = cf.getDirection();
-		//String from = cf.getFrom();
-		//String to = cf.getTo();
 
 		cv = repo.findBySlcStatusIdAndSlcStatudDtlId(cf);
 
@@ -43,43 +37,6 @@ public class CandidatesViewService {
 			}
 		}
 
-
-		//if (ssdId == 0) {
-		//	if (ssId == 0) {
-		//		cv = repo.findAll();
-		//	} else {
-		//		cv = repo.findBySlcStatusId(ssId);
-		//	}
-		//} else if (ssdId == -1) {
-		//	if (ssId == 0) {
-		//		cv = repo.findBySlcStatusDtlIdOrSlcStatusDtlId(1, 3);
-		//	} else {
-		//		cv = repo.findBySlcStatusIdAndSlcStatusDtlIdOrSlcStatusDtlId(ssId, 1, 3);
-		//	}
-		//} else {
-		//	if (ssId == 0) {
-		//		cv = repo.findBySlcStatusDtlId(ssdId);
-		//	} else {
-		//		cv = repo.findBySlcStatusIdAndSlcStatusDtlId(ssId, ssdId);
-		//	}
-		//}
-        //
-		//if (!from.isEmpty() || !to.isEmpty()) {
-		//cv = repo.findBySlcDate(from, to);
-		//}
-        //
-		//if (order == 2) {
-		//	Collections.sort(cv, new SlcStatusComparator());
-		//} else if (order == 3) {
-		//	Collections.sort(cv, new SlcStatusDtlComparator());
-		//} else if (order == 4) {
-		//	Collections.sort(cv, new SlcDateComparator());
-		//}
-        //
-		//if(dir == 2) {
-		//	Collections.reverse(cv);
-		//}
-        //
 		return cv;
 	}
 

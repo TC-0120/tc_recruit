@@ -104,6 +104,8 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			case ConditionsForm.SLC_STATUS_DTL:
 				queryStr += " ORDER BY slcStatusDtlId";
 				break;
+			case ConditionsForm.SLC_DATE:
+				queryStr += " ORDER BY slcDate";
 			default:
 				break;
 		}

@@ -25,7 +25,7 @@
  		height: 100px;
 	}
 
-	.table_radio {
+	.table_checkbox {
 		width: 25px;
 	}
 	.candidate_id {
@@ -50,7 +50,7 @@
 		width: 164px;
 	}
 	.slc_status {
-		width: 80px;
+		width: 100px;
 	}
 	.slc_status_dtl {
 		width: 80px;
@@ -69,68 +69,101 @@
 		document.updateForm.submit();
 	}
 
-	function checkNotAll(cId) {
-		for (var i = 0; i < cId.length; i++) {
-			cId[i].checked = false;
-		}
-	}
-
-	function checkAll(cId) {
-		for (var i = 0; i < cId.length; i++) {
-			cId[i].checked = true;
-		}
-	}
-
-	function submitCheck(url) {
+	function buttonCheck() {
 	  var checkedNum = 0;
+	  var flag = true;
 	  var cId = document.updateForm.checkbox;
+	  var slcStatus = document.getElementsByClassName("slc_status");
+	  var slcStatusChecked = [];
+	  var cndButton = document.getElementById("candidateButton");
+	  var alcButton = document.getElementById("selectionButton");
+	  var mltButton = document.getElementById("multipleButton");
+
 
 	  for (var i = 0; i < cId.length; i++) {
 	    if (cId[i].checked) {
 	    	checkedNum += 1;
+	    	slcStatusChecked.push(slcStatus[i+1].textContent);
 	    }
-	    if (checkedNum == 2) {
-	    	break;
-	    }
+	  }
+	  for (var i = 0; i <slcStatusChecked.length - 1; i++) {
+	  	if (slcStatusChecked[i] != slcStatusChecked[i+1]) {
+	  		flag = false;
+	  		break;
+	  	}
 	  }
 
 	  if (checkedNum == 0) {
-		alert('チェックされていません');
+		cndButton.disabled = true;
+		alcButton.disabled = true;
+		mltButton.disabled = true;
 	  } else if (checkedNum == 1) {
-		  submitAction(url);
+		  cndButton.disabled = false;
+		  alcButton.disabled = false;
+		  mltButton.disabled = false;
 	  } else {
-		  if (url == '/multiple') {
-			  submitAction(url);
-		  } else {
-		  	alert('2個以上チェックされています');
-		  	checkNotAll(cId);
-		  }
+		  cndButton.disabled = true;
+		  alcButton.disabled = true;
+		  if (flag) {
+		  	mltButton.disabled = false;
+	  	  } else {
+	  		mltButton.disabled = true;
+	  	  }
 	  }
+
 	}
 
 	function checkManagement() {
 		var cId = document.updateForm.checkbox;
-		var checkFlag = true;
+		var checkAll = document.getElementById("checkAll");
 
-		for (var i = 0; i < cId.length; i++) {
-			if (!cId[i].checked) {
-				checkFlag = false;
+		if (checkAll.checked) {
+			for (var i = 0; i < cId.length; i++) {
+				cId[i].checked = true;
 			}
-			if (checkFlag == false) {
-				break;
-			}
-		}
-
-		if (checkFlag == false) {
-			checkAll(cId);
 		} else {
-			checkNotAll(cId);
+			for (var i = 0; i < cId.length; i++) {
+				cId[i].checked = false;
+			}
 		}
 
 	}
+
+	function sort(param) {
+		var order =  document.conditionsForm.order;
+		var direction = document.conditionsForm.direction;
+
+		if (order.value == param) {
+			if (direction.value == 1) {
+				direction.value = 2;
+			} else if (direction.value == 2) {
+				direction.value = 1;
+			}
+		} else {
+			order.value = param;
+			direction.value = 1;
+		}
+
+		document.conditionsForm.submit();
+
+	}
+
+	function sortKeep() {
+		var orderValue =  document.conditionsForm.order.value;
+		var directionValue = document.conditionsForm.direction.value;
+		var sort = document.getElementsByClassName("sort");
+
+		if (directionValue == 1) {
+			sort[orderValue - 1].textContent = "▼";
+		} else if (directionValue == 2) {
+			sort[orderValue - 1].textContent = "▲";
+		}
+
+	}
+
 </script>
 </head>
-<body>
+<body onload="sortKeep()">
 	<h2>候補者一覧画面</h2>
 
 	<a th:href="@{/recruit/candidates/regist}">新規登録</a><br/><br/>
@@ -151,7 +184,9 @@
 				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
 			</select>
 		</div>
-
+		<input type="hidden" th:field="*{order}">
+		<input type="hidden" th:field="*{direction}">
+		<!--
 		<div>
 			<label>項目</label>
 			<select th:field="*{order}" onchange="conditionsFormSubmit()">
@@ -171,6 +206,7 @@
 				<option value="2">降順</option>
 			</select>
 		</div>
+		-->
 	</form><br/>
 
 	<form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
@@ -182,27 +218,59 @@
 		</div>
 	</form><br/>
 
-
-	<button id="checkButton" type="button" onclick="checkManagement()">全選択</button>
 	<form name="updateForm" th:action="@{/recruit/candidates/selection}" th:method="get">
+		<button id="candidateButton" type="button" disabled onclick="submitAction('/update')">候補者情報変更</button>
+		<button id="selectionButton" type="button" disabled onclick="submitAction('/selection')">選考情報変更</button>
+		<button id="multipleButton" type="button" disabled onclick="submitAction('/multiple')">一括管理</button>
 	<table>
 		<thead>
 		<tr>
-			<th class="table_radio"></th>
-			<th class="candidate_id">ID</th>
+			<th class="table_checkbox">
+				<input type="checkbox" id="checkAll" onchange="checkManagement()"></th>
+
+			<th class="candidate_id">
+				<button type="button" onclick="sort(1)">
+					ID<span class="sort"></span>
+				</button>
+			</th>
 			<th class="candidate_name">氏名</th>
-			<th class="gender">性別</th>
+			<th class="gender">
+				<button type="button" onclick="sort(2)">
+					性別<span class="sort"></span>
+				</button>
+			</th>
 			<th class="edu_back">学歴</th>
-			<th class="agent">採用Agent</th>
-			<th class="referrer">紹介元</th>
-			<th class="slc_status_title" colspan="2">選考ステータス</th>
-			<th class="slc_date">選考日程</th>
+			<th class="agent">
+				<button type="button" onclick="sort(3)">
+					採用Agent<span class="sort"></span>
+				</button>
+			</th>
+			<th class="referrer">
+				<button type="button" onclick="sort(4)">
+					紹介元<span class="sort"></span>
+				</button>
+			</th>
+			<th class="slc_status">
+				<button type="button" onclick="sort(5)">
+					ステータス<span class="sort"></span>
+				</button>
+			</th>
+			<th class="slc_status_dtl">
+				<button type="button" onclick="sort(6)">
+					詳細<span class="sort"></span>
+				</button>
+			</th>
+			<th class="slc_date">
+				<button type="button" onclick="sort(7)">
+					選考日程<span class="sort"></span>
+				</button>
+			</th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr th:each="candidate: ${candidates}" th:object="${candidate}">
-			<td class="table_radio">
-				<input type="checkbox" id="checkbox" name="candidateId" th:value="*{candidateId}">
+			<td class="table_checkbox">
+				<input type="checkbox" id="checkbox" name="candidateId" th:value="*{candidateId}" onchange="buttonCheck()">
 			</td>
 			<td class="candidate_id" th:text="*{candidateId}"></td>
 			<td class="candidate_name" th:text="*{candidateName}"></td>
@@ -213,12 +281,10 @@
 			<td class="slc_status" th:text="*{slcStatusName}"></td>
 			<td class="slc_status_dtl" th:text="*{slcStatusDtlName}"></td>
 			<td class="slc_date"><div th:if="*{slcStatusDtlId == 2 || slcStatusDtlId == 6 || slcStatusDtlId == 8}" th:text="*{slcDate}"></div></td>
+
 		</tr>
 		</tbody>
 	</table>
-		<button type="button" onclick="submitCheck('/update')">候補者情報変更</button>
-		<button type="button" onclick="submitCheck('/selection')">選考情報変更</button>
-		<button type="button" onclick="submitCheck('/multiple')">一括管理</button>
 	</form>
 	<br/>
 
