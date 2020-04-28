@@ -2,12 +2,14 @@ package jp.co.tc.recruit.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jp.co.tc.recruit.entity.Candidate;
 import jp.co.tc.recruit.entity.Selection;
 import jp.co.tc.recruit.entity.Selection.SelectionPK;
 import jp.co.tc.recruit.repository.CandidateRepository;
@@ -53,7 +55,7 @@ public class SelectionService {
 		if (date == null) {
 			return null;
 		} else {
-			return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(date);
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(date).replace(" ", "T");
 		}
 	}
 
@@ -62,11 +64,35 @@ public class SelectionService {
 			return null;
 		} else {
 			try {
-				return new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(stringDate);
+				return new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(stringDate.replace("T", " "));
 			} catch (ParseException e) {
 				e.printStackTrace();
 				return null;
 			}
+		}
+	}
+
+	public void multipleUpdate(List<Candidate> cList, String slcDateString) {
+		if (slcDateString == null) {
+			return;
+		}
+
+		Date slcDate = setDate(slcDateString);
+		List <Selection> slcList = new ArrayList<Selection>();
+
+		for (int i = 0; i < cList.size(); i++) {
+			SelectionPK slcPK = new SelectionPK(cList.get(i).getCandidateId(), cList.get(i).getSlcStatus().getSlcStatusId());
+			Selection slc = findById(slcPK);
+			slc.setSlcDate(slcDate);
+			slcList.add(slc);
+		}
+
+		slcRepo.saveAll(slcList);
+	}
+
+	public void multipleDelete(Integer[] cId) {
+		for (int i = 0; i < cId.length; i++) {
+			slcRepo.deleteByCandidateId(cId[i]);
 		}
 	}
 

@@ -8,4 +8,6 @@ import jp.co.tc.recruit.entity.Agent;
 
 public interface AgentRepository extends JpaRepository<Agent, Integer> {
 	public List<Agent> findByOrderByAgentId();
+
+	public Agent findByAgentId(Integer id);
 }

@@ -8,6 +8,17 @@ public class ConditionsForm {
 	private String from;
 	private String to;
 
+	public static final int CANDIDATE_ID = 1;
+	public static final int GENDER = 2;
+	public static final int AGENT = 3;
+	public static final int REFERRER = 4;
+	public static final int SLC_STATUS = 5;
+	public static final int SLC_STATUS_DTL = 6;
+	public static final int SLC_DATE = 7;
+
+	public static final int ASC = 1;
+	public static final int DESC = 2;
+
 	public ConditionsForm() {
 		slcStatusId = 0;
 		slcStatusDtlId = 0;

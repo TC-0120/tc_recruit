@@ -8,4 +8,6 @@ import jp.co.tc.recruit.entity.Referrer;
 
 public interface ReferrerRepository extends JpaRepository<Referrer, Integer> {
 	public List<Referrer> findByOrderByReferrerId();
+
+	public Referrer findByReferrerId(Integer id);
 }

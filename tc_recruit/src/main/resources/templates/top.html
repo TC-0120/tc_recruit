@@ -26,10 +26,10 @@
 	}
 
 	.table_radio {
-		width: 20px;
+		width: 25px;
 	}
 	.candidate_id {
-		width: 20px;
+		width: 25px;
 	}
 	.candidate_name {
 		width: 140px;
@@ -56,12 +56,77 @@
 		width: 80px;
 	}
 	.slc_date {
-		width: 140px;
+		width: 160px;
 	}
 </style>
 <script type="text/javascript">
 	function conditionsFormSubmit() {
 		document.conditionsForm.submit();
+	}
+
+	function submitAction(url) {
+		document.updateForm.action = '/recruit/candidates' + url;
+		document.updateForm.submit();
+	}
+
+	function checkNotAll(cId) {
+		for (var i = 0; i < cId.length; i++) {
+			cId[i].checked = false;
+		}
+	}
+
+	function checkAll(cId) {
+		for (var i = 0; i < cId.length; i++) {
+			cId[i].checked = true;
+		}
+	}
+
+	function submitCheck(url) {
+	  var checkedNum = 0;
+	  var cId = document.updateForm.checkbox;
+
+	  for (var i = 0; i < cId.length; i++) {
+	    if (cId[i].checked) {
+	    	checkedNum += 1;
+	    }
+	    if (checkedNum == 2) {
+	    	break;
+	    }
+	  }
+
+	  if (checkedNum == 0) {
+		alert('チェックされていません');
+	  } else if (checkedNum == 1) {
+		  submitAction(url);
+	  } else {
+		  if (url == '/multiple') {
+			  submitAction(url);
+		  } else {
+		  	alert('2個以上チェックされています');
+		  	checkNotAll(cId);
+		  }
+	  }
+	}
+
+	function checkManagement() {
+		var cId = document.updateForm.checkbox;
+		var checkFlag = true;
+
+		for (var i = 0; i < cId.length; i++) {
+			if (!cId[i].checked) {
+				checkFlag = false;
+			}
+			if (checkFlag == false) {
+				break;
+			}
+		}
+
+		if (checkFlag == false) {
+			checkAll(cId);
+		} else {
+			checkNotAll(cId);
+		}
+
 	}
 </script>
 </head>
@@ -82,7 +147,7 @@
 			<label>選考ステータス詳細</label>
 			<select th:field="*{slcStatusDtlId}" onchange="conditionsFormSubmit()">
 				<option value="0">一覧</option>
-				<option value="-1">要調整</option>
+				<option value="-1">要対応</option>
 				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
 			</select>
 		</div>
@@ -91,9 +156,12 @@
 			<label>項目</label>
 			<select th:field="*{order}" onchange="conditionsFormSubmit()">
 				<option value="1">ID</option>
-				<option value="2">選考ステータス</option>
-				<option value="3">選考ステータス詳細</option>
-				<option value="4">選考日程</option>
+				<option value="2">性別</option>
+				<option value="3">採用エージェント</option>
+				<option value="4">紹介元</option>
+				<option value="5">選考ステータス</option>
+				<option value="6">選考ステータス詳細</option>
+				<option value="7">選考日程</option>
 			</select>
 		</div>
 		<div>
@@ -108,14 +176,15 @@
 	<form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
 		<div>
 			<label>日付検索</label>
-			<input type="text" th:field="*{from}">～
-			<input type="text" th:field="*{to}">（yyyy/MM/dd）
+			<input type="date" th:field="*{from}">～
+			<input type="date" th:field="*{to}">
 			<input type="submit" value="検索">
 		</div>
 	</form><br/>
 
 
-	<form th:action="@{/recruit/candidates/selection}" th:method="get">
+	<button id="checkButton" type="button" onclick="checkManagement()">全選択</button>
+	<form name="updateForm" th:action="@{/recruit/candidates/selection}" th:method="get">
 	<table>
 		<thead>
 		<tr>
@@ -133,21 +202,23 @@
 		<tbody>
 		<tr th:each="candidate: ${candidates}" th:object="${candidate}">
 			<td class="table_radio">
-				<input type="radio" name="candidateId" th:value="*{candidateId}">
+				<input type="checkbox" id="checkbox" name="candidateId" th:value="*{candidateId}">
 			</td>
 			<td class="candidate_id" th:text="*{candidateId}"></td>
-			<td class="candidate_name"><a th:text="*{candidateName}" th:href="@{/recruit/candidates/{id}(id=*{candidateId})}"></a></td>
+			<td class="candidate_name" th:text="*{candidateName}"></td>
 			<td class="gender" th:text="*{gender == 1} ? 男性 : 女性"></td>
 			<td class="edu_back" th:text="*{eduBack}"></td>
 			<td class="agent" th:text="*{agentName}"></td>
 			<td class="referrer" th:text="*{referrerName}"></td>
 			<td class="slc_status" th:text="*{slcStatusName}"></td>
 			<td class="slc_status_dtl" th:text="*{slcStatusDtlName}"></td>
-			<td class="slc_date"><div th:if="*{slcStatusDtlId == 2}" th:text="*{slcDate}"></div></td>
+			<td class="slc_date"><div th:if="*{slcStatusDtlId == 2 || slcStatusDtlId == 6 || slcStatusDtlId == 8}" th:text="*{slcDate}"></div></td>
 		</tr>
 		</tbody>
 	</table>
-		<input type="submit" value="選考情報変更">
+		<button type="button" onclick="submitCheck('/update')">候補者情報変更</button>
+		<button type="button" onclick="submitCheck('/selection')">選考情報変更</button>
+		<button type="button" onclick="submitCheck('/multiple')">一括管理</button>
 	</form>
 	<br/>
 
