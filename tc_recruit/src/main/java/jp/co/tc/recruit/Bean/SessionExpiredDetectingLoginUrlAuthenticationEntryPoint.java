@@ -1,7 +1,16 @@
 package jp.co.tc.recruit.Bean;
 
-public class SessionExpiredDetectingLoginUrlAuthenticationEntryPoint /*extends LoginUrlAuthenticationEntryPoint*/{
-	/*@Override
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+
+public class SessionExpiredDetectingLoginUrlAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint{
+	@Override
 	   protected String buildRedirectUrlToLoginPage(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
 
 	       String redirectUrl = super.buildRedirectUrlToLoginPage(request, response, authException);
@@ -30,5 +39,5 @@ public class SessionExpiredDetectingLoginUrlAuthenticationEntryPoint /*extends L
 
 	   public SessionExpiredDetectingLoginUrlAuthenticationEntryPoint(String loginFormUrl) {
 	       super(loginFormUrl);
-	   }*/
+	   }
 }

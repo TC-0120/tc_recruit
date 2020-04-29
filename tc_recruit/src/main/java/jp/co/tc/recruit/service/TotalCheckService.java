@@ -12,8 +12,8 @@ public class TotalCheckService {
 	@Autowired
 	TotalCheckRepository ttlChkRepo;
 
-	public TotalCheckView findByMessageId(Integer msgId) {
-		return ttlChkRepo.findByMessageId(msgId);
+	public TotalCheckView findByMessageId(Integer messageId) {
+		return ttlChkRepo.findByMessageId(messageId);
 	}
 
 }

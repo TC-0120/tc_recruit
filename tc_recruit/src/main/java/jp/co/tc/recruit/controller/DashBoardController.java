@@ -1,70 +1,69 @@
 package jp.co.tc.recruit.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import jp.co.tc.recruit.entity.MessageStatus;
-import jp.co.tc.recruit.entity.TotalStatusView;
-import jp.co.tc.recruit.repository.CheckMessageRepository;
-import jp.co.tc.recruit.repository.MessageStatusRepository;
-import jp.co.tc.recruit.repository.TotalCheckRepository;
-import jp.co.tc.recruit.repository.TotalStatusRepository;
+import jp.co.tc.recruit.service.CheckMessageService;
+import jp.co.tc.recruit.service.MessageStatusService;
+import jp.co.tc.recruit.service.TotalCheckService;
+import jp.co.tc.recruit.service.TotalStatusService;
 
 @Controller
 public class DashBoardController {
 
 	/*	@Autowired
 		SelectionStatusRepository slcStatusRepo;*/
+	@Autowired
+	TotalStatusService ttlSttSvc;
+	@Autowired
+	TotalCheckService ttlChkSvc;
+	@Autowired
+	CheckMessageService chkMsgSvc;
+	@Autowired
+	MessageStatusService msgSttSvc;
 
-	@Autowired
-	TotalStatusRepository ttlSttRepo;
-	@Autowired
-	TotalCheckRepository ttlChkRepo;
-	@Autowired
-	CheckMessageRepository chkMsgRepo;
-	@Autowired
-	MessageStatusRepository msgSttRepo;
-	@Autowired
-	MessageStatus slcStt;
-	@Autowired
-	MessageStatus chkStt;
-	@Autowired
-	TotalStatusView ttlSttViw;
-
-	@GetMapping("/dashboard")
-	public String getLogin(Model model) {
+	@GetMapping
+	public String getDashBoard(Model model) {
 
 		/*全ステータス名称を取得*/
 		Integer msgId;
+		MessageStatus msgStt;
+		MessageStatus chkStt;
+		List<MessageStatus> msgSttList = new ArrayList<MessageStatus>();
+		List<MessageStatus> chkSttList = new ArrayList<MessageStatus>();
 		for (msgId = 1; msgId < 9; msgId++) {
-			slcStt = msgSttRepo.findByStatusMessageId(msgId);
-			model.addAttribute("slcStt", slcStt);
+			msgStt = msgSttSvc.findByStatusMessageId(msgId);
+			msgSttList.add(msgStt);
 		}
+		model.addAttribute("msgSttList", msgSttList);
+
 		for (msgId = 9; msgId < 19; msgId++) {
-			chkStt = msgSttRepo.findByStatusMessageId(msgId);
-			model.addAttribute("chkStt", chkStt);
+			chkStt = msgSttSvc.findByStatusMessageId(msgId);
+			chkSttList.add(chkStt);
 		}
+		model.addAttribute("chkSttList", chkSttList);
 
 		/*選考ステータスごとの人数を集計*/
-		Integer slcSttId;
+		/*Integer slcSttId;
+		List<TotalStatusView> ttlStt = new ArrayList<TotalStatusView>();
+		List<TotalStatusView> ttlSttList = new ArrayList<TotalStatusView>();
 		for (slcSttId = 1; slcSttId < 9; slcSttId++) {
-			ttlSttViw = ttlSttRepo.findBySelectionStatusId(slcSttId);
-			model.addAttribute("ttlSttViw", ttlSttViw);
+			ttlStt = ttlSttSvc.findBySelectionStatusId(slcSttId);
+			ttlSttList.addAll(ttlStt);
 		}
+		model.addAttribute("ttlStt", ttlSttList);*/
 
 		/*選考中の候補者全数*/
-		Integer allTtlSttViw = 0;
-		Integer ttlSttViwCnt = 0;
-		for (slcSttId = 1; slcSttId < 9; slcSttId++) {
-			ttlSttViwCnt = ttlSttRepo.findBySelectionStatusId(slcSttId).getCount();
-			allTtlSttViw += ttlSttViwCnt;
-		}
-		model.addAttribute("allTtlSttViw", allTtlSttViw);
+		/*s*/
 
 		/*要対応ステータスごとの人数を集計*/
-		Integer ttlChkViw1 = ttlChkRepo.findByMessageId(1).getTtlExcAsm();
+		/*Integer ttlChkViw1 = ttlChkRepo.findByMessageId(1).getTtlExcAsm();
 		Integer ttlChkViw2 = ttlChkRepo.findByMessageId(2).getTtlExcAsm();
 		Integer ttlChkViw3 = ttlChkRepo.findByMessageId(3).getTtlExcAsm();
 		Integer ttlChkViw4 = ttlChkRepo.findByMessageId(4).getTtlExcAsm();
@@ -82,7 +81,7 @@ public class DashBoardController {
 		model.addAttribute("ttlChkViw", ttlChkViw6);
 		model.addAttribute("ttlChkViw", ttlChkViw7);
 		model.addAttribute("ttlChkViw", ttlChkViw8);
-		model.addAttribute("ttlChkViw", ttlChkViw9);
+		model.addAttribute("ttlChkViw", ttlChkViw9);*/
 
 		/*Integer chkMsgId;
 		   Integer ttlChkViw;
@@ -92,10 +91,10 @@ public class DashBoardController {
 		}
 		*/
 
-		/*要対応事項の全数*/
+		/*要対応事項の全数
 		Integer ttlChkViwCnt = ttlChkViw1 + ttlChkViw2 + ttlChkViw3 + ttlChkViw4
 				+ ttlChkViw5 + ttlChkViw6 + ttlChkViw7 + ttlChkViw8 + ttlChkViw9;
-		model.addAttribute("ttlChkViwCnt", ttlChkViwCnt);
+		model.addAttribute("ttlChkViwCnt", ttlChkViwCnt);*/
 
 		/*Integer allTtlChkViw = 0;
 		Integer ttlChkViwCnt = 0;

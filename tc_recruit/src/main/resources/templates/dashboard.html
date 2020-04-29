@@ -6,28 +6,41 @@
 </head>
 <body>
 	<h2>ダッシュボード</h2>
-	<table border="1">
+	<table>
 		<tr>
-			<th th:each="MessageStatus : ${slcStt}"
-				th:object="${MessageStatus}" th:text="*{sttMsg}"></th>
+			<td th:each="msgStt: ${msgSttList}">
+				<form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
+					<!-- <input type="hidden" th:name="slcStatusId" th:value="${ttlStt.selectionStatusId}"/> -->
+					<button type="submit" name="aaa" value="aaa">
+						<div th:text="${msgStt.statusMessage}"></div>
+						<!-- <div th:text="${msgSttList.}"></div> -->
+					</button>
+				</form>
+			</td>
+		</tr>
+	</table>
+	<!-- <table border="1">
+		<tr>
+			<th th:each="msgSttList : ${slcStt}"
+			th:text="${msgSttList.statusMessage}"></th>
 		</tr>
 		<tr>
 			<td th:text="${allTtlSttViw}"></td>
 			<td th:each="TotalStatusView : ${ttlSttViw}"
 				th:object="${TotalStatusView}" th:text="*{count}"></td>
 		</tr>
-	</table>
-	<table border="1">
+	</table> -->
+	<!-- <table border="1">
 		<tr>
-			<th th:each="MessageStatus : ${chkStt}"
-				th:object="${MessageStatus}" th:text="*{sttMsg}"></th>
+			<th th:each="chkSttList : ${chkStt}"
+			 th:text="${chkSttList.statusMessage}"></th>
 		</tr>
 		<tr>
 			<td th:text="${ttlChkViwCnt}"></td>
 			<td th:each="TotalCheckView : ${ttlChkViw}"
 				th:object="${TotalCheckView}"></td>
 		</tr>
-	</table>
+	</table> -->
 
 
 	<!-- <table border="1">

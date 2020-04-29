@@ -12,8 +12,8 @@ public class MessageStatusService {
 	@Autowired
 	MessageStatusRepository MsgSttRepo;
 
-	public MessageStatus findByStatusMessageId(Integer sttMsgId) {
-		return findByStatusMessageId(sttMsgId);
+	public MessageStatus findByStatusMessageId(Integer statusMessageId) {
+		return MsgSttRepo.findByStatusMessageId(statusMessageId);
 	}
 
 }
