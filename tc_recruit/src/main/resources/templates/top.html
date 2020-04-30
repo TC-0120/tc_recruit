@@ -22,32 +22,29 @@
 	tbody {
   		overflow-x: hidden;
   		overflow-y: scroll;
- 		height: 100px;
+ 		height: 250px;
 	}
 
 	.table_checkbox {
 		width: 25px;
 	}
 	.candidate_id {
-		width: 25px;
+		width: 45px;
 	}
 	.candidate_name {
 		width: 140px;
 	}
 	.gender {
-		width: 40px;
+		width: 60px;
 	}
 	.edu_back {
 		width: 200px;
 	}
 	.agent {
-		width: 80px;
+		width: 110px;
 	}
 	.referrer {
 		width: 80px;
-	}
-	.slc_status_title {
-		width: 164px;
 	}
 	.slc_status {
 		width: 100px;
@@ -58,6 +55,80 @@
 	.slc_date {
 		width: 160px;
 	}
+
+	.candidate_id_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		border-color:#fff;
+		height: 26px;
+		width: 45px;
+
+	}
+	.candidate_name_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 140px;
+	}
+	.gender_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 60px;
+	}
+	.edu_back_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 200px;
+	}
+	.agent_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 110px;
+	}
+	.referrer_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 80px;
+	}
+	.slc_status_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 100px;
+	}
+	.slc_status_dtl_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 80px;
+	}
+	.slc_date_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 160px;
+	}
+
+	.sort_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+	}
+
 </style>
 <script type="text/javascript">
 	function conditionsFormSubmit() {
@@ -171,14 +242,14 @@
 	<form name="conditionsForm" th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
 		<div>
 			<label>選考ステータス</label>
-			<select th:field="*{slcStatusId}" onchange="conditionsFormSubmit()">
+			<select th:field="*{slcStatusId}">
 				<option value="0">一覧</option>
 				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
 			</select>
 		</div>
 		<div>
 			<label>選考ステータス詳細</label>
-			<select th:field="*{slcStatusDtlId}" onchange="conditionsFormSubmit()">
+			<select th:field="*{slcStatusDtlId}">
 				<option value="0">一覧</option>
 				<option value="-1">要対応</option>
 				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
@@ -186,36 +257,16 @@
 		</div>
 		<input type="hidden" th:field="*{order}">
 		<input type="hidden" th:field="*{direction}">
-		<!--
-		<div>
-			<label>項目</label>
-			<select th:field="*{order}" onchange="conditionsFormSubmit()">
-				<option value="1">ID</option>
-				<option value="2">性別</option>
-				<option value="3">採用エージェント</option>
-				<option value="4">紹介元</option>
-				<option value="5">選考ステータス</option>
-				<option value="6">選考ステータス詳細</option>
-				<option value="7">選考日程</option>
-			</select>
-		</div>
-		<div>
-			<label>順番</label>
-			<select th:field="*{direction}" onchange="conditionsFormSubmit()">
-				<option value="1">昇順</option>
-				<option value="2">降順</option>
-			</select>
-		</div>
-		-->
-	</form><br/>
 
-	<form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
 		<div>
 			<label>日付検索</label>
 			<input type="date" th:field="*{from}">～
 			<input type="date" th:field="*{to}">
 			<input type="submit" value="検索">
 		</div>
+	</form>
+	<form th:action="@{/recruit/candidates}">
+		<input type="submit" value="クリア">
 	</form><br/>
 
 	<form name="updateForm" th:action="@{/recruit/candidates/selection}" th:method="get">
@@ -229,39 +280,46 @@
 				<input type="checkbox" id="checkAll" onchange="checkManagement()"></th>
 
 			<th class="candidate_id">
-				<button type="button" onclick="sort(1)">
+				<button class="candidate_id_button" type="button" onclick="sort(1)">
 					ID<span class="sort"></span>
 				</button>
 			</th>
-			<th class="candidate_name">氏名</th>
+			<th class="candidate_name">
+				<button class="candidate_name_button" type="button" onclick="sort(2)">
+					氏名<span class="sort"></span>
+				</button>
+			</th>
 			<th class="gender">
-				<button type="button" onclick="sort(2)">
+				<button class="gender_button" type="button" onclick="sort(3)">
 					性別<span class="sort"></span>
 				</button>
 			</th>
-			<th class="edu_back">学歴</th>
+			<th class="edu_back">
+				<button class="edu_back_button" type="button" onclick="sort(4)">
+					学歴<span class="sort"></span>
+				</button></th>
 			<th class="agent">
-				<button type="button" onclick="sort(3)">
-					採用Agent<span class="sort"></span>
+				<button  class="agent_button" type="button" onclick="sort(5)">
+					エージェント<span class="sort"></span>
 				</button>
 			</th>
 			<th class="referrer">
-				<button type="button" onclick="sort(4)">
+				<button class="referrer_button" type="button" onclick="sort(6)">
 					紹介元<span class="sort"></span>
 				</button>
 			</th>
 			<th class="slc_status">
-				<button type="button" onclick="sort(5)">
+				<button class="slc_status_button" type="button" onclick="sort(7)">
 					ステータス<span class="sort"></span>
 				</button>
 			</th>
 			<th class="slc_status_dtl">
-				<button type="button" onclick="sort(6)">
+				<button class="slc_status_dtl_button" type="button" onclick="sort(8)">
 					詳細<span class="sort"></span>
 				</button>
 			</th>
 			<th class="slc_date">
-				<button type="button" onclick="sort(7)">
+				<button class="slc_date_button" type="button" onclick="sort(9)">
 					選考日程<span class="sort"></span>
 				</button>
 			</th>
@@ -288,7 +346,7 @@
 	</form>
 	<br/>
 
-	<a th:href="@{/recruit/candidates}">TOPに戻る</a>
+	<a href="#">TOPに戻る</a>
 </body>
 </html>
 

@@ -9,12 +9,14 @@ public class ConditionsForm {
 	private String to;
 
 	public static final int CANDIDATE_ID = 1;
-	public static final int GENDER = 2;
-	public static final int AGENT = 3;
-	public static final int REFERRER = 4;
-	public static final int SLC_STATUS = 5;
-	public static final int SLC_STATUS_DTL = 6;
-	public static final int SLC_DATE = 7;
+	public static final int CANDIDATE_NAME = 2;
+	public static final int GENDER = 3;
+	public static final int EDU_BACK= 4;
+	public static final int AGENT = 5;
+	public static final int REFERRER = 6;
+	public static final int SLC_STATUS = 7;
+	public static final int SLC_STATUS_DTL = 8;
+	public static final int SLC_DATE = 9;
 
 	public static final int ASC = 1;
 	public static final int DESC = 2;

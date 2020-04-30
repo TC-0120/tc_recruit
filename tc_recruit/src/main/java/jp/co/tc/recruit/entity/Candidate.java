@@ -23,6 +23,9 @@ public class Candidate implements Serializable {
 	@Column(name="candidate_name")
 	private String candidateName;
 
+	@Column(name="candidate_name_furigana")
+	private String candidateFurigana;
+
 	@Column(name="gender")
 	private Integer gender;
 
@@ -68,6 +71,14 @@ public class Candidate implements Serializable {
 
 	public void setCandidateName(String candidateName) {
 		this.candidateName = candidateName;
+	}
+
+	public String getCandidateFurigana() {
+		return candidateFurigana;
+	}
+
+	public void setCandidateFurigana(String candidateFurigana) {
+		this.candidateFurigana = candidateFurigana;
 	}
 
 	public Integer getGender() {

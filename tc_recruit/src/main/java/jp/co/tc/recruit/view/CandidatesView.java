@@ -24,6 +24,9 @@ public class CandidatesView {
 	@Column(name="candidate_name")
 	private String candidateName;
 
+	@Column(name="candidate_name_furigana")
+	private String candidateFurigana;
+
 	@Column(name="gender")
 	private Integer gender;
 
