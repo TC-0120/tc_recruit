@@ -17,8 +17,6 @@ import jp.co.tc.recruit.service.TotalStatusService;
 @Controller
 public class DashBoardController {
 
-	/*	@Autowired
-		SelectionStatusRepository slcStatusRepo;*/
 	@Autowired
 	TotalStatusService ttlSttSvc;
 	@Autowired
