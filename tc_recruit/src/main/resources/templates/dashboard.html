@@ -8,12 +8,21 @@
 	<h2>ダッシュボード</h2>
 	<table>
 		<tr>
-			<td th:each="msgStt: ${msgSttList}">
+			<td>
 				<form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
-					<!-- <input type="hidden" th:name="slcStatusId" th:value="${ttlStt.selectionStatusId}"/> -->
+					<input type="hidden" th:name="slcStatusId" th:value="${1}"/>
 					<button type="submit" name="aaa" value="aaa">
-						<div th:text="${msgStt.statusMessage}"></div>
-						<!-- <div th:text="${msgSttList.}"></div> -->
+						<div th:text="${ttlSttAll.selectionStatusName}"></div>
+						<div th:text="${ttlSttCount}"></div>
+					</button>
+				</form>
+			</td>
+			<td th:each="ttlStt: ${ttlSttList}">
+				<form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
+					<input type="hidden" th:name="slcStatusId" th:value="${ttlStt.selectionStatusId}"/>
+					<button type="submit" name="aaa" value="aaa">
+						<div th:text="${ttlStt.selectionStatusName}"></div>
+						<div th:text="${ttlStt.count}"></div>
 					</button>
 				</form>
 			</td>

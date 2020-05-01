@@ -1,7 +1,5 @@
 package jp.co.tc.recruit.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +12,7 @@ public class TotalStatusService {
 	@Autowired
 	TotalStatusRepository ttlSttRepo;
 
-	public List<TotalStatusView> findBySelectionStatusId(Integer selectionStatusId) {
+	public TotalStatusView findBySelectionStatusId(Integer selectionStatusId) {
 		return ttlSttRepo.findBySelectionStatusId(selectionStatusId);
 	}
 

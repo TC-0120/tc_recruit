@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import jp.co.tc.recruit.entity.MessageStatus;
+import jp.co.tc.recruit.entity.TotalStatusView;
 import jp.co.tc.recruit.service.CheckMessageService;
 import jp.co.tc.recruit.service.MessageStatusService;
 import jp.co.tc.recruit.service.TotalCheckService;
@@ -26,7 +27,7 @@ public class DashBoardController {
 	@Autowired
 	MessageStatusService msgSttSvc;
 
-	@GetMapping
+	@GetMapping("/dashboard")
 	public String getDashBoard(Model model) {
 
 		/*全ステータス名称を取得*/
@@ -48,19 +49,26 @@ public class DashBoardController {
 		model.addAttribute("chkSttList", chkSttList);
 
 		/*選考ステータスごとの人数を集計*/
-		/*Integer slcSttId;
-		List<TotalStatusView> ttlStt = new ArrayList<TotalStatusView>();
+		Integer slcSttId;
+		Integer ttlSttCount = 0;
+		TotalStatusView ttlStt;
 		List<TotalStatusView> ttlSttList = new ArrayList<TotalStatusView>();
-		for (slcSttId = 1; slcSttId < 9; slcSttId++) {
+		/*選考中のみ先に取り出し*/
+		TotalStatusView ttlSttAll = ttlSttSvc.findBySelectionStatusId(1);
+		for (slcSttId = 2; slcSttId < 9; slcSttId++) {
 			ttlStt = ttlSttSvc.findBySelectionStatusId(slcSttId);
-			ttlSttList.addAll(ttlStt);
+			ttlSttList.add(ttlStt);
+			ttlSttCount += ttlStt.getCount();
 		}
-		model.addAttribute("ttlStt", ttlSttList);*/
-
+		/*選考中*/
+		model.addAttribute("ttlSttAll", ttlSttAll);
 		/*選考中の候補者全数*/
-		/*s*/
+		model.addAttribute("ttlSttCount", ttlSttCount);
+		/*その他ステータスと集計値*/
+		model.addAttribute("ttlSttList", ttlSttList);
 
-		/*要対応ステータスごとの人数を集計*/
+
+		/*要対応ステータスごとの人数を集計
 		/*Integer ttlChkViw1 = ttlChkRepo.findByMessageId(1).getTtlExcAsm();
 		Integer ttlChkViw2 = ttlChkRepo.findByMessageId(2).getTtlExcAsm();
 		Integer ttlChkViw3 = ttlChkRepo.findByMessageId(3).getTtlExcAsm();
@@ -106,7 +114,7 @@ public class DashBoardController {
 		String totalCheckStatus [] = {"chkBriefingAdjust", "chkBriefingAssesment", "checkDocument",
 				"chkFirstAdjust", "chkFirstAssesment", "chkSecondAdjust", "chkSecondAssesment", "chkLastAdjust", "chkLastAssesment"};
 		*/
-		return "/dashboard";
+		return "dashboard";
 	}
 
 	/*@PostMapping("/dashboard")

@@ -20,4 +20,10 @@ public class MessageStatus {
 
 	@Column(name="status_message")
 	private String statusMessage;
+
+	@Column(name="selection_status_id")
+	private Integer selectionStatusId;
+
+	@Column(name="selection_status_detail_id")
+	private Integer selectionStatusDetailId;
 }
