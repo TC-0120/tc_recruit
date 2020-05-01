@@ -11,6 +11,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
+/**
+ * 選考情報のエンティティ
+ *
+ * @author TC-0115
+ *
+ */
 @Entity
 @Table(name="XXTC_SELECTION")
 public class Selection implements Serializable {
@@ -45,6 +52,12 @@ public class Selection implements Serializable {
 		this.slcDate = slcDate;
 	}
 
+	/**
+	 * 選考情報の複合主キークラス
+	 *
+	 * @author TC-0115
+	 *
+	 */
 	@Embeddable
 	public static class SelectionPK implements Serializable{
 		@Column(name="candidate_id")

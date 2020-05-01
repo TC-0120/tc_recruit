@@ -8,6 +8,12 @@ import org.springframework.stereotype.Service;
 import jp.co.tc.recruit.entity.SelectionStatus;
 import jp.co.tc.recruit.repository.SelectionStatusRepository;
 
+/**
+ * 選考ステータスのサービスクラス
+ *
+ * @author TC-0115
+ *
+ */
 @Service
 public class SelectionStatusService {
 

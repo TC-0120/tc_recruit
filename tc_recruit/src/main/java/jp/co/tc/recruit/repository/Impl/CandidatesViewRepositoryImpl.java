@@ -15,12 +15,23 @@ import jp.co.tc.recruit.form.ConditionsForm;
 import jp.co.tc.recruit.repository.CandidatesViewRepositoryCustom;
 import jp.co.tc.recruit.view.CandidatesView;
 
+/**
+ * 候補者情報ビューのリポジトリのカスタムメソッド実装クラス
+ *
+ * @author TC-0115
+ *
+ */
 public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCustom {
 
 	@PersistenceContext
 	private EntityManager em;
 
-
+	/**
+	 * 選考ステータス、詳細、選考日程検索
+	 *
+	 * @param cf 検索条件
+	 * @return 候補者情報
+	 */
 	@SuppressWarnings("unchecked")
 	public List<CandidatesView> findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(ConditionsForm cf) {
 		Integer ssId = cf.getSlcStatusId();

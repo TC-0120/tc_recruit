@@ -10,6 +10,12 @@ import org.springframework.data.repository.query.Param;
 import jp.co.tc.recruit.entity.Selection;
 import jp.co.tc.recruit.entity.Selection.SelectionPK;
 
+/**
+ * 選考情報のリポジトリ
+ *
+ * @author TC-0115
+ *
+ */
 @Transactional
 public interface SelectionRepository extends JpaRepository<Selection, SelectionPK> {
 	public Selection findBySlcPK(SelectionPK slcPK);

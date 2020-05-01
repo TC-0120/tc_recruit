@@ -1,5 +1,11 @@
 package jp.co.tc.recruit.form;
 
+/**
+ * 一括更新フォームクラス
+ *
+ * @author TC-0115
+ *
+ */
 public class MultipleUpdateForm {
 	private Integer gender;
 	private String eduBack;

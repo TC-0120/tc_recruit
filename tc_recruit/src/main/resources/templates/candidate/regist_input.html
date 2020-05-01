@@ -8,6 +8,16 @@
 	color: red;
 }
 </style>
+<script type="text/javascript">
+	function referenceReferrer() {
+		var agentId = document.getElementById("agentId").value;
+
+	}
+
+	function reference() {
+		return true;
+	}
+</script>
 </head>
 <body>
 	<h2>候補者情報登録画面</h2>
@@ -38,14 +48,16 @@
 		</div>
 		<div>
 			<label>採用エージェント</label>
-			<select name="agent.agentId">
+			<select id="agentId" name="agent.agentId" onchange="referenceReferrer()">
 				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
 			</select>
 		</div>
 		<div>
 			<label>紹介元</label>
 			<select name="referrer.referrerId">
-				<option th:each="referrer: ${referrerList}" th:value="${referrer.referrerId}" th:text="${referrer.referrerName}">
+				<th:block th:each="referrer: ${referrerList}">
+					<option th:value="${referrer.referrerId}" th:text="${referrer.referrerName}">
+				</th:block>
 			</select>
 		</div>
 		<input type="submit" value="登録"/>

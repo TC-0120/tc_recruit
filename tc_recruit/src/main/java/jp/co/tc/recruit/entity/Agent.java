@@ -10,6 +10,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.Data;
+
+/**
+ * 採用エージェントのエンティティ
+ *
+ * @author TC-0115
+ *
+ */
+@Data
 @Entity
 @Table(name="XXTC_AGENT")
 public class Agent {
@@ -27,37 +36,5 @@ public class Agent {
 
 	@OneToMany(mappedBy="agent", cascade=CascadeType.ALL)
 	private List<Referrer> referrers;
-
-	public Integer getAgentId() {
-		return agentId;
-	}
-
-	public void setAgentId(Integer agentId) {
-		this.agentId = agentId;
-	}
-
-	public String getAgentName() {
-		return agentName;
-	}
-
-	public void setAgentName(String agentName) {
-		this.agentName = agentName;
-	}
-
-	public List<Candidate> getCandidates() {
-		return candidates;
-	}
-
-	public void setCandidates(List<Candidate> candidates) {
-		this.candidates = candidates;
-	}
-
-	public List<Referrer> getReferrers() {
-		return referrers;
-	}
-
-	public void setReferrers(List<Referrer> referrers) {
-		this.referrers = referrers;
-	}
 
 }

@@ -14,6 +14,12 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
+/**
+ * 紹介元のエンティティ
+ *
+ * @author TC-0115
+ *
+ */
 @Data
 @Entity
 @Table(name="XXTC_REFERRER")

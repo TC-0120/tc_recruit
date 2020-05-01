@@ -8,6 +8,12 @@ import org.springframework.stereotype.Service;
 import jp.co.tc.recruit.entity.Referrer;
 import jp.co.tc.recruit.repository.ReferrerRepository;
 
+/**
+ * 紹介元のサービスクラス
+ *
+ * @author TC-0115
+ *
+ */
 @Service
 public class ReferrerService {
 
