@@ -8,8 +8,68 @@
 	color: red;
 }
 </style>
+<script type="text/javascript" th:inline="javascript">
+	var referrerAll = [];
+
+	function getReferrerAll() {
+		//紹介元の情報を取得
+		[# th:each="referrer: ${referrerList}"]
+			var referrer = {id:/*[[${referrer.referrerId}]]*/, name:/*[[${referrer.referrerName}]]*/,
+				fee:/*[[${referrer.referrerFee}]]*/, agentId:/*[[${referrer.agent.agentId}]]*/};
+
+			referrerAll.push(referrer);
+		[/]
+
+		selectAgentId();
+
+		var referrer = document.getElementById("referrer");
+		for (var i = 0; i < referrer.length; i++) {
+			if (referrer[i].value == /*[[${candidate.referrer.referrerId}]]*/) {
+				referrer[i].selected = true;
+			}
+		}
+	}
+
+
+	function selectAgentId() {
+
+		var selectedAgentId = document.getElementById("agentId").value;
+
+		setReferrer(selectedAgentId);
+
+	}
+
+	function setReferrer(selectedAgentId) {
+		var referrer = document.getElementById("referrer");
+		var referrerList = [];
+
+
+		for (var i = 0; i < referrerAll.length; i++) {
+			if (referrerAll[i].agentId == selectedAgentId) {
+				referrerList.push(referrerAll[i]);
+			}
+		}
+
+		referrer.textContent = null;
+
+
+		for (var i = 0; i < referrerList.length; i++) {
+			var op = document.createElement("option");
+
+			op.value = referrerList[i].id;
+
+			op.text = referrerList[i].name;
+
+			referrer.appendChild(op);
+		}
+
+	}
+
+
+</script>
+
 </head>
-<body>
+<body onload="getReferrerAll()">
 	<h2>候補者情報変更画面</h2>
 
 	<form th:action="@{/recruit/candidates/{id}(id=*{candidateId})}" th:method="post" th:object="${candidate}">
@@ -20,6 +80,10 @@
 		<div>
 			<label>候補者:</label>
 			<input type="text" th:field="*{candidateName}" />
+		</div>
+		<div>
+			<label>候補者(ふりがな)</label>
+			<input type="text" th:field="*{candidateFurigana}" />
 		</div>
 		<div>
 			<label>性別:</label>
@@ -54,16 +118,22 @@
 
 		<div>
 			<label>採用エージェント:</label>
-			<select th:field="*{agent.agentId}" >
+			<select id="agentId" th:field="*{agent.agentId}" onchange="selectAgentId()">
 				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
 			</select>
 		</div>
 		<div>
+			<label>紹介元</label>
+			<select id="referrer" th:field="*{referrer.referrerId}">
+
+			</select>
+		</div>
+		<!--  <div>
 			<label>紹介元:</label>
 			<select th:field="*{referrer.referrerId}">
 				<option th:each="referrer: ${referrerList}" th:value="${referrer.referrerId}" th:text="${referrer.referrerName}">
 			</select>
-		</div>
+		</div> -->
 		<input type="submit" value="更新"/>
 	</form>
 	<form th:action="@{/recruit/candidates/{id}/delete(id=*{candidateId})}" th:object="${candidate}">

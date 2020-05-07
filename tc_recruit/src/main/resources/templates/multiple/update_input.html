@@ -54,8 +54,70 @@
 		width: 160px;
 	}
 </style>
+<script type="text/javascript" th:inline="javascript">
+	var referrerAll = [];
+
+	function getReferrerAll() {
+		//紹介元の情報を取得
+		[# th:each="referrer: ${referrerList}"]
+			var referrer = {id:/*[[${referrer.referrerId}]]*/, name:/*[[${referrer.referrerName}]]*/,
+				fee:/*[[${referrer.referrerFee}]]*/, agentId:/*[[${referrer.agent.agentId}]]*/};
+
+			referrerAll.push(referrer);
+		[/]
+
+		//selectAgentId();
+	}
+
+
+	function selectAgentId() {
+		//選択した採用エージェントIDを取得
+		var selectedAgentId = document.getElementById("agentId").value;
+		//紹介元のドロップダウンをセット
+		setReferrer(selectedAgentId);
+
+
+	}
+
+	function setReferrer(selectedAgentId) {
+		//紹介元の入力フォームを取得
+		var referrer = document.getElementById("referrer");
+		var referrerList = [];
+
+		if (selectedAgentId == 0) {
+			var referrerDefault = {id:0, name:"---", fee:0, agentId:0};
+			referrerList.push(referrerDefault);
+		} else {
+
+		//採用エージェントIDが一致する紹介元を抽出
+		for (var i = 0; i < referrerAll.length; i++) {
+			if (referrerAll[i].agentId == selectedAgentId) {
+				referrerList.push(referrerAll[i]);
+			}
+		}
+		}
+
+		//紹介元のドロップダウンを初期化
+		referrer.textContent = null;
+
+		//紹介元のドロップダウンをセット
+		for (var i = 0; i < referrerList.length; i++) {
+			var op = document.createElement("option");
+
+			op.value = referrerList[i].id;
+
+			op.text = referrerList[i].name;
+
+			referrer.appendChild(op);
+		}
+
+
+	}
+
+
+</script>
 </head>
-<body>
+<body onload="getReferrerAll()">
 	<h2>一括管理画面</h2>
 	<table>
 		<thead>
@@ -111,16 +173,16 @@
 		</div>
 		<div>
 			<label>採用エージェント:</label>
-			<select name="agentId" >
+			<select id="agentId" name="agentId" onchange="selectAgentId()">
 				<option value="0">---</option>
 				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
 			</select>
 		</div>
 		<div>
 			<label>紹介元:</label>
-			<select name="referrerId">
+			<select id="referrer" name="referrerId">
 				<option value="0">---</option>
-				<option th:each="referrer: ${referrerList}" th:value="${referrer.referrerId}" th:text="${referrer.referrerName}">
+				<!--  <option th:each="referrer: ${referrerList}" th:value="${referrer.referrerId}" th:text="${referrer.referrerName}"> -->
 			</select>
 		</div>
 		<div>

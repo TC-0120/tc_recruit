@@ -8,15 +8,7 @@
 	color: red;
 }
 </style>
-<script type="text/javascript">
-	function selectSlcResult(slcStatusDtlId) {
-		if (slcStatusDtlId >= 3 && slcStatusDtlId <= 9) {
-			document.getElementById('slcResult').value = slcStatusDtlId;
-		} else {
-			document.getElementById('slcResult').value = '0';
-		}
-	}
-</script>
+<script type="text/javascript" th:src="@{/js/recruitmentManagement.js}"></script>
 </head>
 <body th:onload="selectSlcResult([[${candidate.slcStatusDtl.slcStatusDtlId}]])">
 	<h2>選考情報変更画面</h2>

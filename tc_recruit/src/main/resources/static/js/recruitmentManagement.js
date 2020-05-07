@@ -98,3 +98,11 @@
 		}
 
 	}
+
+	function selectSlcResult(slcStatusDtlId) {
+		if (slcStatusDtlId >= 3 && slcStatusDtlId <= 9) {
+			document.getElementById('slcResult').value = slcStatusDtlId;
+		} else {
+			document.getElementById('slcResult').value = '0';
+		}
+	}

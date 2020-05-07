@@ -1,5 +1,6 @@
 package jp.co.tc.recruit.view;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -68,5 +69,9 @@ public class CandidatesView {
 	@Column(name="selection_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date slcDate;
+
+	public String getSlcDate() {
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(slcDate);
+	}
 
 }
