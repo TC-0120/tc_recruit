@@ -1,14 +1,11 @@
 package jp.co.tc.recruit.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import lombok.Data;
 
@@ -17,10 +14,11 @@ import lombok.Data;
 @Table(name = "TOTAL_CHECK")
 public class TotalCheckView implements Serializable {
 	@Id
-	@Column(name = "message_id")
-	private Integer messageId;
+	@Column(name = "status_message_id")
+	private Integer statusMessageId;
 
-	private String message;
+	@Column(name = "status_message")
+	private String statusMessage;
 
 	@Column(name="selection_status_id")
 	private Integer selectionStatusId;
@@ -33,10 +31,6 @@ public class TotalCheckView implements Serializable {
 
 	@Column(name="selection_status_detail_name")
 	private String selectionStatusDetailName;
-
-	@Column(name="selection_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date selectionDate;
 
 	@Column(name = "total_except_assessment")
 	private Integer totalExceptAssessment;

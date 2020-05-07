@@ -11,9 +11,15 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "TOTAL_STATUS")
-public class TotalStatusView implements Serializable{
+@Table(name = "TOTAL_SELECTION")
+public class TotalSelectionView implements Serializable{
 	@Id
+	@Column(name="status_message_id")
+	private Integer statusMessageId;
+
+	@Column(name="status_message")
+	private String statusMessage;
+
 	@Column(name="selection_status_id")
 	private Integer selectionStatusId;
 

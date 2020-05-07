@@ -8,112 +8,67 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import jp.co.tc.recruit.entity.MessageStatus;
-import jp.co.tc.recruit.entity.TotalStatusView;
-import jp.co.tc.recruit.service.CheckMessageService;
+import jp.co.tc.recruit.entity.TotalCheckView;
+import jp.co.tc.recruit.entity.TotalSelectionView;
 import jp.co.tc.recruit.service.MessageStatusService;
 import jp.co.tc.recruit.service.TotalCheckService;
-import jp.co.tc.recruit.service.TotalStatusService;
+import jp.co.tc.recruit.service.TotalSelectionService;
 
 @Controller
 public class DashBoardController {
 
 	@Autowired
-	TotalStatusService ttlSttSvc;
+	TotalSelectionService ttlSlcSvc;
 	@Autowired
 	TotalCheckService ttlChkSvc;
-	@Autowired
-	CheckMessageService chkMsgSvc;
 	@Autowired
 	MessageStatusService msgSttSvc;
 
 	@GetMapping("/dashboard")
 	public String getDashBoard(Model model) {
-
-		/*全ステータス名称を取得*/
-		Integer msgId;
-		MessageStatus msgStt;
-		MessageStatus chkStt;
-		List<MessageStatus> msgSttList = new ArrayList<MessageStatus>();
-		List<MessageStatus> chkSttList = new ArrayList<MessageStatus>();
-		for (msgId = 1; msgId < 9; msgId++) {
-			msgStt = msgSttSvc.findByStatusMessageId(msgId);
-			msgSttList.add(msgStt);
+		/*選考中候補者集計*/
+		Integer sttMsgId;
+		Integer ttlSlcCount = 0;
+		TotalSelectionView ttlSlc;
+		List<TotalSelectionView> ttlSlcList = new ArrayList<TotalSelectionView>();
+		/*選考中(ALL)のみ集計値がDBにないので先に取り出し*/
+		TotalSelectionView ttlSlcAll = ttlSlcSvc.findByStatusMessageId(1);
+		for (sttMsgId = 2; sttMsgId < 9; sttMsgId++) {
+			ttlSlc = ttlSlcSvc.findByStatusMessageId(sttMsgId);
+			ttlSlcList.add(ttlSlc);
+			ttlSlcCount += ttlSlc.getCount();
 		}
-		model.addAttribute("msgSttList", msgSttList);
-
-		for (msgId = 9; msgId < 19; msgId++) {
-			chkStt = msgSttSvc.findByStatusMessageId(msgId);
-			chkSttList.add(chkStt);
-		}
-		model.addAttribute("chkSttList", chkSttList);
-
-		/*選考ステータスごとの人数を集計*/
-		Integer slcSttId;
-		Integer ttlSttCount = 0;
-		TotalStatusView ttlStt;
-		List<TotalStatusView> ttlSttList = new ArrayList<TotalStatusView>();
-		/*選考中のみ先に取り出し*/
-		TotalStatusView ttlSttAll = ttlSttSvc.findBySelectionStatusId(1);
-		for (slcSttId = 2; slcSttId < 9; slcSttId++) {
-			ttlStt = ttlSttSvc.findBySelectionStatusId(slcSttId);
-			ttlSttList.add(ttlStt);
-			ttlSttCount += ttlStt.getCount();
-		}
-		/*選考中*/
-		model.addAttribute("ttlSttAll", ttlSttAll);
-		/*選考中の候補者全数*/
-		model.addAttribute("ttlSttCount", ttlSttCount);
+		/*選考中(ALL)*/
+		model.addAttribute("ttlSlcAll", ttlSlcAll);
+		/*選考中(ALL)の候補者全数*/
+		model.addAttribute("ttlSlcCount", ttlSlcCount);
 		/*その他ステータスと集計値*/
-		model.addAttribute("ttlSttList", ttlSttList);
+		model.addAttribute("ttlSlcList", ttlSlcList);
 
-
-		/*要対応ステータスごとの人数を集計
-		/*Integer ttlChkViw1 = ttlChkRepo.findByMessageId(1).getTtlExcAsm();
-		Integer ttlChkViw2 = ttlChkRepo.findByMessageId(2).getTtlExcAsm();
-		Integer ttlChkViw3 = ttlChkRepo.findByMessageId(3).getTtlExcAsm();
-		Integer ttlChkViw4 = ttlChkRepo.findByMessageId(4).getTtlExcAsm();
-		Integer ttlChkViw5 = ttlChkRepo.findByMessageId(5).getTtlAsm();
-		Integer ttlChkViw6 = ttlChkRepo.findByMessageId(6).getTtlExcAsm();
-		Integer ttlChkViw7 = ttlChkRepo.findByMessageId(7).getTtlAsm();
-		Integer ttlChkViw8 = ttlChkRepo.findByMessageId(8).getTtlExcAsm();
-		Integer ttlChkViw9 = ttlChkRepo.findByMessageId(9).getTtlAsm();
-
-		model.addAttribute("ttlChkViw", ttlChkViw1);
-		model.addAttribute("ttlChkViw", ttlChkViw2);
-		model.addAttribute("ttlChkViw", ttlChkViw3);
-		model.addAttribute("ttlChkViw", ttlChkViw4);
-		model.addAttribute("ttlChkViw", ttlChkViw5);
-		model.addAttribute("ttlChkViw", ttlChkViw6);
-		model.addAttribute("ttlChkViw", ttlChkViw7);
-		model.addAttribute("ttlChkViw", ttlChkViw8);
-		model.addAttribute("ttlChkViw", ttlChkViw9);*/
-
-		/*Integer chkMsgId;
-		   Integer ttlChkViw;
-		 for (chkMsgId = 1; chkMsgId < 10; chkMsgId++) {
-			ttlChkViw = ttlChkRepo.findByMessageId(chkMsgId);
-		model.addAttribute("ttlChkViw", ttlChkViw);
+		/*要対応事項集計*/
+		Integer ttlChkCount = 0;
+		TotalCheckView ttlChk;
+		List<TotalCheckView> ttlChkList = new ArrayList<TotalCheckView>();
+		/*要対応(ALL)のみ集計値がDBにないので先に取り出し*/
+		TotalCheckView ttlChkAll = ttlChkSvc.findByStatusMessageId(9);
+		for (sttMsgId = 10; sttMsgId < 19; sttMsgId++) {
+			ttlChk = ttlChkSvc.findByStatusMessageId(sttMsgId);
+			ttlChkList.add(ttlChk);
+			/*要対応(ALL)の集計：合否判定はtotal_except_assessment
+			                     それ以外はtotal_assessmentの値を足し合わせる*/
+			if (sttMsgId == 11 || sttMsgId == 14 || sttMsgId == 16 || sttMsgId == 18)
+				ttlChkCount += ttlChk.getTotalExceptAssessment();
+			else {
+				ttlChkCount += ttlChk.getTotalAssessment();
+			}
 		}
-		*/
+		/*要対応(ALL)*/
+		model.addAttribute("ttlChkAll", ttlChkAll);
+		/*要対応(ALL)の全数*/
+		model.addAttribute("ttlChkCount", ttlChkCount);
+		/*その他ステータスと集計値*/
+		model.addAttribute("ttlChkList", ttlChkList);
 
-		/*要対応事項の全数
-		Integer ttlChkViwCnt = ttlChkViw1 + ttlChkViw2 + ttlChkViw3 + ttlChkViw4
-				+ ttlChkViw5 + ttlChkViw6 + ttlChkViw7 + ttlChkViw8 + ttlChkViw9;
-		model.addAttribute("ttlChkViwCnt", ttlChkViwCnt);*/
-
-		/*Integer allTtlChkViw = 0;
-		Integer ttlChkViwCnt = 0;
-		for (chkMsgId = 1; chkMsgId < 10; chkMsgId++) {
-			ttlChkViwCnt = ttlChkRepo.findByMessageId(chkMsgId).getTtlExcAsm();
-			allTtlChkViw += ttlChkViwCnt;
-		}
-		model.addAttribute("allTtlChkViw", allTtlChkViw);*/
-
-		/*Integer n = 1;
-		String totalCheckStatus [] = {"chkBriefingAdjust", "chkBriefingAssesment", "checkDocument",
-				"chkFirstAdjust", "chkFirstAssesment", "chkSecondAdjust", "chkSecondAssesment", "chkLastAdjust", "chkLastAssesment"};
-		*/
 		return "dashboard";
 	}
 
