@@ -8,13 +8,17 @@
 	color: red;
 }
 </style>
+<<<<<<< HEAD
 <link rel="stylesheet"
 	href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+=======
+>>>>>>> 7827f19e166a8ddb2c63b84dc03b27e6806564f4
 </head>
 <body>
 	<h2>候補者一覧画面</h2>
 
 	<a th:href="@{/recruit/candidates/regist}">新規登録</a>
+<<<<<<< HEAD
 	<form th:action="@{/recruit/candidates/filter}" th:method="get">
 		<div>
 			<label>選考ステータス</label> <select name="SlcStatusF">
@@ -52,6 +56,44 @@
 		</div>
 		<input type="submit" value="送信">
 	</form>
+=======
+	 <form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
+			<div>
+				<label>選考ステータス</label>
+				<select th:field="*{slcStatusId}">
+					<option value="0">一覧</option>
+					<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
+				</select>
+			</div>
+			<div>
+				<label>選考ステータス詳細</label>
+				<select th:field="*{slcStatusDtlId}">
+					<option value="0">一覧</option>
+					<option value="-1">要調整</option>
+					<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
+				</select>
+			</div>
+
+			<div>
+				<label>項目</label>
+				<select th:field="*{order}">
+					<option value="1">ID</option>
+					<option value="2">選考ステータス</option>
+					<option value="3">選考ステータス詳細</option>
+					<option value="4">選考日程</option>
+				</select>
+			</div>
+			<div>
+				<label>順番</label>
+				<select th:field="*{direction}">
+					<option value="1">昇順</option>
+					<option value="2">降順</option>
+				</select>
+			</div>
+			<input type="submit" value="送信">
+	</form>
+
+>>>>>>> 7827f19e166a8ddb2c63b84dc03b27e6806564f4
 
 	<table border="1">
 		<tr>
@@ -70,6 +112,7 @@
 
 		</tr>
 		<tr th:each="candidate: ${candidates}" th:object="${candidate}">
+<<<<<<< HEAD
 			<td th:text="*{candidate.candidateId}"></td>
 			<td><a th:text="*{candidate.candidateName}"
 				th:href="@{/recruit/candidates/{id}(id=*{candidate.candidateId})}"></a></td>
@@ -100,6 +143,30 @@
 				--></td>
 		</tr>
 		</tbody>
+=======
+			<td th:text="*{candidateId}"></td>
+			<td><a th:text="*{candidateName}" th:href="@{/recruit/candidates/{id}(id=*{candidateId})}"></a></td>
+			<td th:text="*{gender == 1} ? 男性 : 女性"></td>
+			<td th:text="*{eduBack}"></td>
+			<td th:text="*{agentName}"></td>
+			<td th:text="*{referrerName}"></td>
+			<td th:text="*{slcStatusName}"></td>
+			<td th:text="*{slcStatusDtlName}"></td>
+			<td>
+				<div th:if="*{slcStatusDtlId == 3}">
+					<a th:href="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=*{slcStatusId + 1})}">調整</a>
+				</div>
+				<div th:if="*{slcStatusDtlId == 1}">
+					<a th:href="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=*{slcStatusId})}">調整中</a>
+				</div>
+				<div th:if="*{slcStatusDtlId != 1 && slcStatusDtlId != 3}">
+					<a th:text="*{slcDate}" th:href="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=*{slcStatusId})}"></a>
+				</div>
+			</td>
+		</tr>
+
+>>>>>>> 7827f19e166a8ddb2c63b84dc03b27e6806564f4
 	</table>
+
 </body>
 </html>

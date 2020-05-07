@@ -1,22 +1,13 @@
 package jp.co.tc.recruit.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import jp.co.tc.recruit.entity.Candidate;
-import jp.co.tc.recruit.entity.Selection;
 import jp.co.tc.recruit.repository.CandidateRepository;
 import jp.co.tc.recruit.repository.SelectionRepository;
 import jp.co.tc.recruit.repository.SelectionStatusDetailRepository;
 import jp.co.tc.recruit.repository.SelectionStatusRepository;
-import jp.co.tc.recruit.view.CandidateView;
 
 @Service
 public class CandidateService {
@@ -30,51 +21,11 @@ public class CandidateService {
 	@Autowired
 	SelectionStatusDetailRepository slcStatusDtlRepo;
 
-	public List<Candidate> findAll() {
-		return candidateRepo.findAll(Sort.by("candidateId"));
-	}
-
-	public List<CandidateView> list(List<Candidate> cList) {
-		List<Selection> sList = slcRepo.findAll();
-		List<CandidateView> cvList = new ArrayList<CandidateView>();
-
-		for(Candidate c : cList) {
-			CandidateView cv = new CandidateView(c);
-
-			switch(c.getSlcStatusDtl().getSlcStatusDtlId()) {
-				case 1:
-					cv.setSlcDate("調整中");
-					break;
-				case 2:
-					for(Selection s: sList) {
-						if (c.getCandidateId().equals(s.getSlcPK().getCandidateId()) &&
-							c.getSlcStatus().getSlcStatusId().equals(s.getSlcPK().getSlcStatusId())) {
-							cv.setSlcDate(new SimpleDateFormat("yyyy/MM/dd hh:mm").format(s.getSlcDate()));
-						}
-					}
-					break;
-				case 3:
-					cv.setSlcDate("調整");
-					break;
-				default:
-					cv.setSlcDate("");
-					break;
-			}
-
-			cvList.add(cv);
-		}
-
-		return cvList;
-	}
-
-
-
-
-
 	public Candidate findById(Integer id) {
 		return candidateRepo.findByCandidateId(id);
 	}
 
+<<<<<<< HEAD
 	/*public List<Candidate> findBySlcStatusIdAndSlcStatudDtlId(Integer ssId, Integer ssdId) {
 		List<Candidate> candidates = new ArrayList<Candidate>();
 
@@ -117,6 +68,8 @@ public class CandidateService {
 		return candidates;
 	}
 
+=======
+>>>>>>> 7827f19e166a8ddb2c63b84dc03b27e6806564f4
 	public Candidate save(Candidate candidate) {
 		return candidateRepo.save(candidate);
 	}
@@ -138,6 +91,7 @@ public class CandidateService {
 		candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(slcStatusDtlId));
 		save(candidate);
 	}
+<<<<<<< HEAD
 	*/
 
 
@@ -188,4 +142,6 @@ public class CandidateService {
 
 	//public class SlcDateComparator implements Comparator<CandidateView> {
 	//}
+=======
+>>>>>>> 7827f19e166a8ddb2c63b84dc03b27e6806564f4
 }

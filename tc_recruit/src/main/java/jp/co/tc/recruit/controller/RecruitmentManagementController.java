@@ -6,12 +6,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+<<<<<<< HEAD
+=======
+import jp.co.tc.recruit.entity.Candidate;
+import jp.co.tc.recruit.entity.Selection;
+import jp.co.tc.recruit.entity.Selection.SelectionPK;
+import jp.co.tc.recruit.form.ConditionsForm;
+>>>>>>> 7827f19e166a8ddb2c63b84dc03b27e6806564f4
 import jp.co.tc.recruit.service.AgentService;
 import jp.co.tc.recruit.service.CandidateService;
+import jp.co.tc.recruit.service.CandidatesViewService;
 import jp.co.tc.recruit.service.ReferrerService;
 import jp.co.tc.recruit.service.SelectionService;
 import jp.co.tc.recruit.service.SelectionStatusDetailService;
 import jp.co.tc.recruit.service.SelectionStatusService;
+
+
 
 @Controller
 @RequestMapping("/recruit/candidates")
@@ -29,8 +39,11 @@ public class RecruitmentManagementController {
 	AgentService agentService;
 	@Autowired
 	ReferrerService referrerService;
+	@Autowired
+	CandidatesViewService candidatesViewService;
 
 	@GetMapping
+<<<<<<< HEAD
 	public String index(Model model) {
 		model.addAttribute("candidates", candidateService.findAll());
 		model.addAttribute("selections", selectionService.findAll());
@@ -43,6 +56,10 @@ public class RecruitmentManagementController {
 	public String filter(@RequestParam("SlcStatusF") Integer ssId, @RequestParam("SlcStatusDtlF") Integer ssdId, Model model) {
 		model.addAttribute("candidates", candidateService.findBySlcStatusIdAndSlcStatudDtlId(ssId, ssdId));
 		model.addAttribute("selections", selectionService.findAll());
+=======
+	public String filter(@ModelAttribute("conditionsForm") ConditionsForm conditionsForm, Model model) {
+		model.addAttribute("candidates", candidatesViewService.findBySlcStatusIdAndSlcStatudDtlId(conditionsForm));
+>>>>>>> 7827f19e166a8ddb2c63b84dc03b27e6806564f4
 		model.addAttribute("slcStatusList", slcStatusService.findAll());
 		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
 		return "top";
