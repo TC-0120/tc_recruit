@@ -8,11 +8,15 @@
 	color: red;
 }
 </style>
+<script type="text/javascript" th:src="@{/js/recruitmentManagement.js}"></script>
 </head>
-<body>
-	<h2>選考日程変更画面</h2>
-
-	<form th:action="@{/recruit/candidates/selection/{cId}/{sId}(cId=*{candidateId}, sId=${selection.slcPK.slcStatusId})}" th:method="post" th:object="${candidate}">
+<body th:onload="selectSlcResult([[${candidate.slcStatusDtl.slcStatusDtlId}]])">
+	<h2>選考情報変更画面</h2>
+	<form th:action="@{/recruit/candidates/selection}" th:method="post" th:object="${candidate}">
+		<div>
+			<label>ID</label>
+			<div th:text="*{candidateId}">/</div>
+		</div>
 		<div>
 			<label>候補者</label>
 			<div th:text="*{candidateName}">/</div>
@@ -26,14 +30,48 @@
 			<div th:text="*{slcStatus.slcStatusName}"></div>
 		</div>
 		<div>
-			<label>選考日程</label>
-			<input type="text" name="slcDateString" th:value="${slcDateString}" />
+			<label th:if="*{slcStatus.slcStatusId <= 5}">選考日程</label>
+			<label th:if="*{slcStatus.slcStatusId == 6}">承諾期限</label>
+			<label th:if="*{slcStatus.slcStatusId == 7}">入社手続き日程</label>
+			<input type="datetime-local" name="slcDateString" th:value="${slcDateString}" />
 		</div>
 		<div>
-			<label>選考結果</label>
-			<input type="text" th:field="${selection.slcResult}" />
+			<div th:if="*{slcStatus.slcStatusId >= 2 && slcStatus.slcStatusId <= 5}">
+				<label>選考結果</label>
+				<select name="slcResult" id="slcResult">
+					<option value="0" selected>保留</option>
+					<option value="3">合格</option>
+					<option value="4">不合格</option>
+					<option value="5">辞退</option>
+				</select>
+			</div>
+			<div th:if="*{slcStatus.slcStatusId == 6}">
+				<label>内定返事</label>
+				<select name="slcResult" id="slcResult">
+					<option value="6">承諾待ち</option>
+					<option value="7">承諾</option>
+					<option value="5">辞退</option>
+				</select>
+			</div>
+			<div th:if="*{slcStatus.slcStatusId == 1 || slcStatus.slcStatusId == 7}">
+				<input type="hidden" name="slcResult" th:value="*{slcStatusDtl.slcStatusDtlId}">
+			</div>
 		</div>
+		<input type="hidden" th:field="${selection.slcPK.candidateId}" />
+		<input type="hidden" th:field="${selection.slcPK.slcStatusId}" />
 		<input type="submit" value="更新"/>
 	</form>
+		<form th:action="@{/recruit/candidates/seleciton/nextStatus}" th:method="post">
+			<input type="hidden" name="candidateId" th:value="${candidate.candidateId}">
+			<div th:if="${candidate.slcStatusDtl.slcStatusDtlId == 3}">
+				<input type="submit" value="次選考調整"/>
+			</div>
+			<div th:if="${candidate.slcStatusDtl.slcStatusDtlId == 7}">
+				<input type="submit" value="入社手続き調整"/>
+			</div>
+			<div th:if="${candidate.slcStatusDtl.slcStatusDtlId == 8}">
+				<input type="submit" value="入社手続き完了"/>
+			</div>
+		</form>
 </body>
 </html>

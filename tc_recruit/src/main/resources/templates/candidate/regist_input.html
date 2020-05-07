@@ -8,14 +8,72 @@
 	color: red;
 }
 </style>
+<script type="text/javascript" th:inline="javascript">
+	var referrerAll = [];
+
+	function getReferrerAll() {
+		//紹介元の情報を取得
+		[# th:each="referrer: ${referrerList}"]
+			var referrer = {id:/*[[${referrer.referrerId}]]*/, name:/*[[${referrer.referrerName}]]*/,
+				fee:/*[[${referrer.referrerFee}]]*/, agentId:/*[[${referrer.agent.agentId}]]*/};
+
+			referrerAll.push(referrer);
+		[/]
+
+		selectAgentId();
+	}
+
+
+	function selectAgentId() {
+
+		var selectedAgentId = document.getElementById("agentId").value;
+
+		setReferrer(selectedAgentId);
+
+
+	}
+
+	function setReferrer(selectedAgentId) {
+		var referrer = document.getElementById("referrer");
+		var referrerList = [];
+
+
+		for (var i = 0; i < referrerAll.length; i++) {
+			if (referrerAll[i].agentId == selectedAgentId) {
+				referrerList.push(referrerAll[i]);
+			}
+		}
+
+		referrer.textContent = null;
+
+
+		for (var i = 0; i < referrerList.length; i++) {
+			var op = document.createElement("option");
+
+			op.value = referrerList[i].id;
+
+			op.text = referrerList[i].name;
+
+			referrer.appendChild(op);
+		}
+
+
+	}
+
+
+</script>
 </head>
-<body>
-	<h2>候補者登録画面</h2>
+<body onload="getReferrerAll()">
+	<h2>候補者情報登録画面</h2>
 
 	<form th:action="@{/recruit/candidates}" th:method="post">
 		<div>
 			<label>候補者</label>
 			<input type="text" name="candidateName" />
+		</div>
+		<div>
+			<label>候補者(ふりがな)</label>
+			<input type="text" name="candidateFurigana" />
 		</div>
 		<div>
 			<label>性別</label>
@@ -27,27 +85,21 @@
 			<input type="text" name="eduBack" />
 		</div>
 		<div>
-			<label>選考ステータス</label>
-			<select name="slcStatus.slcStatusId">
-				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
-			</select>
-		</div>
-		<div>
-			<label>選考ステータス詳細</label>
-			<select name="slcStatusDtl.slcStatusDtlId">
-				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
-			</select>
+			<label>選考ルート</label>
+			<input type="radio" name="slcStatus.slcStatusId" value="1"/>説明会
+			<input type="radio" name="slcStatus.slcStatusId" value="2"/>書類選考:
+			<input type="datetime-local" name="slcDate" />
 		</div>
 		<div>
 			<label>採用エージェント</label>
-			<select name="agent.agentId">
+			<select id="agentId" name="agent.agentId" onchange="selectAgentId()">
 				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
 			</select>
 		</div>
 		<div>
 			<label>紹介元</label>
-			<select name="referrer.referrerId">
-				<option th:each="referrer: ${referrerList}" th:value="${referrer.referrerId}" th:text="${referrer.referrerName}">
+			<select id="referrer" name="referrer.referrerId">
+
 			</select>
 		</div>
 		<input type="submit" value="登録"/>

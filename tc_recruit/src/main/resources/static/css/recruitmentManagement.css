@@ -1,0 +1,119 @@
+	table {
+		 text-align: center;
+ 		 border-collapse: collapse;
+	}
+	th, td {
+  		border: solid 2px black;
+  	}
+	thead, tbody {
+  		display: block;
+	}
+	tbody {
+  		overflow-x: hidden;
+  		overflow-y: scroll;
+ 		height: 250px;
+	}
+
+	.table_checkbox {
+		width: 25px;
+	}
+	.candidate_id {
+		width: 45px;
+	}
+	.candidate_name {
+		width: 140px;
+	}
+	.gender {
+		width: 60px;
+	}
+	.edu_back {
+		width: 200px;
+	}
+	.agent {
+		width: 110px;
+	}
+	.referrer {
+		width: 80px;
+	}
+	.slc_status {
+		width: 100px;
+	}
+	.slc_status_dtl {
+		width: 80px;
+	}
+	.slc_date {
+		width: 160px;
+	}
+
+	.candidate_id_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		border-color:#fff;
+		height: 26px;
+		width: 45px;
+
+	}
+	.candidate_name_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 140px;
+	}
+	.gender_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 60px;
+	}
+	.edu_back_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 200px;
+	}
+	.agent_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 110px;
+	}
+	.referrer_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 80px;
+	}
+	.slc_status_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 100px;
+	}
+	.slc_status_dtl_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 80px;
+	}
+	.slc_date_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 160px;
+	}
+
+	.sort_button {
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+	}

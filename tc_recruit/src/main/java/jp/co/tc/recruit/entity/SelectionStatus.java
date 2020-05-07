@@ -11,6 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.Data;
+
+/**
+ * 選考ステータスのエンティティ
+ *
+ * @author TC-0115
+ *
+ */
+@Data
 @Entity
 @Table(name="XXTC_SELECTION_STATUS")
 public class SelectionStatus implements Serializable{
@@ -25,29 +34,5 @@ public class SelectionStatus implements Serializable{
 
 	@OneToMany(mappedBy="slcStatus", cascade=CascadeType.ALL)
 	private List<Candidate> candidates;
-
-	public Integer getSlcStatusId() {
-		return slcStatusId;
-	}
-
-	public void setSlcStatusId(Integer slcStatusId) {
-		this.slcStatusId = slcStatusId;
-	}
-
-	public String getSlcStatusName() {
-		return slcStatusName;
-	}
-
-	public void setSlcStatusName(String slcStatusName) {
-		this.slcStatusName = slcStatusName;
-	}
-
-	public List<Candidate> getCandidates() {
-		return candidates;
-	}
-
-	public void setCandidates(List<Candidate> candidates) {
-		this.candidates = candidates;
-	}
 
 }

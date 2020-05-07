@@ -8,6 +8,12 @@ import org.springframework.stereotype.Service;
 import jp.co.tc.recruit.entity.Agent;
 import jp.co.tc.recruit.repository.AgentRepository;
 
+/**
+ * 採用エージェントのサービスクラス
+ *
+ * @author TC-0115
+ *
+ */
 @Service
 public class AgentService {
 

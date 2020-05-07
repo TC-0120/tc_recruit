@@ -18,6 +18,12 @@ import jp.co.tc.recruit.entity.SelectionStatus;
 >>>>>>> 7827f19e166a8ddb2c63b84dc03b27e6806564f4
 import jp.co.tc.recruit.repository.SelectionStatusRepository;
 
+/**
+ * 選考ステータスのサービスクラス
+ *
+ * @author TC-0115
+ *
+ */
 @Service
 public class SelectionStatusService {
 

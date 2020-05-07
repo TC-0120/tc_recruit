@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Login page</title>
+<style type="text/css">
+	table {
+		 text-align: center;
+ 		 border-collapse: collapse;
+	}
+	th, td {
+  		border: solid 2px black;
+  	}
+	thead, tbody {
+  		display: block;
+	}
+	tbody {
+  		overflow-x: hidden;
+  		overflow-y: scroll;
+ 		height: 100px;
+	}
+
+	.table_radio {
+		width: 25px;
+	}
+	.candidate_id {
+		width: 25px;
+	}
+	.candidate_name {
+		width: 140px;
+	}
+	.gender {
+		width: 40px;
+	}
+	.edu_back {
+		width: 200px;
+	}
+	.agent {
+		width: 80px;
+	}
+	.referrer {
+		width: 80px;
+	}
+	.slc_status_title {
+		width: 164px;
+	}
+	.slc_status {
+		width: 80px;
+	}
+	.slc_status_dtl {
+		width: 80px;
+	}
+	.slc_date {
+		width: 160px;
+	}
+</style>
+<script type="text/javascript" th:inline="javascript">
+	var referrerAll = [];
+
+	function getReferrerAll() {
+		//紹介元の情報を取得
+		[# th:each="referrer: ${referrerList}"]
+			var referrer = {id:/*[[${referrer.referrerId}]]*/, name:/*[[${referrer.referrerName}]]*/,
+				fee:/*[[${referrer.referrerFee}]]*/, agentId:/*[[${referrer.agent.agentId}]]*/};
+
+			referrerAll.push(referrer);
+		[/]
+
+		//selectAgentId();
+	}
+
+
+	function selectAgentId() {
+		//選択した採用エージェントIDを取得
+		var selectedAgentId = document.getElementById("agentId").value;
+		//紹介元のドロップダウンをセット
+		setReferrer(selectedAgentId);
+
+
+	}
+
+	function setReferrer(selectedAgentId) {
+		//紹介元の入力フォームを取得
+		var referrer = document.getElementById("referrer");
+		var referrerList = [];
+
+		if (selectedAgentId == 0) {
+			var referrerDefault = {id:0, name:"---", fee:0, agentId:0};
+			referrerList.push(referrerDefault);
+		} else {
+
+		//採用エージェントIDが一致する紹介元を抽出
+		for (var i = 0; i < referrerAll.length; i++) {
+			if (referrerAll[i].agentId == selectedAgentId) {
+				referrerList.push(referrerAll[i]);
+			}
+		}
+		}
+
+		//紹介元のドロップダウンを初期化
+		referrer.textContent = null;
+
+		//紹介元のドロップダウンをセット
+		for (var i = 0; i < referrerList.length; i++) {
+			var op = document.createElement("option");
+
+			op.value = referrerList[i].id;
+
+			op.text = referrerList[i].name;
+
+			referrer.appendChild(op);
+		}
+
+
+	}
+
+
+</script>
+</head>
+<body onload="getReferrerAll()">
+	<h2>一括管理画面</h2>
+	<table>
+		<thead>
+		<tr>
+			<th class="candidate_id">ID</th>
+			<th class="candidate_name">氏名</th>
+			<th class="gender">性別</th>
+			<th class="edu_back">学歴</th>
+			<th class="agent">採用Agent</th>
+			<th class="referrer">紹介元</th>
+			<th class="slc_status_title" colspan="2">選考ステータス</th>
+			<th class="slc_date">選考日程</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="candidate: ${candidates}" th:object="${candidate}">
+			<td class="candidate_id" th:text="*{candidateId}"></td>
+			<td class="candidate_name" th:text="*{candidateName}" ></td>
+			<td class="gender" th:text="*{gender == 1} ? 男性 : 女性"></td>
+			<td class="edu_back" th:text="*{eduBack}"></td>
+			<td class="agent" th:text="*{agentName}"></td>
+			<td class="referrer" th:text="*{referrerName}"></td>
+			<td class="slc_status" th:text="*{slcStatusName}"></td>
+			<td class="slc_status_dtl" th:text="*{slcStatusDtlName}"></td>
+			<td class="slc_date"><div th:if="*{slcStatusDtlId == 2}" th:text="*{slcDate}"></div></td>
+		</tr>
+		</tbody>
+	</table>
+
+	<form th:action="@{/recruit/candidates/multiple}" th:method="post" th:object="${multipleUpdateForm}">
+		<div>
+			<label>性別:</label>
+			<input type="radio" name="gender" value="1" th:field="*{gender}"/>男性
+			<input type="radio" name="gender" value="2" th:field="*{gender}"/>女性
+		</div>
+		<div>
+			<label>学歴:</label>
+			<input type="text" th:field="*{eduBack}" />
+		</div>
+		<div>
+			<label>選考ステータス:</label>
+			<select name="slcStatusId">
+				<option value="0">---</option>
+				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
+			</select>
+			</div>
+		<div>
+			<label>選考ステータス詳細:</label>
+			<select name="slcStatusDtlId">
+				<option value="0">---</option>
+				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
+			</select>
+		</div>
+		<div>
+			<label>採用エージェント:</label>
+			<select id="agentId" name="agentId" onchange="selectAgentId()">
+				<option value="0">---</option>
+				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
+			</select>
+		</div>
+		<div>
+			<label>紹介元:</label>
+			<select id="referrer" name="referrerId">
+				<option value="0">---</option>
+				<!--  <option th:each="referrer: ${referrerList}" th:value="${referrer.referrerId}" th:text="${referrer.referrerName}"> -->
+			</select>
+		</div>
+		<div>
+			<label>選考日程</label>
+			<input type="datetime-local" name="*{slcDateString}" />
+		</div>
+		<input th:each="candidate: ${candidates}" type="hidden" name="candidateId" th:value="${candidate.candidateId}">
+		<input type="submit" value="更新"/>
+	</form>
+	<form th:action="@{/recruit/candidates/multiple/delete}" th:method="post">
+		<input th:each="candidate: ${candidates}" type="hidden" name="candidateId" th:value="${candidate.candidateId}">
+		<input type="submit" value="削除"/>
+	</form>
+</body>
+</html>

@@ -8,55 +8,137 @@
 	color: red;
 }
 </style>
+<script type="text/javascript" th:inline="javascript">
+	var referrerAll = [];
+
+	function getReferrerAll() {
+		//紹介元の情報を取得
+		[# th:each="referrer: ${referrerList}"]
+			var referrer = {id:/*[[${referrer.referrerId}]]*/, name:/*[[${referrer.referrerName}]]*/,
+				fee:/*[[${referrer.referrerFee}]]*/, agentId:/*[[${referrer.agent.agentId}]]*/};
+
+			referrerAll.push(referrer);
+		[/]
+
+		selectAgentId();
+
+		var referrer = document.getElementById("referrer");
+		for (var i = 0; i < referrer.length; i++) {
+			if (referrer[i].value == /*[[${candidate.referrer.referrerId}]]*/) {
+				referrer[i].selected = true;
+			}
+		}
+	}
+
+
+	function selectAgentId() {
+
+		var selectedAgentId = document.getElementById("agentId").value;
+
+		setReferrer(selectedAgentId);
+
+	}
+
+	function setReferrer(selectedAgentId) {
+		var referrer = document.getElementById("referrer");
+		var referrerList = [];
+
+
+		for (var i = 0; i < referrerAll.length; i++) {
+			if (referrerAll[i].agentId == selectedAgentId) {
+				referrerList.push(referrerAll[i]);
+			}
+		}
+
+		referrer.textContent = null;
+
+
+		for (var i = 0; i < referrerList.length; i++) {
+			var op = document.createElement("option");
+
+			op.value = referrerList[i].id;
+
+			op.text = referrerList[i].name;
+
+			referrer.appendChild(op);
+		}
+
+	}
+
+
+</script>
+
 </head>
-<body>
-	<h2>候補者登録画面</h2>
+<body onload="getReferrerAll()">
+	<h2>候補者情報変更画面</h2>
 
 	<form th:action="@{/recruit/candidates/{id}(id=*{candidateId})}" th:method="post" th:object="${candidate}">
 		<div>
-			<label>候補者</label>
+			<label>ID:</label>
+			<span th:text="*{candidateId}"></span>
+		</div>
+		<div>
+			<label>候補者:</label>
 			<input type="text" th:field="*{candidateName}" />
 		</div>
 		<div>
-			<label>性別</label>
+			<label>候補者(ふりがな)</label>
+			<input type="text" th:field="*{candidateFurigana}" />
+		</div>
+		<div>
+			<label>性別:</label>
 			<input type="radio" name="gender" value="1" th:field="*{gender}"/>男性
 			<input type="radio" name="gender" value="2" th:field="*{gender}"/>女性
 		</div>
 		<div>
-			<label>学歴</label>
+			<label>学歴:</label>
 			<input type="text" th:field="*{eduBack}" />
 		</div>
-		<div>
-			<label>選考ステータス</label>
+
+		<div th:if="*{slcStatus.slcStatusId != 1}">
+			<div>
+				<label>選考ステータス:</label>
+				<span th:text="*{slcStatus.slcStatusName}"></span>
+				<input type="hidden" th:field="*{slcStatus.slcStatusId}">
+			</div>
+			<div>
+				<label>選考ステータス詳細:</label>
+				<span th:text="*{slcStatusDtl.slcStatusDtlName}"></span>
+				<input type="hidden" th:field="*{slcStatusDtl.slcStatusDtlId}">
+			</div>
+		</div>
+		<div th:if="*{slcStatus.slcStatusId == 1}">
+			<label>選考ステータス:</label>
 			<select th:field="*{slcStatus.slcStatusId}">
-				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
+				<option th:value="1">説明会
+				<option th:value="2">書類選考
 			</select>
+			<input type="hidden" th:field="*{slcStatusDtl.slcStatusDtlId}">
 		</div>
+
 		<div>
-			<label>選考ステータス詳細</label>
-			<select th:field="*{slcStatusDtl.slcStatusDtlId}">
-				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
-			</select>
-		</div>
-		<div>
-			<label>採用エージェント</label>
-			<select th:field="*{agent.agentId}" >
+			<label>採用エージェント:</label>
+			<select id="agentId" th:field="*{agent.agentId}" onchange="selectAgentId()">
 				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
 			</select>
 		</div>
 		<div>
 			<label>紹介元</label>
+			<select id="referrer" th:field="*{referrer.referrerId}">
+
+			</select>
+		</div>
+		<!--  <div>
+			<label>紹介元:</label>
 			<select th:field="*{referrer.referrerId}">
 				<option th:each="referrer: ${referrerList}" th:value="${referrer.referrerId}" th:text="${referrer.referrerName}">
 			</select>
-		</div>
+		</div> -->
 		<input type="submit" value="更新"/>
 	</form>
 	<form th:action="@{/recruit/candidates/{id}/delete(id=*{candidateId})}" th:object="${candidate}">
 		<input type="submit" value="削除"/>
 	</form>
-
-
 
 	<br>
 

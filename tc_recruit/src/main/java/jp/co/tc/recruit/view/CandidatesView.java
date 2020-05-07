@@ -1,5 +1,6 @@
 package jp.co.tc.recruit.view;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -11,6 +12,15 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Data;
+
+/**
+ * 候補者情報ビューのエンティティ
+ *
+ * @author TC-0115
+ *
+ */
+@Data
 @Entity
 @Table(name="VIEW_CANDIDATES")
 public class CandidatesView {
@@ -22,6 +32,9 @@ public class CandidatesView {
 
 	@Column(name="candidate_name")
 	private String candidateName;
+
+	@Column(name="candidate_name_furigana")
+	private String candidateFurigana;
 
 	@Column(name="gender")
 	private Integer gender;
@@ -57,107 +70,8 @@ public class CandidatesView {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date slcDate;
 
-	public Integer getCandidateId() {
-		return candidateId;
+	public String getSlcDate() {
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(slcDate);
 	}
 
-	public void setCandidateId(Integer candidateId) {
-		this.candidateId = candidateId;
-	}
-
-	public String getCandidateName() {
-		return candidateName;
-	}
-
-	public void setCandidateName(String candidateName) {
-		this.candidateName = candidateName;
-	}
-
-	public Integer getGender() {
-		return gender;
-	}
-
-	public void setGender(Integer gender) {
-		this.gender = gender;
-	}
-
-	public String getEduBack() {
-		return eduBack;
-	}
-
-	public void setEduBack(String eduBack) {
-		this.eduBack = eduBack;
-	}
-
-	public Integer getSlcStatusId() {
-		return slcStatusId;
-	}
-
-	public void setSlcStatusId(Integer slcStatusId) {
-		this.slcStatusId = slcStatusId;
-	}
-
-	public String getSlcStatusName() {
-		return slcStatusName;
-	}
-
-	public void setSlcStatusName(String slcStatusName) {
-		this.slcStatusName = slcStatusName;
-	}
-
-	public Integer getSlcStatusDtlId() {
-		return slcStatusDtlId;
-	}
-
-	public void setSlcStatusDtlId(Integer slcStatusDtlId) {
-		this.slcStatusDtlId = slcStatusDtlId;
-	}
-
-	public String getSlcStatusDtlName() {
-		return slcStatusDtlName;
-	}
-
-	public void setSlcStatusDtlName(String slcStatusDtlName) {
-		this.slcStatusDtlName = slcStatusDtlName;
-	}
-
-	public Integer getAgentId() {
-		return agentId;
-	}
-
-	public void setAgentId(Integer agentId) {
-		this.agentId = agentId;
-	}
-
-	public String getAgentName() {
-		return agentName;
-	}
-
-	public void setAgentName(String agentName) {
-		this.agentName = agentName;
-	}
-
-	public Integer getReferrerId() {
-		return referrerId;
-	}
-
-	public void setReferrerId(Integer referrerId) {
-		this.referrerId = referrerId;
-	}
-
-	public String getReferrerName() {
-		return referrerName;
-	}
-
-	public void setReferrerName(String referrerName) {
-		this.referrerName = referrerName;
-	}
-
-	public Date getSlcDate() {
-		return slcDate;
-	}
-
-	public void setSlcDate(Date slcDate) {
-		this.slcDate = slcDate;
-	}
 }

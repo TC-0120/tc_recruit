@@ -12,6 +12,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.Data;
+
+/**
+ * 紹介元のエンティティ
+ *
+ * @author TC-0115
+ *
+ */
+@Data
 @Entity
 @Table(name="XXTC_REFERRER")
 public class Referrer {
@@ -24,36 +33,15 @@ public class Referrer {
 	@Column(name="referrer_name")
 	private String referrerName;
 
+	@Column(name="referrer_fee")
+	private Integer referrerFee;
+
 	@ManyToOne
 	@JoinColumn(name="agent_id")
 	private Agent agent;
 
 	@OneToMany(mappedBy="agent", cascade=CascadeType.ALL)
 	private List<Candidate> candidates;
-
-	public Integer getReferrerId() {
-		return referrerId;
-	}
-
-	public void setReferrerId(Integer referrerId) {
-		this.referrerId = referrerId;
-	}
-
-	public String getReferrerName() {
-		return referrerName;
-	}
-
-	public void setRefererName(String referrerName) {
-		this.referrerName = referrerName;
-	}
-
-	public Agent getAgent() {
-		return agent;
-	}
-
-	public void setAgent(Agent agent) {
-		this.agent = agent;
-	}
 
 	public List<Candidate> getCandidates() {
 		return candidates;
