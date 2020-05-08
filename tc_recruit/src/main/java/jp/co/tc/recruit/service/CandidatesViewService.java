@@ -54,7 +54,13 @@ public class CandidatesViewService {
 		return cv;
 	}
 
-	public List<CandidatesView> getCandidatesByCandidateId(Integer[] cId) {
+	/**
+	 * 複数の候補者IDによる候補者情報の検索
+	 *
+	 * @param cId 候補者ID（複数）
+	 * @return 候補者情報
+	 */
+	public List<CandidatesView> findByCandidateId(Integer[] cId) {
 		List<CandidatesView> cv = new ArrayList<CandidatesView>();
 		for (int i = 0; i < cId.length; i++) {
 			cv.add(repo.findByCandidateId(cId[i]));
@@ -63,12 +69,22 @@ public class CandidatesViewService {
 	}
 
 	/**
-	 * 選考日程のComparator
+	 * 選考日程が登録されている候補者情報の検索
+	 *
+	 */
+	public List<CandidatesView> findByIsRegisteredSlcDate() {
+		//選考ステータス詳細が選考中、確定の候補者情報を取得
+		List<CandidatesView> cv = repo.findBySlcStatusDtlIdOrSlcStatusDtlId(SlcStatusDtlConstant.SELECTING, SlcStatusDtlConstant.CONFIRMED);
+		return cv;
+	}
+
+	/**
+	 * 選考日程のComparatorクラス
 	 *
 	 * @author TC-0115
 	 *
 	 */
-	public class SlcDateComparator implements Comparator<CandidatesView> {
+	private class SlcDateComparator implements Comparator<CandidatesView> {
 		public int compare(CandidatesView cv1, CandidatesView cv2) {
 			Integer cvStDtl1 = cv1.getSlcStatusDtlId();
 			Integer cvStDtl2 = cv2.getSlcStatusDtlId();
