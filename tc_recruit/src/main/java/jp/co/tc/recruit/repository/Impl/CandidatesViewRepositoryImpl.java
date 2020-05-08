@@ -11,9 +11,9 @@ import javax.persistence.Query;
 
 import jp.co.tc.recruit.constant.SlcStatusConstant;
 import jp.co.tc.recruit.constant.SlcStatusDtlConstant;
+import jp.co.tc.recruit.entity.CandidatesView;
 import jp.co.tc.recruit.form.ConditionsForm;
 import jp.co.tc.recruit.repository.CandidatesViewRepositoryCustom;
-import jp.co.tc.recruit.view.CandidatesView;
 
 /**
  * 候補者情報ビューのリポジトリのカスタムメソッド実装クラス

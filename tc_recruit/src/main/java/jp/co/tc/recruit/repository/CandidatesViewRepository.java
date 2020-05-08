@@ -3,7 +3,7 @@ package jp.co.tc.recruit.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import jp.co.tc.recruit.view.CandidatesView;
+import jp.co.tc.recruit.entity.CandidatesView;
 
 /**
  * 候補者情報ビューのリポジトリ

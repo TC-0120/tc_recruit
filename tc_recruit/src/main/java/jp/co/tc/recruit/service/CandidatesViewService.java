@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jp.co.tc.recruit.constant.SlcStatusDtlConstant;
+import jp.co.tc.recruit.entity.CandidatesView;
 import jp.co.tc.recruit.form.ConditionsForm;
 import jp.co.tc.recruit.repository.CandidatesViewRepository;
-import jp.co.tc.recruit.view.CandidatesView;
 
 /**
  * 候補者情報ビューのサービスクラス

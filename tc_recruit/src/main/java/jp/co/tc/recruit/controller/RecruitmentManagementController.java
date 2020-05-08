@@ -1,32 +1,24 @@
 package jp.co.tc.recruit.controller;
 
-<<<<<<< HEAD
-=======
+
 import java.util.List;
 
->>>>>>> RecruitmentManagement
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-<<<<<<< HEAD
-=======
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
->>>>>>> RecruitmentManagement
 
-<<<<<<< HEAD
-=======
 import jp.co.tc.recruit.entity.Candidate;
 import jp.co.tc.recruit.entity.Selection;
 import jp.co.tc.recruit.entity.Selection.SelectionPK;
 import jp.co.tc.recruit.form.ConditionsForm;
-<<<<<<< HEAD
->>>>>>> 7827f19e166a8ddb2c63b84dc03b27e6806564f4
-=======
 import jp.co.tc.recruit.form.MultipleUpdateForm;
->>>>>>> RecruitmentManagement
 import jp.co.tc.recruit.service.AgentService;
 import jp.co.tc.recruit.service.CandidateService;
 import jp.co.tc.recruit.service.CandidatesViewService;
@@ -67,34 +59,15 @@ public class RecruitmentManagementController {
 	 * @return 一覧画面
 	 */
 	@GetMapping
-<<<<<<< HEAD
-<<<<<<< HEAD
-	public String index(Model model) {
-		model.addAttribute("candidates", candidateService.findAll());
-		model.addAttribute("selections", selectionService.findAll());
-		/*	model.addAttribute("slcStatusList", slcStatusService.findAll());*/
-		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
-		return "top";
-	}
-
-	/*@GetMapping("filter")
-	public String filter(@RequestParam("SlcStatusF") Integer ssId, @RequestParam("SlcStatusDtlF") Integer ssdId, Model model) {
-		model.addAttribute("candidates", candidateService.findBySlcStatusIdAndSlcStatudDtlId(ssId, ssdId));
-		model.addAttribute("selections", selectionService.findAll());
-=======
-	public String filter(@ModelAttribute("conditionsForm") ConditionsForm conditionsForm, Model model) {
-		model.addAttribute("candidates", candidatesViewService.findBySlcStatusIdAndSlcStatudDtlId(conditionsForm));
->>>>>>> 7827f19e166a8ddb2c63b84dc03b27e6806564f4
-=======
 	public String index(@ModelAttribute("conditionsForm") ConditionsForm conditionsForm, Model model) {
 		//入力された検索条件から候補者情報を取得、格納
 		model.addAttribute("candidates", candidatesViewService.findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(conditionsForm));
 		//検索ドロップダウン用のリスト（選考ステータス、詳細）を格納
->>>>>>> RecruitmentManagement
 		model.addAttribute("slcStatusList", slcStatusService.findAll());
 		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
 		return "recruitment_management";
 	}
+
 
 	/**
 	 * 候補者情報登録入力画面への遷移
@@ -261,9 +234,6 @@ public class RecruitmentManagementController {
 		model.addAttribute("referrerList", referrerService.findAll());
 		return "multiple/update_input";
 	}
-<<<<<<< HEAD
-	*/
-=======
 
 	/**
 	 *
@@ -279,7 +249,6 @@ public class RecruitmentManagementController {
 		selectionService.multipleUpdate(cList, muForm.getSlcDateString());
 		return "redirect:/recruit/candidates";
 	}
->>>>>>> RecruitmentManagement
 
 	/**
 	 * 候補者情報の一括削除

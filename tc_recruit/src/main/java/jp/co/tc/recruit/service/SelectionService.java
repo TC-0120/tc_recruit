@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import jp.co.tc.recruit.entity.Candidate;
 import jp.co.tc.recruit.entity.Selection;
+import jp.co.tc.recruit.entity.Selection.SelectionPK;
 import jp.co.tc.recruit.repository.CandidateRepository;
 import jp.co.tc.recruit.repository.SelectionRepository;
 
@@ -32,9 +33,6 @@ public class SelectionService {
 		return slcRepo.findAll();
 	}
 
-<<<<<<< HEAD
-	/*public Selection findById(SelectionPK slcPK) {
-=======
 	/**
 	 * 選考情報の検索
 	 *
@@ -43,7 +41,6 @@ public class SelectionService {
 	 */
 	public Selection findById(SelectionPK slcPK) {
 		//複合主キーから選考情報を取得
->>>>>>> RecruitmentManagement
 		Selection slc = slcRepo.findBySlcPK(slcPK);
 		//選考情報がなかった場合、その複合主キーで新規登録し、それを返す（選考情報がないとエラーがでるため）
 		if (slc == null) {
@@ -53,11 +50,6 @@ public class SelectionService {
 		}
 		return slc;
 	}
-<<<<<<< HEAD
-	*/
-	public Selection save(Selection slc) {
-		return slcRepo.save(slc);
-=======
 
 	public void save(Selection slc) {
 		slcRepo.save(slc);
@@ -75,7 +67,6 @@ public class SelectionService {
 		//選考日程をString型からDate型に変換、保存
 		slc.setSlcDate(setDate(slcDate));
 		save(slc);
->>>>>>> RecruitmentManagement
 	}
 
 	public void deleteByCandidateId(Integer id) {
