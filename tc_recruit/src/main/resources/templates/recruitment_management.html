@@ -15,7 +15,7 @@
 	<div th:replace="header :: header_fragment"></div>
 	<h2>候補者一覧画面</h2>
 
-	<a th:href="@{/recruit/candidates/regist}">新規登録</a><br/><br/>
+	<a th:href="@{/recruit/candidates/register}">新規登録</a><br/><br/>
 
 	<form name="conditionsForm" th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
 		<div>

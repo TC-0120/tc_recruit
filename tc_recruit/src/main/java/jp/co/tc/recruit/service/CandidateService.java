@@ -50,7 +50,7 @@ public class CandidateService {
 	 * @param candidate 候補者情報
 	 * @param slcDate 選考日程
 	 */
-	public void regist(Candidate candidate, String slcDate) {
+	public void register(Candidate candidate, String slcDate) {
 		Integer slcStatusDtlId = null;
 
 		if (candidate.getSlcStatus().getSlcStatusId() == SlcStatusConstant.INFORMATION_SESSION) {
@@ -92,13 +92,13 @@ public class CandidateService {
 	}
 
 	/**
-	 * 選考ステータスを管理
+	 * 選考ステータス詳細の更新
 	 *
 	 * @param cId 候補者ID
 	 * @param slcResult 選考結果
 	 * @param slcDate 選考日程
 	 */
-	public void slcStatusManagement(Integer cId, Integer slcResult, String slcDate) {
+	public void updateSlcStatusDtl(Integer cId, Integer slcResult, String slcDate) {
 		Candidate candidate = findById(cId);
 
 		if (slcResult == SlcStatusDtlConstant.PENDING) {
@@ -133,7 +133,7 @@ public class CandidateService {
 	 * @param cId 候補者ID
 	 * @return 選考ステータスが最後（入社手続き）でないかどうか
 	 */
-	public boolean slcStatusUp(Integer cId) {
+	public boolean promoteSlcStatus(Integer cId) {
 		Candidate candidate = findById(cId);
 		Integer slcStatusId = candidate.getSlcStatus().getSlcStatusId();
 		Integer slcStatusDtlId = candidate.getSlcStatusDtl().getSlcStatusDtlId();
@@ -175,7 +175,7 @@ public class CandidateService {
 	 * @param muForm 一括更新フォーム
 	 * @return 候補者情報
 	 */
-	public List<Candidate> multipleUpdate(Integer[] cId, MultipleUpdateForm muForm) {
+	public List<Candidate> updateList(Integer[] cId, MultipleUpdateForm muForm) {
 		List<Candidate> cList = new ArrayList<Candidate>();
 
 		for (int i = 0; i < cId.length; i++) {
@@ -213,7 +213,7 @@ public class CandidateService {
 		return cList;
 	}
 
-	public void multipleDelete(Integer[] cId) {
+	public void deleteList(Integer[] cId) {
 		for (int i = 0; i < cId.length; i++) {
 			candidateRepo.deleteById(cId[i]);
 		}

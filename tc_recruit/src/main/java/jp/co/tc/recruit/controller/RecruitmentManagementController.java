@@ -26,6 +26,7 @@ import jp.co.tc.recruit.service.ReferrerService;
 import jp.co.tc.recruit.service.SelectionService;
 import jp.co.tc.recruit.service.SelectionStatusDetailService;
 import jp.co.tc.recruit.service.SelectionStatusService;
+import jp.co.tc.recruit.util.DateFormatter;
 
 /**
  * 採用情報管理機能のコントローラー
@@ -75,14 +76,14 @@ public class RecruitmentManagementController {
 	 * @param model
 	 * @return 候補者情報登録入力画面
 	 */
-	@GetMapping("regist")
-	public String registInput(Model model) {
+	@GetMapping("register")
+	public String transitionToCandidateRegisterInputScreen(Model model) {
 		//登録ドロップダウン用のリスト（選考ステータス、詳細、エージェント、紹介元）を格納
 		model.addAttribute("slcStatusList", slcStatusService.findAll());
 		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
 		model.addAttribute("agentList", agentService.findAll());
 		model.addAttribute("referrerList", referrerService.findAll());
-		return "candidate/regist_input";
+		return "candidate/register_input";
 	}
 
 	/**
@@ -93,11 +94,11 @@ public class RecruitmentManagementController {
 	 * @return 一覧画面
 	 */
 	@PostMapping
-	public String registComplete(@ModelAttribute Candidate candidate, @RequestParam("slcDate") String slcDate) {
+	public String registerCandidate(@ModelAttribute Candidate candidate, @RequestParam("slcDate") String slcDate) {
 		//候補者情報を登録
-		candidateService.regist(candidate, slcDate);
+		candidateService.register(candidate, slcDate);
 		//選考情報を登録
-		selectionService.regist(candidate.getCandidateId(), candidate.getSlcStatus().getSlcStatusId(), slcDate);
+		selectionService.register(candidate.getCandidateId(), candidate.getSlcStatus().getSlcStatusId(), slcDate);
 		return "redirect:/recruit/candidates";
 	}
 
@@ -109,7 +110,7 @@ public class RecruitmentManagementController {
 	 * @return 候補者情報変更入力画面
 	 */
 	@GetMapping("update")
-	public String updateInput(@RequestParam("candidateId") Integer id, Model model) {
+	public String transitionToCandidateUpdateInputScreen(@RequestParam("candidateId") Integer id, Model model) {
 		//候補者IDから候補者情報を取得、格納
 		model.addAttribute("candidate", candidateService.findById(id));
 		//変更ドロップダウン用のリスト（選考ステータス、詳細、エージェント、紹介元）を格納
@@ -128,7 +129,7 @@ public class RecruitmentManagementController {
 	 * @return 一覧画面
 	 */
 	@PostMapping("{id}")
-	public String updateComplete(@PathVariable Integer id, @ModelAttribute Candidate candidate) {
+	public String updateCandidate(@PathVariable Integer id, @ModelAttribute Candidate candidate) {
 		//候補者情報を変更
 		candidate.setCandidateId(id);
 		candidateService.update(candidate);
@@ -158,7 +159,7 @@ public class RecruitmentManagementController {
 	 * @return 選考情報変更画面
 	 */
 	@GetMapping("selection")
-	public String slcUpdateInput(@RequestParam("candidateId") Integer cId, Model model) {
+	public String transitionToSlcInfoUpdateInputScreen(@RequestParam("candidateId") Integer cId, Model model) {
 		//候補者IDから候補者情報を取得
 		Candidate candidate = candidateService.findById(cId);
 		//候補者IDと選考ステータスIDから選考情報を取得
@@ -170,12 +171,15 @@ public class RecruitmentManagementController {
 		model.addAttribute("candidate", candidate);
 		model.addAttribute("selection", slc);
 		//選考日程をDate型からString型に変換、格納
-		model.addAttribute("slcDateString", selectionService.getStringDate(slc.getSlcDate()));
+		model.addAttribute("slcDateString", DateFormatter.toString(slc.getSlcDate()));
 		//選考結果を候補者情報から取得、格納
 		model.addAttribute("slcResult", candidate.getSlcStatusDtl().getSlcStatusDtlId());
+
+		// 日程が登録された候補者情報を取得、格納
+		model.addAttribute("candidatesHasSlcDate", candidatesViewService.findByIsRegisteredSlcDate());
+
 		return "selection/update_input";
 	}
-
 
 	/**
 	 * 選考情報を変更
@@ -186,13 +190,11 @@ public class RecruitmentManagementController {
 	 * @return 一覧画面
 	 */
 	@PostMapping("selection")
-	public String slcUpdateComplete(@RequestParam("slcResult") Integer slcResult, @ModelAttribute Selection slc, @RequestParam("slcDateString") String slcDate) {
-		//選考日程をString型からDate型に変換、保存
-		slc.setSlcDate(selectionService.setDate(slcDate));
+	public String updateSlcInfo(@RequestParam("slcResult") Integer slcResult, @ModelAttribute Selection slc, @RequestParam("slcDateString") String slcDateString) {
 		//選考情報を変更
-		selectionService.save(slc);
+		selectionService.update(slc, slcDateString);
 		//選考ステータスを変更
-		candidateService.slcStatusManagement(slc.getSlcPK().getCandidateId(), slcResult, slcDate);
+		candidateService.updateSlcStatusDtl(slc.getSlcPK().getCandidateId(), slcResult, slcDateString);
 		return "redirect:/recruit/candidates";
 	}
 
@@ -204,8 +206,8 @@ public class RecruitmentManagementController {
 	 * @return 選考情報変更画面or一覧画面
 	 */
 	@PostMapping("seleciton/nextStatus")
-	public String nextStatus(@RequestParam("candidateId") Integer cId, RedirectAttributes redirectAttributes) {
-		if (candidateService.slcStatusUp(cId)) {
+	public String promoteSlcStatus(@RequestParam("candidateId") Integer cId, RedirectAttributes redirectAttributes) {
+		if (candidateService.promoteSlcStatus(cId)) {
 			//選考ステータスが最後（入社手続き）でない場合、選考情報変更画面に遷移
 			redirectAttributes.addAttribute("candidateId", cId);
 			return "redirect:/recruit/candidates/selection";
@@ -224,9 +226,9 @@ public class RecruitmentManagementController {
 	 * @return 一括更新画面
 	 */
 	@GetMapping("multiple")
-	public String multipleUpdate(@RequestParam("candidateId") Integer[] cId, @ModelAttribute("multipleUpdateForm") MultipleUpdateForm muForm, Model model) {
+	public String transitionToMultipleUpdateScreen(@RequestParam("candidateId") Integer[] cId, @ModelAttribute("multipleUpdateForm") MultipleUpdateForm muForm, Model model) {
 		//複数の候補者IDから候補者情報を取得、格納
-		model.addAttribute("candidates", candidatesViewService.getCandidatesByCandidateId(cId));
+		model.addAttribute("candidates", candidatesViewService.findByCandidateId(cId));
 		//一括更新ドロップダウン用のリスト（選考ステータス、詳細、エージェント、紹介元）を格納
 		model.addAttribute("slcStatusList", slcStatusService.findAll());
 		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
@@ -243,10 +245,10 @@ public class RecruitmentManagementController {
 	 * @return 一覧画面
 	 */
 	@PostMapping("multiple")
-	public String multipleUpdateComplete(@RequestParam("candidateId") Integer[] cId, @ModelAttribute("multipleUpdateForm") MultipleUpdateForm muForm, Model model) {
+	public String updateCandidateList(@RequestParam("candidateId") Integer[] cId, @ModelAttribute("multipleUpdateForm") MultipleUpdateForm muForm, Model model) {
 		//候補者情報の一括保存、更新
-		List<Candidate> cList= candidateService.multipleUpdate(cId, muForm);
-		selectionService.multipleUpdate(cList, muForm.getSlcDateString());
+		List<Candidate> cList= candidateService.updateList(cId, muForm);
+		selectionService.updateList(cList, muForm.getSlcDateString());
 		return "redirect:/recruit/candidates";
 	}
 
@@ -258,10 +260,10 @@ public class RecruitmentManagementController {
 	 * @return 一覧画面
 	 */
 	@PostMapping("multiple/delete")
-	public String multipleDelete(@RequestParam("candidateId") Integer[] cId, Model model) {
+	public String deleteCandidateList(@RequestParam("candidateId") Integer[] cId, Model model) {
 		//候補者情報、選考情報の一括削除
-		candidateService.multipleDelete(cId);
-		selectionService.multipleDelete(cId);
+		candidateService.deleteList(cId);
+		selectionService.deleteList(cId);
 		return "redirect:/recruit/candidates";
 	}
 }

@@ -9,11 +9,72 @@
 }
 </style>
 <script type="text/javascript" th:src="@{/js/recruitmentManagement.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+	function hasRegistered() {
+		var candidateList = [];
+		var candidateId = /*[[${candidate.candidateId}]]*/
+		var slcStatusId = /*[[${candidate.slcStatus.slcStatusId}]]*/
+		var slcDate = document.getElementById("slcDate").value
+							  .replace("-","/").replace("-","/")
+							  .substring(0, 10);
+
+		//面接、入社手続きのステータスでない場合、submit
+		if (slcStatusId <= 2 || slcStatusId == 6 || slcStatusId == 8) {
+			return true;
+		}
+
+		//選考日程が登録されている候補者情報を取得
+		[# th:each="candidates: ${candidatesHasSlcDate}"]
+			var candidate = {id:/*[[${candidates.candidateId}]]*/, name:/*[[${candidates.candidateName}]]*/,
+				slcStatus:/*[[${candidates.slcStatusName}]]*/, slcDate:/*[[${candidates.slcDate}]]*/};
+			var slcStatusId = /*[[${candidates.slcStatusId}]]*/;
+
+			if (candidateId != candidate.id) {
+				if ((slcStatusId >= 3 && slcStatusId <= 5) || slcStatusId == 7) {
+					candidateList.push(candidate);
+				}
+			}
+		[/]
+
+
+		var flag = false;
+
+
+		// 選考日程が被っているか判定
+		for (var i = 0; i < candidateList.length; i++) {
+			if (slcDate == candidateList[i].slcDate.substring(0, 10)) {
+				var message = "同日に予定があります。\n"
+							+ "\nID:"+ candidateList[i].id
+							+"\n氏名:" + candidateList[i].name
+							+"\n選考ステータス:" + candidateList[i].slcStatus
+							+"\n日程:" + candidateList[i].slcDate;
+				alert(message);
+
+				flag = true;
+			}
+		}
+		if(flag) {
+			if(window.confirm("同日に予定がありますが、変更しますか？")){
+
+				return true;
+
+			} else{
+
+				return false;
+
+			}
+		}
+
+		// 過去かどうか判定する？
+		// その場合、日付の処理方法を変更する必要あり
+
+	}
+</script>
 </head>
 <body th:onload="selectSlcResult([[${candidate.slcStatusDtl.slcStatusDtlId}]])">
 	<div th:replace="header :: header_fragment"></div>
 	<h2>選考情報変更画面</h2>
-	<form th:action="@{/recruit/candidates/selection}" th:method="post" th:object="${candidate}">
+	<form th:action="@{/recruit/candidates/selection}" th:method="post" th:object="${candidate}" onSubmit="return hasRegistered()">
 		<div>
 			<label>ID</label>
 			<div th:text="*{candidateId}">/</div>
@@ -34,7 +95,7 @@
 			<label th:if="*{slcStatus.slcStatusId <= 5}">選考日程</label>
 			<label th:if="*{slcStatus.slcStatusId == 6}">承諾期限</label>
 			<label th:if="*{slcStatus.slcStatusId == 7}">入社手続き日程</label>
-			<input type="datetime-local" name="slcDateString" th:value="${slcDateString}" />
+			<input id="slcDate" type="datetime-local" name="slcDateString" th:value="${slcDateString}" />
 		</div>
 		<div>
 			<div th:if="*{slcStatus.slcStatusId >= 2 && slcStatus.slcStatusId <= 5}">
