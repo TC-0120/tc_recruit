@@ -78,9 +78,9 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 
 			if (ssdId == SlcStatusDtlConstant.NEED_RESPOND) {
 				//選択したステータス詳細が要対応の場合
-				queryStr += " slcStatusDtlId = :adjusting OR slcStatusDtlId = :passing OR slcStatusDtlId = :acceptance "
+				queryStr += " (slcStatusDtlId = :adjusting OR slcStatusDtlId = :passing OR slcStatusDtlId = :acceptance "
 						+ "OR ((slcStatusDtlId = :selecting OR slcStatusDtlId = :waitingAcceptance OR slcStatusDtlId = :confirmed) "
-						+ "AND slcDate < :today)";
+						+ "AND slcDate < :today))";
 			} else {
 				//選択したステータス詳細が一覧、要対応以外の場合
 				queryStr += " slcStatusDtlId = :ssdId";

@@ -70,6 +70,7 @@
 
 </head>
 <body onload="getReferrerAll()">
+	<div th:replace="header :: header_fragment"></div>
 	<h2>候補者情報変更画面</h2>
 
 	<form th:action="@{/recruit/candidates/{id}(id=*{candidateId})}" th:method="post" th:object="${candidate}">

@@ -64,6 +64,7 @@
 </script>
 </head>
 <body onload="getReferrerAll()">
+	<div th:replace="header :: header_fragment"></div>
 	<h2>候補者情報登録画面</h2>
 
 	<form th:action="@{/recruit/candidates}" th:method="post">

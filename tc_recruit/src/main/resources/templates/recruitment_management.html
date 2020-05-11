@@ -12,6 +12,7 @@
 <script type="text/javascript" th:src="@{/js/recruitmentManagement.js}"></script>
 </head>
 <body onload="sortKeep()">
+	<div th:replace="header :: header_fragment"></div>
 	<h2>候補者一覧画面</h2>
 
 	<a th:href="@{/recruit/candidates/regist}">新規登録</a><br/><br/>
@@ -122,10 +123,6 @@
 	</table>
 	</form>
 	<br/>
-
-	<a href="#">TOPに戻る</a>
-
-
 </body>
 </html>
 

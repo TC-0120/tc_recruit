@@ -11,6 +11,7 @@
 <script type="text/javascript" th:src="@{/js/recruitmentManagement.js}"></script>
 </head>
 <body th:onload="selectSlcResult([[${candidate.slcStatusDtl.slcStatusDtlId}]])">
+	<div th:replace="header :: header_fragment"></div>
 	<h2>選考情報変更画面</h2>
 	<form th:action="@{/recruit/candidates/selection}" th:method="post" th:object="${candidate}">
 		<div>
