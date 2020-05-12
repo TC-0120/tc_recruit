@@ -9,9 +9,89 @@
 	color: red;
 }
 </style>
-<script type="text/javascript" th:src="@{/js/recruitmentManagement.js}"></script>
+<script type="text/javascript" th:src="@{/js/recruitmentManagement.js}" th:inline="javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+	var slcStatusDtlAll = [];
+
+	function getSlcStatusDtlAll() {
+		//選考ステータス詳細の情報を取得
+		[# th:each="slcStatusDtl: ${slcStatusDtlList}"]
+			var slcStatusDtl = {id:/*[[${slcStatusDtl.slcStatusDtlId}]]*/, name:/*[[${slcStatusDtl.slcStatusDtlName}]]*/,
+				flag:/*[[${slcStatusDtl.slcStatusFlag}]]*/};
+
+			slcStatusDtlAll.push(slcStatusDtl);
+		[/]
+
+		selectSlcStatus();
+
+		var slcStatusDtl = document.getElementById("slcStatusDtl");
+		for (var i = 0; i < slcStatusDtl.length; i++) {
+			if (slcStatusDtl[i].value == /*[[${conditionsForm.slcStatusDtlId}]]*/) {
+				slcStatusDtl[i].selected = true;
+			}
+		}
+	}
+
+
+	function selectSlcStatus() {
+
+		var selectedSlcStatus = document.getElementById("slcStatus").value;
+
+		setSlcStatusDtl(selectedSlcStatus);
+
+
+	}
+
+	function setSlcStatusDtl(selectedSlcStatus) {
+		var slcStatusDtl = document.getElementById("slcStatusDtl");
+		var slcStatusDtlList = [{id:0, name:"一覧"},{id:-1, name:"要対応"}];
+
+		if (selectedSlcStatus == 0) {
+			for (var i = 0; i < slcStatusDtlAll.length; i++) {
+				slcStatusDtlList.push(slcStatusDtlAll[i]);
+			}
+		} else if (selectedSlcStatus >=2 && selectedSlcStatus <= 5) {
+			for (var i = 0; i < slcStatusDtlAll.length; i++) {
+				if (slcStatusDtlAll[i].flag >= 1 && slcStatusDtlAll[i].flag <= 3) {
+					slcStatusDtlList.push(slcStatusDtlAll[i]);
+				}
+			}
+		} else if (selectedSlcStatus == 6) {
+			for (var i = 0; i < slcStatusDtlAll.length; i++) {
+				if (slcStatusDtlAll[i].flag == 4) {
+					slcStatusDtlList.push(slcStatusDtlAll[i]);
+				}
+			}
+			for (var i = 0; i < slcStatusDtlAll.length; i++) {
+				if (slcStatusDtlAll[i].flag == 2) {
+					slcStatusDtlList.push(slcStatusDtlAll[i]);
+				}
+			}
+		} else if (selectedSlcStatus == 7) {
+			for (var i = 0; i < slcStatusDtlAll.length; i++) {
+				if (slcStatusDtlAll[i].flag == 3 || slcStatusDtlAll[i].flag == 5) {
+					slcStatusDtlList.push(slcStatusDtlAll[i]);
+				}
+			}
+		}
+
+		slcStatusDtl.textContent = null;
+
+		for (var i = 0; i < slcStatusDtlList.length; i++) {
+			var op = document.createElement("option");
+
+			op.value = slcStatusDtlList[i].id;
+
+			op.text = slcStatusDtlList[i].name;
+
+			slcStatusDtl.appendChild(op);
+		}
+
+
+	}
+</script>
 </head>
-<body onload="sortKeep()">
+<body onload="loadRecruitmentManagement()">
 	<div th:replace="header :: header_fragment"></div>
 	<h2>候補者一覧画面</h2>
 
@@ -20,17 +100,19 @@
 	<form name="conditionsForm" th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
 		<div>
 			<label>選考ステータス</label>
-			<select th:field="*{slcStatusId}">
+			<select id="slcStatus" th:field="*{slcStatusId}" onchange="selectSlcStatus()">
 				<option value="0">一覧</option>
 				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
 			</select>
 		</div>
 		<div>
 			<label>選考ステータス詳細</label>
-			<select th:field="*{slcStatusDtlId}">
+			<select id="slcStatusDtl" th:field="*{slcStatusDtlId}">
+				<!--
 				<option value="0">一覧</option>
 				<option value="-1">要対応</option>
 				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
+				-->
 			</select>
 		</div>
 		<input type="hidden" th:field="*{order}">
@@ -116,7 +198,7 @@
 			<td class="referrer" th:text="*{referrerName}"></td>
 			<td class="slc_status" th:text="*{slcStatusName}"></td>
 			<td class="slc_status_dtl" th:text="*{slcStatusDtlName}"></td>
-			<td class="slc_date"><div th:if="*{slcStatusDtlId == 2 || slcStatusDtlId == 6 || slcStatusDtlId == 8}" th:text="*{slcDate}"></div></td>
+			<td class="slc_date"><div th:if="*{slcStatusDtlId == 2 || slcStatusDtlId == 6 || slcStatusDtlId == 8 && slcDate != null}" th:text="*{slcDate}"></div></td>
 
 		</tr>
 		</tbody>

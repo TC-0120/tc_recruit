@@ -78,9 +78,7 @@ public class RecruitmentManagementController {
 	 */
 	@GetMapping("register")
 	public String transitionToCandidateRegisterInputScreen(Model model) {
-		//登録ドロップダウン用のリスト（選考ステータス、詳細、エージェント、紹介元）を格納
-		model.addAttribute("slcStatusList", slcStatusService.findAll());
-		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
+		//入力ドロップダウン用のリスト（採用エージェント、紹介元）を格納
 		model.addAttribute("agentList", agentService.findAll());
 		model.addAttribute("referrerList", referrerService.findAll());
 		return "candidate/register_input";
@@ -113,9 +111,7 @@ public class RecruitmentManagementController {
 	public String transitionToCandidateUpdateInputScreen(@RequestParam("candidateId") Integer id, Model model) {
 		//候補者IDから候補者情報を取得、格納
 		model.addAttribute("candidate", candidateService.findById(id));
-		//変更ドロップダウン用のリスト（選考ステータス、詳細、エージェント、紹介元）を格納
-		model.addAttribute("slcStatusList", slcStatusService.findAll());
-		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
+		//入力ドロップダウン用のリスト（採用エージェント、紹介元）を格納
 		model.addAttribute("agentList", agentService.findAll());
 		model.addAttribute("referrerList", referrerService.findAll());
 		return "candidate/update_input";

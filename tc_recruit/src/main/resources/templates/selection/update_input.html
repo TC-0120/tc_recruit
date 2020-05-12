@@ -94,8 +94,8 @@
 		<div>
 			<label th:if="*{slcStatus.slcStatusId <= 5}">選考日程</label>
 			<label th:if="*{slcStatus.slcStatusId == 6}">承諾期限</label>
-			<label th:if="*{slcStatus.slcStatusId == 7}">入社手続き日程</label>
-			<input id="slcDate" type="datetime-local" name="slcDateString" th:value="${slcDateString}" />
+			<label th:if="*{slcStatus.slcStatusId == 7 && slcStatusDtl.slcStatusDtlId != 9}">入社手続き日程</label>
+			<input th:if="*{slcStatusDtl.slcStatusDtlId != 9}" id="slcDate" type="datetime-local" name="slcDateString" th:value="${slcDateString}" />
 		</div>
 		<div>
 			<div th:if="*{slcStatus.slcStatusId >= 2 && slcStatus.slcStatusId <= 5}">
@@ -121,12 +121,17 @@
 		</div>
 		<input type="hidden" th:field="${selection.slcPK.candidateId}" />
 		<input type="hidden" th:field="${selection.slcPK.slcStatusId}" />
-		<input type="submit" value="更新"/>
+		<input th:if="*{slcStatusDtl.slcStatusDtlId != 9}" type="submit" value="更新"/>
 	</form>
 		<form th:action="@{/recruit/candidates/seleciton/nextStatus}" th:method="post">
 			<input type="hidden" name="candidateId" th:value="${candidate.candidateId}">
 			<div th:if="${candidate.slcStatusDtl.slcStatusDtlId == 3}">
-				<input type="submit" value="次選考調整"/>
+				<div th:if="${candidate.slcStatus.slcStatusId != 5}">
+					<input type="submit" value="次選考調整"/>
+				</div>
+				<div th:if="${candidate.slcStatus.slcStatusId == 5}">
+					<input type="submit" value="内定通知"/>
+				</div>
 			</div>
 			<div th:if="${candidate.slcStatusDtl.slcStatusDtlId == 7}">
 				<input type="submit" value="入社手続き調整"/>
