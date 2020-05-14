@@ -89,7 +89,7 @@ public class RecruitmentManagementController {
 	 *
 	 * @param candidate 候補者情報
 	 * @param slcDate 選考日程
-	 * @return 一覧画面
+	 * @return 候補者情報登録入力画面
 	 */
 	@PostMapping
 	public String registerCandidate(@ModelAttribute Candidate candidate, @RequestParam("slcDate") String slcDate) {
@@ -97,7 +97,7 @@ public class RecruitmentManagementController {
 		candidateService.register(candidate, slcDate);
 		//選考情報を登録
 		selectionService.register(candidate.getCandidateId(), candidate.getSlcStatus().getSlcStatusId(), slcDate);
-		return "redirect:/recruit/candidates";
+		return "redirect:/recruit/candidates/register";
 	}
 
 	/**
@@ -108,9 +108,9 @@ public class RecruitmentManagementController {
 	 * @return 候補者情報変更入力画面
 	 */
 	@GetMapping("update")
-	public String transitionToCandidateUpdateInputScreen(@RequestParam("candidateId") Integer id, Model model) {
+	public String transitionToCandidateUpdateInputScreen(@RequestParam("candidateId") Integer cId, Model model) {
 		//候補者IDから候補者情報を取得、格納
-		model.addAttribute("candidate", candidateService.findById(id));
+		model.addAttribute("candidate", candidateService.findById(cId));
 		//入力ドロップダウン用のリスト（採用エージェント、紹介元）を格納
 		model.addAttribute("agentList", agentService.findAll());
 		model.addAttribute("referrerList", referrerService.findAll());
@@ -122,14 +122,14 @@ public class RecruitmentManagementController {
 	 *
 	 * @param id 候補者ID
 	 * @param candidate 候補者情報
-	 * @return 一覧画面
+	 * @return 候補者情報変更入力画面
 	 */
-	@PostMapping("{id}")
-	public String updateCandidate(@PathVariable Integer id, @ModelAttribute Candidate candidate) {
+	@PostMapping("update")
+	public String updateCandidate(@ModelAttribute Candidate candidate, RedirectAttributes redirectAttributes) {
 		//候補者情報を変更
-		candidate.setCandidateId(id);
 		candidateService.update(candidate);
-		return "redirect:/recruit/candidates";
+		redirectAttributes.addAttribute("candidateId", candidate.getCandidateId());
+		return "redirect:/recruit/candidates/update";
 	}
 
 	/**
@@ -186,12 +186,13 @@ public class RecruitmentManagementController {
 	 * @return 一覧画面
 	 */
 	@PostMapping("selection")
-	public String updateSlcInfo(@RequestParam("slcResult") Integer slcResult, @ModelAttribute Selection slc, @RequestParam("slcDateString") String slcDateString) {
+	public String updateSlcInfo(@RequestParam("slcResult") Integer slcResult, @ModelAttribute Selection slc, @RequestParam("slcDateString") String slcDateString, RedirectAttributes redirectAttributes) {
 		//選考情報を変更
 		selectionService.update(slc, slcDateString);
 		//選考ステータスを変更
 		candidateService.updateSlcStatusDtl(slc.getSlcPK().getCandidateId(), slcResult, slcDateString);
-		return "redirect:/recruit/candidates";
+		redirectAttributes.addAttribute("candidateId", slc.getSlcPK().getCandidateId());
+		return "redirect:/recruit/candidates/selection";
 	}
 
 	/**
@@ -199,18 +200,15 @@ public class RecruitmentManagementController {
 	 *
 	 * @param cId 候補者ID
 	 * @param redirectAttributes
-	 * @return 選考情報変更画面or一覧画面
+	 * @return 選考情報変更画面
 	 */
 	@PostMapping("seleciton/nextStatus")
 	public String promoteSlcStatus(@RequestParam("candidateId") Integer cId, RedirectAttributes redirectAttributes) {
-		if (candidateService.promoteSlcStatus(cId)) {
-			//選考ステータスが最後（入社手続き）でない場合、選考情報変更画面に遷移
-			redirectAttributes.addAttribute("candidateId", cId);
-			return "redirect:/recruit/candidates/selection";
-		} else {
-			//選考ステータスが最後の場合、一覧画面に遷移
-			return "redirect:/recruit/candidates";
-		}
+		//選考ステータスを繰り上げる
+		candidateService.promoteSlcStatus(cId);
+		//選考情報変更画面に遷移
+		redirectAttributes.addAttribute("candidateId", cId);
+		return "redirect:/recruit/candidates/selection";
 	}
 
 	/**

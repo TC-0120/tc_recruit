@@ -65,6 +65,23 @@
 
 	}
 
+	function confirmUpdateCandidate() {
+		if(window.confirm("この内容で更新しますか？")){
+			return true;
+		} else{
+			return false;
+		}
+	}
+
+	function confirmDeleteCandidate() {
+		if(window.confirm("候補者情報を削除しますか？")){
+			return true;
+		} else{
+			return false;
+		}
+	}
+
+
 
 </script>
 
@@ -73,18 +90,19 @@
 	<div th:replace="header :: header_fragment"></div>
 	<h2>候補者情報変更画面</h2>
 
-	<form th:action="@{/recruit/candidates/{id}(id=*{candidateId})}" th:method="post" th:object="${candidate}">
+	<form th:action="@{/recruit/candidates/update}" th:method="post" th:object="${candidate}" onsubmit="return confirmUpdateCandidate()">
 		<div>
 			<label>ID:</label>
 			<span th:text="*{candidateId}"></span>
+			<input type="hidden" th:field="*{candidateId}">
 		</div>
 		<div>
 			<label>候補者:</label>
-			<input type="text" th:field="*{candidateName}" />
+			<input type="text" th:field="*{candidateName}" required/>
 		</div>
 		<div>
 			<label>候補者(ふりがな)</label>
-			<input type="text" th:field="*{candidateFurigana}" />
+			<input type="text" th:field="*{candidateFurigana}" required/>
 		</div>
 		<div>
 			<label>性別:</label>
@@ -137,7 +155,7 @@
 		</div> -->
 		<input type="submit" value="更新"/>
 	</form>
-	<form th:action="@{/recruit/candidates/{id}/delete(id=*{candidateId})}" th:object="${candidate}">
+	<form th:action="@{/recruit/candidates/{id}/delete(id=*{candidateId})}" th:object="${candidate}" onsubmit="return confirmDeleteCandidate()">
 		<input type="submit" value="削除"/>
 	</form>
 

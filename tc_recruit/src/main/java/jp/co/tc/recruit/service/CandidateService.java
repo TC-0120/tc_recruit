@@ -133,7 +133,7 @@ public class CandidateService {
 	 * @param cId 候補者ID
 	 * @return 選考ステータスが最後（入社手続き）でないかどうか
 	 */
-	public boolean promoteSlcStatus(Integer cId) {
+	public void promoteSlcStatus(Integer cId) {
 		Candidate candidate = findById(cId);
 		Integer slcStatusId = candidate.getSlcStatus().getSlcStatusId();
 		Integer slcStatusDtlId = candidate.getSlcStatusDtl().getSlcStatusDtlId();
@@ -143,7 +143,6 @@ public class CandidateService {
 			//選考ステータス詳細を確定に
 			candidate.setSlcStatusDtl(slcStatusDtlRepo.findBySlcStatusDtlId(SlcStatusDtlConstant.FINISHED));
 			candidateRepo.save(candidate);
-			return false;
 		}
 
 		if (slcStatusDtlId == SlcStatusDtlConstant.PASSING
@@ -165,7 +164,6 @@ public class CandidateService {
 		}
 
 		candidateRepo.save(candidate);
-		return true;
 	}
 
 	/**

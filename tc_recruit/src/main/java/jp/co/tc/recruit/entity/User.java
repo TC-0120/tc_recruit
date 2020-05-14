@@ -88,6 +88,4 @@ public class User implements UserDetails {
 		return serialVersionUID;
 	}
 
-
-
 }

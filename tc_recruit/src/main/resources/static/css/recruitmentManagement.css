@@ -9,10 +9,12 @@
   		display: block;
 	}
 	tbody {
-  		overflow-x: hidden;
-  		overflow-y: scroll;
- 		height: 250px;
+ 		height: 280px;
 	}
+	.scrollbar {
+		overflow-x: hidden;
+  		overflow-y: scroll;
+  	}
 
 	.table_checkbox {
 		width: 25px;

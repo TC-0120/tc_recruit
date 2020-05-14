@@ -1,15 +1,14 @@
-	//function conditionsFormSubmit() {
-		//document.conditionsForm.submit();
-	//}
-
 	function submitAction(url) {
+		window.open("", "update_window", "width=500, height=500");
 		document.updateForm.action = '/recruit/candidates' + url;
+		document.updateForm.target = "update_window";
 		document.updateForm.submit();
 	}
 
 	function loadRecruitmentManagement() {
 		sortKeep();
 		getSlcStatusDtlAll();
+		removeScrollbar();
 	}
 
 	//チェックボックスの数でボタンの活性・非活性を判定
