@@ -1,6 +1,9 @@
 package jp.co.tc.recruit.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,7 @@ public class DashBoardController {
 		/*その他ステータス名称と集計値*/
 		model.addAttribute("ttlSlcList", ttlSlcList);
 
+
 		/*要対応事項集計*/
 		Integer ttlChkCount = 0;
 		TotalCheckView ttlChk;
@@ -73,6 +77,12 @@ public class DashBoardController {
 		model.addAttribute("ttlChkCount", ttlChkCount);
 		/*その他ステータス名称と集計値*/
 		model.addAttribute("ttlChkList", ttlChkList);
+		/*選考ステータス詳細が選考中(ID=2)の場合
+		 * 今日の日付を追加送信するためtodayを格納*/
+		Date date = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String today = dateFormat.format(date);
+		model.addAttribute("today", today);
 
 
 		/*今日明日のタスク*/

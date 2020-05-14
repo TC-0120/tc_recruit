@@ -1,6 +1,7 @@
 package jp.co.tc.recruit.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -38,4 +39,8 @@ public class LatestPlanView implements Serializable {
 	@Column(name="selection_date", nullable=true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date selectionDate;
+
+	public String getSelectionDate() {
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(selectionDate);
+	}
 }

@@ -46,7 +46,13 @@
 				<form th:action="@{/recruit/candidates}" th:method="get"
 					th:object="${conditionsForm}">
 					<input type="hidden" th:name="slcStatusId"
-						th:value="${ttlChk.selectionStatusId}" />
+						th:value="${ttlChk.selectionStatusId}" /> <input type="hidden"
+						th:name="slcStatusDetailId"
+						th:value="${ttlChk.selectionStatusDetailId}" />
+					<div th:if="${ttlChk.selectionStatusDetailId} == 2">
+						<input type="hidden" th:name="to"
+							th:value="${today}" />
+					</div>
 					<button type="submit" name="aaa" value="aaa">
 						<div th:text="${ttlChk.statusMessage}"></div>
 						<div
