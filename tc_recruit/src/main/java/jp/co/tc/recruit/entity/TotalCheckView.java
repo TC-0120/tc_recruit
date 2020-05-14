@@ -32,9 +32,9 @@ public class TotalCheckView implements Serializable {
 	@Column(name="selection_status_detail_name")
 	private String selectionStatusDetailName;
 
-	@Column(name = "total_except_assessment")
-	private Integer totalExceptAssessment;
+	@Column(name = "total_count")
+	private Integer totalCount;
 
-	@Column(name = "total_assessment")
-	private Integer totalAssessment;
+	@Column(name = "total_over_date")
+	private Integer totalOverDate;
 }

@@ -56,11 +56,13 @@
 					<button type="submit" name="aaa" value="aaa">
 						<div th:text="${ttlChk.statusMessage}"></div>
 						<div
-							th:text="${ttlChk.statusMessageId == 11
-							|| ttlChk.statusMessageId == 14
+							th:text="${ttlChk.statusMessageId == 12
 							|| ttlChk.statusMessageId == 16
-							|| ttlChk.statusMessageId == 18}?
-							${ttlChk.totalExceptAssessment} : ${ttlChk.totalAssessment}">
+							|| ttlChk.statusMessageId == 19
+							|| ttlChk.statusMessageId == 22
+							|| ttlChk.statusMessageId == 24
+							|| ttlChk.statusMessageId == 27}?
+							${ttlChk.totalOverDate} : ${ttlChk.totalCount}">
 						</div>
 					</button>
 				</form>

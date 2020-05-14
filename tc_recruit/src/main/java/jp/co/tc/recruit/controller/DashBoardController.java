@@ -41,7 +41,7 @@ public class DashBoardController {
 		List<TotalSelectionView> ttlSlcList = new ArrayList<TotalSelectionView>();
 		/*選考中(ALL)のみ集計値がDBにないので先に取り出し*/
 		TotalSelectionView ttlSlcAll = ttlSlcSvc.findByStatusMessageId(1);
-		for (sttMsgId = 2; sttMsgId <= 8; sttMsgId++) {
+		for (sttMsgId = 2; sttMsgId <= 9; sttMsgId++) {
 			ttlSlc = ttlSlcSvc.findByStatusMessageId(sttMsgId);
 			ttlSlcList.add(ttlSlc);
 			ttlSlcCount += ttlSlc.getCount();
@@ -59,16 +59,17 @@ public class DashBoardController {
 		TotalCheckView ttlChk;
 		List<TotalCheckView> ttlChkList = new ArrayList<TotalCheckView>();
 		/*要対応(ALL)のみ集計値がDBにないので先に取り出し*/
-		TotalCheckView ttlChkAll = ttlChkSvc.findByStatusMessageId(9);
-		for (sttMsgId = 10; sttMsgId <= 22; sttMsgId++) {
+		TotalCheckView ttlChkAll = ttlChkSvc.findByStatusMessageId(10);
+		for (sttMsgId = 11; sttMsgId <= 27; sttMsgId++) {
 			ttlChk = ttlChkSvc.findByStatusMessageId(sttMsgId);
 			ttlChkList.add(ttlChk);
-			/*要対応(ALL)の集計：合否判定はtotal_except_assessment
-			                     それ以外はtotal_assessmentの値を足し合わせる*/
-			if (sttMsgId == 11 || sttMsgId == 14 || sttMsgId == 16 || sttMsgId == 18)
-				ttlChkCount += ttlChk.getTotalExceptAssessment();
-			else {
-				ttlChkCount += ttlChk.getTotalAssessment();
+			/*要対応(ALL)の集計：合否判定、承諾待ち、確定はtotal_over_date
+			                     それ以外はtotal_countの値を足し合わせる*/
+			if (sttMsgId == 12 || sttMsgId == 16 || sttMsgId == 19
+					|| sttMsgId == 22 || sttMsgId == 24 || sttMsgId == 27 ) {
+				ttlChkCount += ttlChk.getTotalOverDate();
+			}else {
+				ttlChkCount += ttlChk.getTotalCount();
 			}
 		}
 		/*要対応(ALL)ステータス名称用*/
