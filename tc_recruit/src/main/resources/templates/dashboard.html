@@ -29,7 +29,6 @@
 					</button>
 				</form>
 			</td>
-
 		</tr>
 	</table>
 	<table>
@@ -37,8 +36,6 @@
 			<td>
 				<form th:action="@{/recruit/candidates}" th:method="get"
 					th:object="${conditionsForm}">
-					<!-- 要対応事項の判定は何が必要か、櫻井さんに確認 -->
-					<!-- <input type="hidden" th:name="slcStatusId" th:value="${1}"/> -->
 					<button type="submit" name="aaa" value="aaa">
 						<div th:text="${ttlChkAll.statusMessage}"></div>
 						<div th:text="${ttlChkCount}"></div>
@@ -48,8 +45,6 @@
 			<td th:each="ttlChk: ${ttlChkList}" th:object="${ttlChk}">
 				<form th:action="@{/recruit/candidates}" th:method="get"
 					th:object="${conditionsForm}">
-					<!-- 要対応事項、各項目に必要なデータを櫻井さんに確認 -->
-					<!-- ステータスID、詳細ステータスID、時間をhiddenで送る？ -->
 					<input type="hidden" th:name="slcStatusId"
 						th:value="${ttlChk.selectionStatusId}" />
 					<button type="submit" name="aaa" value="aaa">
@@ -66,5 +61,28 @@
 			</td>
 		</tr>
 	</table>
+
+	<form th:action="@{/recruit/candidates}" th:method="get"
+		th:object="${conditionsForm}">
+		<button type="submit" name="aaa" value="aaa">候補者一覧</button>
+	</form>
+	<div th:if="${result}">
+		<table border=1>
+			<tr>
+				<td>時間</td>
+				<td>候補者名</td>
+				<td>ステータス</td>
+			</tr>
+			<tr th:each="ltsPln: ${ltsPlnList}" th:object="${ltsPln}">
+				<td th:text="${ltsPln.selectionDate}"></td>
+				<td th:text="${ltsPln.candidateName}"></td>
+				<td th:text="${ltsPln.selectionStatusName}"></td>
+			</tr>
+		</table>
+	</div>
+	<div th:unless="${result}">
+		<p>直近の面接予定はありません</p>
+	</div>
+
 </body>
 </html>
