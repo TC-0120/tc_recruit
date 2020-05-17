@@ -60,13 +60,13 @@ public class DashBoardController {
 		List<TotalCheckView> ttlChkList = new ArrayList<TotalCheckView>();
 		/*要対応(ALL)のみ集計値がDBにないので先に取り出し*/
 		TotalCheckView ttlChkAll = ttlChkSvc.findByStatusMessageId(10);
-		for (sttMsgId = 11; sttMsgId <= 27; sttMsgId++) {
+		for (sttMsgId = 11; sttMsgId <= 26; sttMsgId++) {
 			ttlChk = ttlChkSvc.findByStatusMessageId(sttMsgId);
 			ttlChkList.add(ttlChk);
 			/*要対応(ALL)の集計：合否判定、承諾待ち、確定はtotal_over_date
 			                     それ以外はtotal_countの値を足し合わせる*/
-			if (sttMsgId == 12 || sttMsgId == 16 || sttMsgId == 19
-					|| sttMsgId == 22 || sttMsgId == 24 || sttMsgId == 27 ) {
+			if (sttMsgId == 11 || sttMsgId == 12 || sttMsgId == 15 || sttMsgId == 18
+					|| sttMsgId == 21 || sttMsgId == 23 || sttMsgId == 26 ) {
 				ttlChkCount += ttlChk.getTotalOverDate();
 			}else {
 				ttlChkCount += ttlChk.getTotalCount();
@@ -78,10 +78,10 @@ public class DashBoardController {
 		model.addAttribute("ttlChkCount", ttlChkCount);
 		/*その他ステータス名称と集計値*/
 		model.addAttribute("ttlChkList", ttlChkList);
-		/*選考ステータス詳細が選考中(ID=2)の場合
+		/*選考ステータス詳細が選考中,承諾待ち,確定(ID=2||6||8)の場合
 		 * 今日の日付を追加送信するためtodayを格納*/
 		Date date = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String today = dateFormat.format(date);
 		model.addAttribute("today", today);
 

@@ -115,7 +115,8 @@
 			<td class="referrer" th:text="*{referrerName}"></td>
 			<td class="slc_status" th:text="*{slcStatusName}"></td>
 			<td class="slc_status_dtl" th:text="*{slcStatusDtlName}"></td>
-			<td class="slc_date"><div th:if="*{slcStatusDtlId == 2 || slcStatusDtlId == 6 || slcStatusDtlId == 8}" th:text="*{slcDate}"></div></td>
+			<td class="slc_date"><div th:if="*{(slcStatusDtlId == 2 || slcStatusDtlId == 6
+			|| slcStatusDtlId == 8) && slcDate != null}" th:text="*{slcDate}"></div></td>
 
 		</tr>
 		</tbody>

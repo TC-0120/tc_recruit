@@ -16,7 +16,6 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		System.out.println("1：" + username);
 
 		if (username == null || username.isEmpty()) {
 			throw new UsernameNotFoundException("");
@@ -25,7 +24,6 @@ public class UserService implements UserDetailsService {
 		if (userInfo == null) {
 			throw new UsernameNotFoundException("");
 		}
-		System.out.println("2：" + userInfo.getUsername());
 
 		return userInfo;
 	}
