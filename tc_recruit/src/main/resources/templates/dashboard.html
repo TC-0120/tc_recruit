@@ -48,7 +48,8 @@
 				<form th:action="@{/recruit/candidates}" th:method="get"
 					th:object="${conditionsForm}">
 					<input type="hidden" th:name="slcStatusId"
-						th:value="${ttlChk.selectionStatusId}" /> <input type="hidden"
+						th:value="${ttlChk.selectionStatusId}" />
+					<input type="hidden"
 						th:name="slcStatusDtlId"
 						th:value="${ttlChk.selectionStatusDetailId}" />
 					<div
@@ -60,12 +61,12 @@
 					<button type="submit" name="aaa" value="aaa">
 						<div th:text="${ttlChk.statusMessage}"></div>
 						<div
-							th:text="${ttlChk.statusMessageId == 12
-							|| ttlChk.statusMessageId == 16
-							|| ttlChk.statusMessageId == 19
-							|| ttlChk.statusMessageId == 22
-							|| ttlChk.statusMessageId == 24
-							|| ttlChk.statusMessageId == 27}?
+							th:text="${ttlChk.statusMessageId == 11
+							|| ttlChk.statusMessageId == 12
+							|| ttlChk.statusMessageId == 18
+							|| ttlChk.statusMessageId == 21
+							|| ttlChk.statusMessageId == 23
+							|| ttlChk.statusMessageId == 26}?
 							${ttlChk.totalOverDate} : ${ttlChk.totalCount}">
 						</div>
 					</button>
@@ -76,7 +77,8 @@
 
 	<form th:action="@{/recruit/candidates}" th:method="get"
 		th:object="${conditionsForm}">
-		<button type="submit" name="aaa" value="aaa">候補者一覧</button>
+		<button type="submit" name="aaa" value="aaa">今日明日の面接予定一覧</button>
+		<input type="hidden" th:name="to" th:value="${tomorrow}" />
 	</form>
 	<div th:if="${result}">
 		<table border=1>

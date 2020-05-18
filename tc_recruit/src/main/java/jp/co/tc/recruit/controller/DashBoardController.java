@@ -3,8 +3,10 @@ package jp.co.tc.recruit.controller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -78,7 +80,7 @@ public class DashBoardController {
 		model.addAttribute("ttlChkCount", ttlChkCount);
 		/*その他ステータス名称と集計値*/
 		model.addAttribute("ttlChkList", ttlChkList);
-		/*選考ステータス詳細が選考中,承諾待ち,確定(ID=2||6||8)の場合
+		/*選考ステータス詳細が選考中,承諾待ち,確定(詳細ID=2||6||8)の場合
 		 * 今日の日付を追加送信するためtodayを格納*/
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -93,8 +95,17 @@ public class DashBoardController {
 		if(CollectionUtils.isEmpty(ltsPlnList)) {
 			result = false;
 		}
+		/*今日明日のタスクリスト*/
 		model.addAttribute("ltsPlnList", ltsPlnList);
+		/*今日明日のタスクリストEmptyか否か*/
 		model.addAttribute("result", result);
+		/*今日明日の面接予定者一覧ボタン押下で
+		 * 明日の日付を送信するためtomorrowを格納*/
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		String tomorrow = new SimpleDateFormat("yyyy-MM-dd",Locale.US).format(cal.getTime());
+		model.addAttribute("tomorrow", tomorrow);
 
 		return "dashboard";
 	}
