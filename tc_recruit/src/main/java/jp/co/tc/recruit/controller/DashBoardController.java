@@ -110,6 +110,7 @@ public class DashBoardController {
 		Integer[] ttlCountByTskType = { ttlScheduleCount, ttlAssessmentCount, ttlUnreportCount };
 		model.addAttribute("ttlCountByTskType", ttlCountByTskType);
 
+		
 		/*今日明日のタスク*/
 		boolean result = true;
 		List<LatestPlanView> ltsPlnList = new ArrayList<LatestPlanView>();

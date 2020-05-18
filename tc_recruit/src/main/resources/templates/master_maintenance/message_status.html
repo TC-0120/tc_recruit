@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>masterMaintenanceOfStatus</title>
+</head>
+<body>
+	<h2>マスタメンテナンス</h2>
+	<p>ダッシュボード：ステータス一覧</p>
+	<form name="statusForm" th:action="@{/maintenance/message_status}" th:method="get" th:object="${statusForm}">
+	<input type="button" value="一括変更">
+		<table border=1>
+			<tr>
+				<td>表示名</td>
+				<td>ステータス</td>
+				<td>ステータス詳細</td>
+			</tr>
+			<tr th:each="msgStt: ${msgSttList}">
+				<td>
+				<input type="hidden" th:value="${msgStt.statusMessageId}">
+				<input th:value="${msgStt.statusMessage}">
+				</td>
+				<td>
+				<select id="msgStt.selectionStatusId" name="slcStatusId">
+					<option th:each="slcStt: ${slcStt}"
+					th:value="${slcStt.slcStatusId}"
+					th:text="${slcStt.slcStatusName}"
+					th:selected="${slcStt.slcStatusId == msgStt.selectionStatusId}">
+				</select>
+				</td>
+				<td>
+					<select id="msgStt.selectionStatusDetailId" name="slcStatusDtId">
+					<option th:each="slcSttDtl: ${slcSttDtl}"
+					th:value="${slcSttDtl.slcStatusDtlId}"
+					th:text="${slcSttDtl.slcStatusDtlName}"
+					th:selected="${slcSttDtl.slcStatusDtlId} == ${msgStt.selectionStatusDetailId}">
+					</select>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

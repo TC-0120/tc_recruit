@@ -5,8 +5,20 @@
 <title>DashBoard</title>
 </head>
 <body>
-	<h2>ダッシュボード</h2>
+	<h2>マスタメンテナンス</h2>
+	<p>ダッシュボード</p>
 	<table>
+		<tr>
+			<td>ステータス名
+			<form th:action="@{/maintenance/message_status}" th:method="get">
+				<button type="submit" name="aaa" value="aaa">
+					<div>変更</div>
+				</button>
+			</form>
+			</td>
+		</tr>
+	</table>
+	<!-- <table>
 		<tr>
 			<td>
 				<form th:action="@{/recruit/candidates}" th:method="get"
@@ -133,8 +145,7 @@
 	</div>
 	<div th:unless="${result}">
 		<p>直近の面接予定はありません</p>
-	</div>
+	</div> -->
 
-<a th:href="@{/maintenance}">マスタメンテナンス</a>
 </body>
 </html>
