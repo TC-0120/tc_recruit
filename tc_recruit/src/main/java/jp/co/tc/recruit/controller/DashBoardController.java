@@ -55,7 +55,6 @@ public class DashBoardController {
 		/*その他ステータス名称と集計値*/
 		model.addAttribute("ttlSlcList", ttlSlcList);
 
-
 		/*要対応事項集計*/
 		Integer ttlChkCount = 0;
 		TotalCheckView ttlChk;
@@ -68,9 +67,9 @@ public class DashBoardController {
 			/*要対応(ALL)の集計：合否判定、承諾待ち、確定はtotal_over_date
 			                     それ以外はtotal_countの値を足し合わせる*/
 			if (sttMsgId == 11 || sttMsgId == 12 || sttMsgId == 15 || sttMsgId == 18
-					|| sttMsgId == 21 || sttMsgId == 23 || sttMsgId == 26 ) {
+					|| sttMsgId == 21 || sttMsgId == 23 || sttMsgId == 26) {
 				ttlChkCount += ttlChk.getTotalOverDate();
-			}else {
+			} else {
 				ttlChkCount += ttlChk.getTotalCount();
 			}
 		}
@@ -87,12 +86,35 @@ public class DashBoardController {
 		String today = dateFormat.format(date);
 		model.addAttribute("today", today);
 
+		/*タスク別の集計*/
+		Integer ttlScheduleCount = 0;
+		Integer ttlAssessmentCount = 0;
+		Integer ttlUnreportCount = 0;
+		TotalCheckView ttlTskChk;
+		for (sttMsgId = 11; sttMsgId <= 26; sttMsgId++) {
+			ttlTskChk = ttlChkSvc.findByStatusMessageId(sttMsgId);
+			/*メッセージステータスが日程調整,合否判定,合格未通知
+			 * (total_check_viewの管理下で、詳細ID=1||2||3)の場合、それぞれ集計*/
+			if (ttlTskChk.getSelectionStatusDetailId() == 1) {
+				ttlScheduleCount += ttlTskChk.getTotalCount();
+			} else if (ttlTskChk.getSelectionStatusDetailId() == 2) {
+				ttlAssessmentCount += ttlTskChk.getTotalOverDate();
+			} else if (ttlTskChk.getSelectionStatusDetailId() == 3) {
+				ttlUnreportCount += ttlTskChk.getTotalCount();
+			}
+		}
+		/*タスク別集計のステータス名称*/
+		String[] statusByTskType = { "日程調整", "合否判定", "合格未通知" };
+		model.addAttribute("statusByTskType", statusByTskType);
+		/*タスク別の集計値*/
+		Integer[] ttlCountByTskType = { ttlScheduleCount, ttlAssessmentCount, ttlUnreportCount };
+		model.addAttribute("ttlCountByTskType", ttlCountByTskType);
 
 		/*今日明日のタスク*/
 		boolean result = true;
 		List<LatestPlanView> ltsPlnList = new ArrayList<LatestPlanView>();
 		ltsPlnList = ltsPlnSvc.findAll();
-		if(CollectionUtils.isEmpty(ltsPlnList)) {
+		if (CollectionUtils.isEmpty(ltsPlnList)) {
 			result = false;
 		}
 		/*今日明日のタスクリスト*/
@@ -104,7 +126,7 @@ public class DashBoardController {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.DAY_OF_MONTH, 1);
-		String tomorrow = new SimpleDateFormat("yyyy-MM-dd",Locale.US).format(cal.getTime());
+		String tomorrow = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(cal.getTime());
 		model.addAttribute("tomorrow", tomorrow);
 
 		return "dashboard";
