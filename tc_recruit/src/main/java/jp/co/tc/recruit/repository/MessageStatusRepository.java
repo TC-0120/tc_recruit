@@ -8,6 +8,5 @@ import jp.co.tc.recruit.entity.MessageStatus;
 
 public interface MessageStatusRepository extends JpaRepository<MessageStatus, Integer>{
 	public MessageStatus findByStatusMessageId(Integer statusMessageId);
-
-	public List<MessageStatus> findAll();
+	public List<MessageStatus> findAllByOrderByStatusMessageId();
 }
