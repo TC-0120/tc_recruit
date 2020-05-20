@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<style type="text/css">
+/* サイドオープン時にメインコンテンツを覆う部分 */
+.overlay {
+  content: '\0ab';
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0);
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+  z-index: 3;
+}
+.overlay::after {
+  content: "\0ab";
+  visibility: hidden;
+  position: fixed;
+  top: 40%;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 50px;
+  color: rgba(255,255,255,0);
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+}
+.side-open .overlay {
+  visibility: visible;
+  cursor: pointer;
+  background: rgba(0,0,0,.7);
+}
+.side-open .overlay::after {
+  visibility: visible;
+  color: rgba(255,255,255,.8);
+}
+
+/* サイドメニュー ※リストのスタイルは省略 */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  text-align: left;
+  font-size: 13px;
+  background: #2A408E;
+  z-index: 1;
+}
+
+/* 開閉用ボタン ※ボタンの細かいスタイルは省略 */
+.side-menu-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  background: #ccc;
+  cursor: pointer;
+  z-index: 4;
+}
+
+/* サイドメニューオープン */
+.side-open .wrapper,
+.side-open .overlay {
+  -webkit-transform: translate3d(-300px, 0, 0);
+  transform: translate3d(-300px, 0, 0);
+}
+</style>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+$(function () {
+  var $body = $('body');
+  $('#js__sideMenuBtn').on('click', function () {
+    $body.toggleClass('side-open');
+    $('#js__overlay').on('click', function () {
+      $body.removeClass('side-open');
+    });
+  });
+});
+</script>
+
+
+</head>
+<body>
+<div th:fragment="sideMenu">
+  <!-- サイドオープン時メインコンテンツを覆う -->
+  <div class="overlay" id="js__overlay">〇</div>
+
+  <!-- サイドメニュー -->
+  <nav class="side-menu">
+    <ul>
+      <li><a th:href="@{/maintenance}">マスタメンテナンス</a></li>
+      <li><a href="#">メニュータイトル</a></li>
+      <li><a href="#">メニュータイトル</a></li>
+    </ul>
+  </nav>
+
+  <!-- 開閉用ボタン -->
+  <div class="side-menu-btn" id="js__sideMenuBtn">×</div>
+
+</div>
+</body>
+</html>

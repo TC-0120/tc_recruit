@@ -3,9 +3,23 @@
 <head>
 <meta charset="utf-8" />
 <title>DashBoard</title>
+
+<style type="text/css">
+.main {
+  width: 85%;
+  float: right;
+}
+
+.side_menu {
+  width: 15%;
+  float: left;
+}
+</style>
+
 </head>
 <body>
 	<h2>ダッシュボード</h2>
+	<div class="main">
 	<table>
 		<tr>
 			<td>
@@ -140,7 +154,11 @@
 	<div th:unless="${result}">
 		<p>直近の面接予定はありません</p>
 	</div>
+	</div>
 
-	<a th:href="@{/maintenance}">マスタメンテナンス</a>
+	<!-- サイドメニュー -->
+	<div class="side_menu">
+          <div th:include="side_menu::sideMenu"></div>
+    </div>
 </body>
 </html>

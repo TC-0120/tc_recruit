@@ -19,8 +19,8 @@ public class MessageStatusService {
 		return msgSttRepo.findByStatusMessageId(statusMessageId);
 	}
 
-	public List<MessageStatus> findAllByOrderByStatusMessageId(){
-		return msgSttRepo.findAllByOrderByStatusMessageId();
+	public List<MessageStatus> findAllByOrderBySelectionStatusIdAscSelectionStatusDetailIdAsc(){
+		return msgSttRepo.findAllByOrderBySelectionStatusIdAscSelectionStatusDetailIdAsc();
 	}
 
 	/**

@@ -43,13 +43,4 @@ public class Referrer {
 	@OneToMany(mappedBy="agent", cascade=CascadeType.ALL)
 	private List<Candidate> candidates;
 
-	public List<Candidate> getCandidates() {
-		return candidates;
-	}
-
-	public void setCandidates(List<Candidate> candidates) {
-		this.candidates = candidates;
-	}
-
-
 }

@@ -60,7 +60,7 @@ public class MasterMaintenanceController {
 		List<SelectionStatus> slcStt;
 		List<SelectionStatusDetail> slcSttDtl;
 		List<MessageStatus> msgSttList;
-		msgSttList = msgSttSvc.findAllByOrderByStatusMessageId();
+		msgSttList = msgSttSvc.findAllByOrderBySelectionStatusIdAscSelectionStatusDetailIdAsc();
 		slcStt = slcSttSvc.findAll();
 		slcSttDtl = slcSttDtlSvc.findAll();
 
