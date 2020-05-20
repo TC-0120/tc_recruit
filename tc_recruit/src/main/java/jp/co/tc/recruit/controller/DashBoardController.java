@@ -66,8 +66,13 @@ public class DashBoardController {
 			ttlChkList.add(ttlChk);
 			/*要対応(ALL)の集計：合否判定、承諾待ち、確定はtotal_over_date
 			                     それ以外はtotal_countの値を足し合わせる*/
-			if (sttMsgId == 11 || sttMsgId == 12 || sttMsgId == 15 || sttMsgId == 18
-					|| sttMsgId == 21 || sttMsgId == 23 || sttMsgId == 26) {
+			if ((ttlChk.getSelectionStatusId() == 1 && ttlChk.getSelectionStatusDetailId() == 2)
+					|| (ttlChk.getSelectionStatusId() == 2 && ttlChk.getSelectionStatusDetailId() == 2)
+					|| (ttlChk.getSelectionStatusId() == 3 && ttlChk.getSelectionStatusDetailId() == 2)
+					|| (ttlChk.getSelectionStatusId() == 4 && ttlChk.getSelectionStatusDetailId() == 2)
+					|| (ttlChk.getSelectionStatusId() == 5 && ttlChk.getSelectionStatusDetailId() == 2)
+					|| (ttlChk.getSelectionStatusId() == 6 && ttlChk.getSelectionStatusDetailId() == 6)
+					|| (ttlChk.getSelectionStatusId() == 7 && ttlChk.getSelectionStatusDetailId() == 8)) {
 				ttlChkCount += ttlChk.getTotalOverDate();
 			} else {
 				ttlChkCount += ttlChk.getTotalCount();
@@ -110,7 +115,7 @@ public class DashBoardController {
 		Integer[] ttlCountByTskType = { ttlScheduleCount, ttlAssessmentCount, ttlUnreportCount };
 		model.addAttribute("ttlCountByTskType", ttlCountByTskType);
 
-		
+
 		/*今日明日のタスク*/
 		boolean result = true;
 		List<LatestPlanView> ltsPlnList = new ArrayList<LatestPlanView>();
