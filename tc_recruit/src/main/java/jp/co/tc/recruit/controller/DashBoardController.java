@@ -14,9 +14,11 @@ import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import jp.co.tc.recruit.entity.Candidate;
 import jp.co.tc.recruit.entity.LatestPlanView;
 import jp.co.tc.recruit.entity.TotalCheckView;
 import jp.co.tc.recruit.entity.TotalSelectionView;
+import jp.co.tc.recruit.service.CandidateService;
 import jp.co.tc.recruit.service.LatestPlanService;
 import jp.co.tc.recruit.service.MessageStatusService;
 import jp.co.tc.recruit.service.TotalCheckService;
@@ -33,6 +35,8 @@ public class DashBoardController {
 	MessageStatusService msgSttSvc;
 	@Autowired
 	LatestPlanService ltsPlnSvc;
+	@Autowired
+	CandidateService cddSvc;
 
 	@GetMapping("/dashboard")
 	public String getDashBoard(Model model) {
@@ -48,12 +52,23 @@ public class DashBoardController {
 			ttlSlcList.add(ttlSlc);
 			ttlSlcCount += ttlSlc.getCount();
 		}
+		/*適性検査未受検者はcandedateテーブルのappitude_flg(=0)から集計*/
+		List<Candidate> candidateAll = cddSvc.findAll();
+		Integer aptFlgCount = 0;
+		for (Integer cddId = 1; cddId <= candidateAll.size(); cddId++) {
+			if (cddSvc.findById(cddId).getAptitudeFlag() == 0) {
+				aptFlgCount++;
+			}
+		}
+
 		/*選考中(ALL)ステータス名称用*/
 		model.addAttribute("ttlSlcAll", ttlSlcAll);
 		/*選考中(ALL)の候補者全数*/
 		model.addAttribute("ttlSlcCount", ttlSlcCount);
 		/*その他ステータス名称と集計値*/
 		model.addAttribute("ttlSlcList", ttlSlcList);
+		/*適性検査完了者集計値*/
+		model.addAttribute("aptFlgCount", aptFlgCount);
 
 		/*要対応事項集計*/
 		Integer ttlChkCount = 0;
@@ -114,7 +129,6 @@ public class DashBoardController {
 		/*タスク別の集計値*/
 		Integer[] ttlCountByTskType = { ttlScheduleCount, ttlAssessmentCount, ttlUnreportCount };
 		model.addAttribute("ttlCountByTskType", ttlCountByTskType);
-
 
 		/*今日明日のタスク*/
 		boolean result = true;

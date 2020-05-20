@@ -26,7 +26,12 @@
 						th:value="${ttlSlc.selectionStatusId}" />
 					<button type="submit" name="aaa" value="aaa">
 						<div th:text="${ttlSlc.statusMessage}"></div>
-						<div th:text="${ttlSlc.count}"></div>
+						<div th:unless="${ttlSlc.selectionStatusId == 8}">
+							<div th:text="${ttlSlc.count}"></div>
+						</div>
+						<div th:if="${ttlSlc.selectionStatusId == 8}">
+							<div th:text="${aptFlgCount}"></div>
+						</div>
 					</button>
 				</form>
 			</td>
@@ -89,8 +94,8 @@
 			<td>
 				<form th:action="@{/recruit/candidates}" th:method="get"
 					th:object="${conditionsForm}">
-					<input type="hidden" th:name="slcStatusDtlId" th:value="${2}" />
-					<input type="hidden" th:name="to" th:value="${today}"/>
+					<input type="hidden" th:name="slcStatusDtlId" th:value="${2}" /> <input
+						type="hidden" th:name="to" th:value="${today}" />
 					<button>
 						<div th:text="${statusByTskType[1]}"></div>
 						<div th:text="${ttlCountByTskType[1]}"></div>
@@ -136,6 +141,6 @@
 		<p>直近の面接予定はありません</p>
 	</div>
 
-<a th:href="@{/maintenance}">マスタメンテナンス</a>
+	<a th:href="@{/maintenance}">マスタメンテナンス</a>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package jp.co.tc.recruit.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import jp.co.tc.recruit.entity.Candidate;
@@ -13,5 +15,6 @@ import jp.co.tc.recruit.entity.Candidate;
 public interface CandidateRepository extends JpaRepository<Candidate, Integer> {
 
 	public Candidate findByCandidateId(Integer id);
+	public List<Candidate> findAll();
 
 }

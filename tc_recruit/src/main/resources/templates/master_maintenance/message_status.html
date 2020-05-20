@@ -18,9 +18,8 @@
 				<td>ステータス詳細</td>
 			</tr>
 			<tr th:each="msgStt: ${msgSttList}">
-				<td><input th:type="hidden" th:name="statusMessageId"
-					th:value="${msgStt.statusMessageId}"> <input
-					th:name="statusMessage" th:value="${msgStt.statusMessage}">
+				<td><input th:name="statusMessage" th:value="${msgStt.statusMessage}">
+				<input type="hidden" th:name="statusMessageId" th:value="${msgStt.statusMessageId}">
 				</td>
 
 				<td>
@@ -31,6 +30,9 @@
 								th:text="${slcStt.slcStatusName}"
 								th:selected="${slcStt.slcStatusId == msgStt.selectionStatusId}">
 						</select>
+					</div>
+					<div th:if="${msgStt.selectionStatusId == 9}">
+					<input type="hidden" th:name="selectionStatusId" th:value="${9}">
 					</div>
 				</td>
 
@@ -43,6 +45,9 @@
 								th:text="${slcSttDtl.slcStatusDtlName}"
 								th:selected="${slcSttDtl.slcStatusDtlId} == ${msgStt.selectionStatusDetailId}">
 						</select>
+					</div>
+					<div th:if="${msgStt.selectionStatusDetailId == 10}">
+					<input type="hidden" th:name="selectionStatusDetailId" th:value="${10}">
 					</div>
 				</td>
 			</tr>

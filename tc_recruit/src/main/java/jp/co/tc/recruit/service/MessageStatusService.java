@@ -31,7 +31,6 @@ public class MessageStatusService {
 	 *
 	 */
 	public void messageStatusUpdate(MessageStatusForm msgSttForm) {
-		/*List<MessageStatus> msgSttList = new ArrayList<MessageStatus>();*/
 		MessageStatus msgStt = new MessageStatus();
 
 		for (int i = 0; i < msgSttForm.getStatusMessageId().size(); i++) {

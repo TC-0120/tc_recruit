@@ -42,6 +42,9 @@ public class CandidateService {
 	public Candidate findById(Integer id) {
 		return candidateRepo.findByCandidateId(id);
 	}
+	public List<Candidate> findAll(){
+		return candidateRepo.findAll();
+	}
 
 
 	/**
