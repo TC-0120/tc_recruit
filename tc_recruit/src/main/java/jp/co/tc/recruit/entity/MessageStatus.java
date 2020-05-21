@@ -3,7 +3,9 @@ package jp.co.tc.recruit.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -13,7 +15,8 @@ import lombok.Data;
 @Table(name="XXTC_MESSAGE_STATUS")
 public class MessageStatus {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "message_status_sequence")
+	@SequenceGenerator(name = "message_status_sequence", sequenceName = "message_status_sequence", allocationSize = 1)
 	@Column(name="status_message_id")
 	private Integer statusMessageId;
 

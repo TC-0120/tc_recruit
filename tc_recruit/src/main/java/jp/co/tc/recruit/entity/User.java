@@ -33,8 +33,8 @@ public class User implements UserDetails {
 
 	@Id
 	@Column(nullable = false, unique = true)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_seq")
-	@SequenceGenerator(name = "id_seq", sequenceName = "id_seq", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
+	@SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false, unique = true)

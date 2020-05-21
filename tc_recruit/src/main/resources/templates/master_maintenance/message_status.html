@@ -25,9 +25,9 @@ margin: 10px;
 				<td>ステータス詳細</td>
 			</tr>
 			<tr th:each="msgStt: ${msgSttList}">
-				<td><input th:name="statusMessage"
-					th:value="${msgStt.statusMessage}"> <input type="hidden"
-					th:name="statusMessageId" th:value="${msgStt.statusMessageId}">
+				<td>
+					<input th:name="statusMessage" th:value="${msgStt.statusMessage}">
+					<input type="hidden" th:name="statusMessageId" th:value="${msgStt.statusMessageId}">
 				</td>
 
 				<td>
@@ -66,18 +66,28 @@ margin: 10px;
 
 	<div class="input">
 	<p>表示項目追加</p><br>
-		<input th:name="statusMessage"> <select
-			th:name="selectionStatusId">
-			<option th:each="slcStt: ${slcStt}" th:value="${slcStt.slcStatusId}"
+		<form th:name="MessageStatus"
+		th:action="@{/maintenance/message_status/input}"
+		th:object="${MessageStatus}" th:method="post">
+
+		<input type="text" th:name="statusMessage">
+		<select th:name="selectionStatusId">
+			<option th:each="slcStt: ${slcStt}"
+				th:value="${slcStt.slcStatusId}"
 				th:text="${slcStt.slcStatusName}"
 				th:selected="${slcStt.slcStatusId} == 9">
-		</select> <select name="selectionStatusDetailId">
+		</select>
+		<select name="selectionStatusDetailId">
 			<option th:each="slcSttDtl: ${slcSttDtl}"
 				th:value="${slcSttDtl.slcStatusDtlId}"
 				th:text="${slcSttDtl.slcStatusDtlName}"
 				th:selected="${slcSttDtl.slcStatusDtlId} == 10">
-		</select> <br> <input type="submit" value="追加">
+		</select>
+		<input type="submit" value="追加">
+
+		</form>
 	</div>
+
 
 </body>
 </html>

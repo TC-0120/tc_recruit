@@ -10,7 +10,6 @@ import lombok.Data;
 /**
  * ステータス変更フォームクラス
  *
- * 未使用
  */
 @Data
 public class MessageStatusForm {
