@@ -19,12 +19,13 @@ public class MessageStatusForm {
         private List<String> statusMessage ;
         private List<Integer> selectionStatusId;
         private List<Integer> selectionStatusDetailId;
-
+        private List<Integer> messageStatusFlag;
 	public MessageStatusForm() {
 		statusMessageId = null;
 		statusMessage = null;
 		selectionStatusId = null;
 		selectionStatusDetailId = null;
+		messageStatusFlag = null;
 	}
 
 }

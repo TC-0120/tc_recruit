@@ -28,4 +28,7 @@ public class MessageStatus {
 
 	@Column(name="selection_status_detail_id")
 	private Integer selectionStatusDetailId;
+
+	@Column(name="message_status_flag")
+	private Integer messageStatusFlag;
 }

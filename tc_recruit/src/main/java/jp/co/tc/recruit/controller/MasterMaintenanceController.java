@@ -1,5 +1,9 @@
 package jp.co.tc.recruit.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import jp.co.tc.recruit.entity.MessageStatus;
-import jp.co.tc.recruit.entity.SelectionStatus;
-import jp.co.tc.recruit.entity.SelectionStatusDetail;
 import jp.co.tc.recruit.entity.User;
-import jp.co.tc.recruit.form.MessageStatusForm;
-import jp.co.tc.recruit.form.MultipartFile;
 import jp.co.tc.recruit.form.UserForm;
 import jp.co.tc.recruit.repository.MessageStatusRepository;
 import jp.co.tc.recruit.service.MessageStatusService;
@@ -55,61 +55,6 @@ public class MasterMaintenanceController {
 	}
 
 	/**
-	 * ダッシュボードのマスタ情報の検索、表示
-	 *
-	 * @param model
-	 * @return メッセージステータスメンテナンス画面
-	 */
-	@GetMapping("message_status")
-	public String msgSttUpdateInput(
-			@ModelAttribute("MessageStatus") MessageStatusForm msgSttForm,
-			Model model) {
-		List<SelectionStatus> slcStt;
-		List<SelectionStatusDetail> slcSttDtl;
-		List<MessageStatus> msgSttList;
-		/*修正予定 findAllByOrderBySelectionStatusIdAscSelectionStatusDetailIdAsc*/
-		msgSttList = msgSttSvc.findAllByOrderByStatusMessageId();
-		slcStt = slcSttSvc.findAll();
-		slcSttDtl = slcSttDtlSvc.findAll();
-
-		/*ダッシュボードでの表示名取得*/
-		model.addAttribute("msgSttList", msgSttList);
-		/*プルダウン：ステータス*/
-		model.addAttribute("slcStt", slcStt);
-		/*プルダウン：詳細ステータス*/
-		model.addAttribute("slcSttDtl", slcSttDtl);
-		return "master_maintenance/message_status";
-	}
-
-	/**
-	 * ステータスメッセージの一括更新
-	 *
-	 * @param msgSttForm
-	 * @return ダッシュボード
-	 */
-	@PostMapping("message_status/update")
-	@Transactional(readOnly = false)
-	public String msgSttUpdateComplete(
-			@ModelAttribute("MessageStatus") MessageStatusForm msgSttForm, Model model) {
-		msgSttSvc.messageStatusUpdate(msgSttForm);
-		return "redirect:/dashboard";
-	}
-
-	/**
-	 * ステータスメッセージの挿入
-	 *
-	 * @param msgSttForm
-	 * @return ダッシュボード
-	 */
-	@PostMapping("message_status/input")
-	@Transactional(readOnly = false)
-	public String msgSttInput(
-			@ModelAttribute("MessageStatus") MessageStatus msgStt, Model model) {
-		msgSttSvc.messageStatusInput(msgStt);
-		return "redirect:/dashboard";
-	}
-
-	/**
 	 * 社員マスタの検索、表示
 	 *
 	 * @return 社員マスタメンテナンス画面
@@ -144,13 +89,23 @@ public class MasterMaintenanceController {
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@PostMapping("sample/upload")
-	public String upload(@RequestParam("upload_file") MultipartFile multipartFile, Model model) {
-		System.out.println(multipartFile
-		        .getOriginalFilename());
-		/* model.addAttribute("originalFilename", multipartFile
-		        .getOriginalFilename());*/
+	public String upload(@RequestParam("namelist.csv") MultipartFile multipartFile, Model model) {
 
-	    return "redirect:/maintenance/user";
-	}
+		 try {
+		      File file = new File("C:\\");
+		      FileReader filereader = new FileReader(file);
+		      int ch;
+		      while((ch = filereader.read()) != -1){
+		        System.out.print((char)ch);
+		      }
+		      filereader.close();
+		    } catch(FileNotFoundException e) {
+		      System.out.println(e);
+		    } catch(IOException e) {
+		      System.out.println(e);
+		    }
+
+		return"redirect:/maintenance/user";
+}
 
 }

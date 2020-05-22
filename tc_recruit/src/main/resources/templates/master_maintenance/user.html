@@ -21,39 +21,6 @@
 	margin: 10px;
 }
 </style>
-<script>
-	$(function() {
-		// アップロードボタンを押下した
-		$("#data_upload_form").submit(
-				function(event) {
-					// 要素規定の動作をキャンセルする
-					event.preventDefault();
-
-					var ajaxUrl = "user/csvCapture?";
-
-					if (window.FormData) {
-						var formData = new FormData($(this)[0]);
-
-						$.ajax({
-							type : "POST", // HTTP通信の種類
-							url : ajaxUrl, // リクエストを送信する先のURL
-							dataType : "text", // サーバーから返されるデータの型
-							data : formData, // サーバーに送信するデータ
-							processData : false,
-							contentType : false,
-						}).done(function(data) { // Ajax通信が成功した時の処理
-							alert("アップロードが完了しました。");
-						}).fail(
-								function(XMLHttpRequest, textStatus,
-										errorThrown) { // Ajax通信が失敗した時の処理
-									alert("アップロードが失敗しました。");
-								});
-					} else {
-						alert("アップロードに対応できていないブラウザです。");
-					}
-				});
-	});}
-</script>
 </head>
 <body>
 	<h2>マスタメンテナンス</h2>
@@ -109,7 +76,7 @@
 
 	<div class="input">
 	  <form name="uploadForm" action="/maintenance/sample/upload" th:action="@{/maintenance/sample/upload}" method="post" enctype="multipart/form-data">
-        <input type="file" name="upload_file"/><br />
+        <input type="file" name="namelist.csv"/><br />
         <button type="submit">upload</button>
 
     </form>

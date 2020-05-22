@@ -22,4 +22,12 @@ public class TotalCheckService {
 		return ttlChkRepo.findAll();
 	}
 
+	public List<TotalCheckView> findAllByOrderByStatusMessageId(){
+		return ttlChkRepo.findAllByOrderByStatusMessageId();
+	}
+
+	public List<TotalCheckView> findAllByOrderBySelectionStatusIdAscSelectionStatusDetailIdAsc(){
+		return ttlChkRepo.findAllByOrderBySelectionStatusIdAscSelectionStatusDetailIdAsc();
+	}
+
 }

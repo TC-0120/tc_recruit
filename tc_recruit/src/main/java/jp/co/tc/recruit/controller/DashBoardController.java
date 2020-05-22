@@ -45,9 +45,12 @@ public class DashBoardController {
 		Integer ttlSlcCount = 0;
 		TotalSelectionView ttlSlc;
 		List<TotalSelectionView> ttlSlcList = new ArrayList<TotalSelectionView>();
-		/*選考中(ALL)のみ集計値がDBにないので先に取り出し*/
-		TotalSelectionView ttlSlcAll = ttlSlcSvc.findByStatusMessageId(1);
-		for (sttMsgId = 2; sttMsgId <= 9; sttMsgId++) {
+
+		/*選考中候補者データ*/
+		List<TotalSelectionView> ttlSlcAll = ttlSlcSvc.findAllByOrderByStatusMessageId();
+		/*選考中(ALL)の候補者全数*/
+		for (sttMsgId = ttlSlcAll.get(1).getStatusMessageId(); sttMsgId <= ttlSlcAll.get(ttlSlcAll.size() - 1)
+				.getStatusMessageId(); sttMsgId++) {
 			ttlSlc = ttlSlcSvc.findByStatusMessageId(sttMsgId);
 			ttlSlcList.add(ttlSlc);
 			ttlSlcCount += ttlSlc.getCount();
@@ -61,26 +64,22 @@ public class DashBoardController {
 			}
 		}
 
-		/*選考中(ALL)ステータス名称用*/
+		/*選考中候補者データ*/
 		model.addAttribute("ttlSlcAll", ttlSlcAll);
 		/*選考中(ALL)の候補者全数*/
 		model.addAttribute("ttlSlcCount", ttlSlcCount);
-		/*その他ステータス名称と集計値*/
-		model.addAttribute("ttlSlcList", ttlSlcList);
 		/*適性検査完了者集計値*/
 		model.addAttribute("aptFlgCount", aptFlgCount);
 
 		/*要対応事項集計*/
 		Integer ttlChkCount = 0;
 		TotalCheckView ttlChk;
-		List<TotalCheckView> ttlChkList = new ArrayList<TotalCheckView>();
-		/*要対応(ALL)のみ集計値がDBにないので先に取り出し*/
-		TotalCheckView ttlChkAll = ttlChkSvc.findByStatusMessageId(10);
-		for (sttMsgId = 11; sttMsgId <= 26; sttMsgId++) {
+		/*要対応候補者データ*/
+		List<TotalCheckView> ttlChkAll = ttlChkSvc.findAllByOrderByStatusMessageId();
+		/*要対応(ALL)の候補者全数*/
+		for (sttMsgId = ttlChkAll.get(1).getStatusMessageId(); sttMsgId <= ttlChkAll.get(ttlChkAll.size() - 1)
+				.getStatusMessageId(); sttMsgId++) {
 			ttlChk = ttlChkSvc.findByStatusMessageId(sttMsgId);
-			ttlChkList.add(ttlChk);
-			/*要対応(ALL)の集計：合否判定、承諾待ち、確定はtotal_over_date
-			                     それ以外はtotal_countの値を足し合わせる*/
 			if ((ttlChk.getSelectionStatusId() == 1 && ttlChk.getSelectionStatusDetailId() == 2)
 					|| (ttlChk.getSelectionStatusId() == 2 && ttlChk.getSelectionStatusDetailId() == 2)
 					|| (ttlChk.getSelectionStatusId() == 3 && ttlChk.getSelectionStatusDetailId() == 2)
@@ -93,18 +92,18 @@ public class DashBoardController {
 				ttlChkCount += ttlChk.getTotalCount();
 			}
 		}
-		/*要対応(ALL)ステータス名称用*/
+
+		/*要対応事項のデータ*/
 		model.addAttribute("ttlChkAll", ttlChkAll);
 		/*要対応(ALL)の全数*/
 		model.addAttribute("ttlChkCount", ttlChkCount);
-		/*その他ステータス名称と集計値*/
-		model.addAttribute("ttlChkList", ttlChkList);
 		/*選考ステータス詳細が選考中,承諾待ち,確定(詳細ID=2||6||8)の場合
 		 * 今日の日付を追加送信するためtodayを格納*/
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String today = dateFormat.format(date);
 		model.addAttribute("today", today);
+
 
 		/*タスク別の集計*/
 		Integer ttlScheduleCount = 0;

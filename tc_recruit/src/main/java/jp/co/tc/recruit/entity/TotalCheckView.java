@@ -32,6 +32,9 @@ public class TotalCheckView implements Serializable {
 	@Column(name="selection_status_detail_name")
 	private String selectionStatusDetailName;
 
+	@Column(name="message_status_flag")
+	private Integer messageStatusFlag;
+
 	@Column(name = "total_count")
 	private Integer totalCount;
 

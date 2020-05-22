@@ -26,6 +26,9 @@ public class TotalSelectionView implements Serializable{
 	@Column(name="selection_status_name")
 	private String selectionStatusName;
 
+	@Column(name="message_status_flag")
+	private Integer messageStatusFlag;
+
 	private Integer count;
 
 

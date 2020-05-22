@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
-<title>DashBoard</title>
+<title>MasterMaintenance</title>
 </head>
 <body>
 	<h2>マスタメンテナンス</h2>
@@ -11,19 +11,7 @@
 	</form>
 	<form th:action="@{/maintenance/candidate}" th:method="get">
 		<button type="submit" name="aaa" value="aaa" disabled>候補者マスタ</button>
-	</form>
-
-	<label>ダッシュボード</label>
-	<table>
-		<tr>
-			<td>ステータス名</td>
-			<td>
-				<form th:action="@{/maintenance/message_status}" th:method="get">
-					<button type="submit" name="aaa" value="aaa">変更</button>
-				</form>
-			</td>
-		</tr>
-	</table>
+	</form><br>
 
 </body>
 </html>
