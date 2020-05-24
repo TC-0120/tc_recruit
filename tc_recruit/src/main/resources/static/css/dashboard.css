@@ -1,6 +1,10 @@
+@import
+	'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
+
 .main {
-	width: 80%;
+	width: 84%;
 	float: right;
+	margin-top: 2em;
 }
 
 .side_menu {
@@ -8,83 +12,164 @@
 	float: left;
 }
 
-.ttlChkBorder {
-    position: relative;
-    margin: 2em 0;
-    padding: 10px 10px 10px;
-    border: solid 2px #FFC107;
-}
-.ttlChkBorder .box-title {
-    position: absolute;
-    display: inline-block;
-    top: -2px;
-    left: -2px;
-    padding: 0 9px;
-    height: 75px;
-    line-height: 75px;
-    width: 100px;
-    font-size: 17px;
-    background: #FFC107;
-    color: #ffffff;
-    font-weight: bold;
-}
-
-
-.ttlChk {
+.count {
 	display: inline-block;
 }
 
-.btn {
-	display: block;
+.chk_btn {
+	background: rgba(232, 230, 237, 0.5);
+	color: #808080;
+	border: none;
 	position: relative;
-	width: 100px;
-	padding: 0.8em;
+	height: 60px;
+	padding: 0 2em;
+	margin: 0.2em;
+	cursor: pointer;
+	transition: 800ms ease all;
+	outline: none;
+	border-bottom: solid 1px #A2CFDE;
+		background: #fff;
+	color: #808080;
+}
+
+.chk_btn:before, .chk_btn:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background: #A2CFDE;
+	transition: 400ms ease all;
+}
+
+.chk_btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+
+.chk_btn:hover:before, .chk_btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
+
+.slc_btn {
+	background: #E8E6ED;
+	background: rgba(232, 230, 237, 0.5);
+	color: #808080;
+	border: none;
+	position: relative;
+	height: 90px;
+	padding: 0 2em;
+	margin: 0.2em;
+	cursor: pointer;
+	transition: 800ms ease all;
+	outline: none;
+	border-bottom: solid 1px #D9CF59;
+		background: #fff;
+	color: #808080;
+}
+
+.slc_btn:before, .slc_btn:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background: #D9CF59;
+	transition: 400ms ease all;
+}
+
+.slc_btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+
+.slc_btn:hover:before, .slc_btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
+
+.ttl_chk_btn {
+	background: #E8E6ED;
+	background: rgba(232, 230, 237, 0.5);
+	color: #808080;
+	border: none;
+	position: relative;
+	height: 60px;
+	padding: 0 2em;
+	margin: 0.2em;
+	cursor: pointer;
+	transition: 800ms ease all;
+	outline: none;
+	border-bottom: solid 1px #507faf;
+		background: #fff;
+	color: #808080;
+}
+
+.ttl_chk_btn:before, .ttl_chk_btn:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background: #507faf;
+	transition: 400ms ease all;
+}
+
+.ttl_chk_btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+
+.ttl_chk_btn:hover:before, .ttl_chk_btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
+
+button {
+	color:white;
+	border: none; /* 枠線を消す */
+	outline: none; /* クリックしたときに表示される枠線を消す */
+	background: transparent; /* 背景の灰色を消す */
+}
+
+.btn {
+	line-height: 25px;
+	height: 25px;
 	text-align: center;
-	text-decoration: none;
-	color: #1B1B1B;
-	background: #fff;
-        border-radius: 30px;
-	border:1px solid #1B1B1B;
-	-webkit-backface-visibility: hidden;
-	-moz-backface-visibility: hidden;
-    backface-visibility: hidden;
+	width: 200px;
+	cursor: pointer;
 }
 
-.btn:hover {
-	 cursor: pointer;
-	 text-decoration: none;
-	-webkit-animation: btn 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-	-moz-animation: btn 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-	        animation: btn 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-}
-@-webkit-keyframes btn{
-  0% {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
-  }
-  100% {
-    -webkit-transform: translateY(-5px);
-            transform: translateY(-5px);
-  }
+.box-3 {
+	background-color: #ccc094;
+	width: 98%;
 }
 
-/* @-moz-keyframes simple_square_btn8{
-  0% {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
-  }
-  100% {
-    -webkit-transform: translateY(-5px);
-            transform: translateY(-5px);
-  }
+.btn-three {
+	color: #FFF;
+	transition: all 0.5s;
+	position: relative;
 }
-@keyframes simple_square_btn8 {
-  0% {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
-  }
-  100% {
-    -webkit-transform: translateY(-5px);
-            transform: translateY(-5px);
-  }
-} */
+
+.btn-three:hover {
+	background-color: rgba(255, 255, 255, .3);
+}
+
+p{
+	color: #808080;
+}
+
+img {
+width: 40px;
+height: 40px;
+}

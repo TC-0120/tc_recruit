@@ -17,68 +17,67 @@
 
 	<!-- ダッシュボード -->
 	<div class="main">
-		<table>
-			<tr>
-				<td th:each="ttlSlc: ${ttlSlcAll}">
-					<form th:action="@{/recruit/candidates}" th:method="get"
-						th:object="${conditionsForm}">
+		<div>
+			<div class="count" th:each="ttlSlc: ${ttlSlcAll}"
+				th:object="${ttlSlc}">
+				<form th:action="@{/recruit/candidates}" th:method="get"
+					th:object="${conditionsForm}">
+					<div th:if="${ttlSlc.selectionStatusId == 9}">
+						<input type="hidden" th:name="slcStatusId" th:value="${0}" /> <input
+							type="hidden" th:name="slcStatusDtlId" th:value="${0}" />
+					</div>
+					<div th:unless="${ttlSlc.selectionStatusId == 9}">
+						<input type="hidden" th:name="slcStatusId"
+							th:value="${ttlSlc.selectionStatusId}" />
+					</div>
+					<button class="slc_btn" type="submit" name="aaa" value="aaa">
+						<div th:text="${ttlSlc.statusMessage}"></div>
 						<div th:if="${ttlSlc.selectionStatusId == 9}">
-							<input type="hidden" th:name="slcStatusId" th:value="${0}" /> <input
-								type="hidden" th:name="slcStatusDtlId" th:value="${0}" />
+							<div th:text="${ttlSlcCount}"></div>
 						</div>
-						<div th:unless="${ttlSlc.selectionStatusId == 9}">
-							<input type="hidden" th:name="slcStatusId"
-								th:value="${ttlSlc.selectionStatusId}" />
+						<div
+							th:if="${ttlSlc.selectionStatusId != 8 && ttlSlc.selectionStatusId != 9}">
+							<div th:text="${ttlSlc.count}"></div>
 						</div>
-						<button class="btn" type="submit" name="aaa" value="aaa">
-							<div th:text="${ttlSlc.statusMessage}"></div>
-							<div th:if="${ttlSlc.selectionStatusId == 9}">
-								<div th:text="${ttlSlcCount}"></div>
-							</div>
-							<div
-								th:if="${ttlSlc.selectionStatusId != 8 && ttlSlc.selectionStatusId != 9}">
-								<div th:text="${ttlSlc.count}"></div>
-							</div>
-							<div th:if="${ttlSlc.selectionStatusId == 8}">
-								<div th:text="${aptFlgCount}"></div>
-							</div>
-						</button>
-					</form>
-				</td>
-			</tr>
-		</table>
-		<div class="ttlChkBorder">
-		<span class="box-title"></span>
-		<div class="ttlChk" th:each="ttlChk: ${ttlChkAll}"
-			th:object="${ttlChk}">
+						<div th:if="${ttlSlc.selectionStatusId == 8}">
+							<div th:text="${aptFlgCount}"></div>
+						</div>
+						<img th:src="${ttlSlc.icon}">
+					</button>
+				</form>
+			</div>
+		</div>
 
-			<form th:action="@{/recruit/candidates}" th:method="get"
-				th:object="${conditionsForm}">
-				<div th:if="${ttlChk.selectionStatusId == 9}">
-					<input type="hidden" th:name="slcStatusId" th:value="${0}" /> <input
-						type="hidden" th:name="slcStatusDtlId" th:value="${-1}" />
-				</div>
-				<div th:unless="${ttlChk.selectionStatusId == 9}">
-					<input type="hidden" th:name="slcStatusId"
-						th:value="${ttlChk.selectionStatusId}" /> <input type="hidden"
-						th:name="slcStatusDtlId"
-						th:value="${ttlChk.selectionStatusDetailId}" />
-				</div>
-				<div
-					th:if="${ttlChk.selectionStatusDetailId == 2
-								|| ttlChk.selectionStatusDetailId == 6
-								|| ttlChk.selectionStatusDetailId == 8}">
-					<input type="hidden" th:name="to" th:value="${today}" />
-				</div>
-				<div class="btn_color">
-				<button class="btn" type="submit" name="aaa" value="aaa">
-					<div th:text="${ttlChk.statusMessage}"></div>
+		<div>
+			<div class="count" th:each="ttlChk: ${ttlChkAll}"
+				th:object="${ttlChk}">
+
+				<form th:action="@{/recruit/candidates}" th:method="get"
+					th:object="${conditionsForm}">
 					<div th:if="${ttlChk.selectionStatusId == 9}">
-						<div th:text="${ttlChkCount}"></div>
+						<input type="hidden" th:name="slcStatusId" th:value="${0}" /> <input
+							type="hidden" th:name="slcStatusDtlId" th:value="${-1}" />
 					</div>
 					<div th:unless="${ttlChk.selectionStatusId == 9}">
-						<div
-							th:text="${(ttlChk.selectionStatusId == 1 && ttlChk.selectionStatusDetailId == 2)
+						<input type="hidden" th:name="slcStatusId"
+							th:value="${ttlChk.selectionStatusId}" /> <input type="hidden"
+							th:name="slcStatusDtlId"
+							th:value="${ttlChk.selectionStatusDetailId}" />
+					</div>
+					<div
+						th:if="${ttlChk.selectionStatusDetailId == 2
+								|| ttlChk.selectionStatusDetailId == 6
+								|| ttlChk.selectionStatusDetailId == 8}">
+						<input type="hidden" th:name="to" th:value="${today}" />
+					</div>
+					<button class="chk_btn" type="submit" name="aaa" value="aaa">
+						<div th:text="${ttlChk.statusMessage}"></div>
+						<div th:if="${ttlChk.selectionStatusId == 9}">
+							<div th:text="${ttlChkCount}"></div>
+						</div>
+						<div th:unless="${ttlChk.selectionStatusId == 9}">
+							<div
+								th:text="${(ttlChk.selectionStatusId == 1 && ttlChk.selectionStatusDetailId == 2)
 							|| (ttlChk.selectionStatusId == 2 && ttlChk.selectionStatusDetailId == 2)
 							|| (ttlChk.selectionStatusId == 3 && ttlChk.selectionStatusDetailId == 2)
 							|| (ttlChk.selectionStatusId == 4 && ttlChk.selectionStatusDetailId == 2)
@@ -86,56 +85,56 @@
 							|| (ttlChk.selectionStatusId == 6 && ttlChk.selectionStatusDetailId == 6)
 							|| (ttlChk.selectionStatusId == 7 && ttlChk.selectionStatusDetailId == 8)}?
 							${ttlChk.totalOverDate} : ${ttlChk.totalCount}">
+							</div>
 						</div>
-					</div>
-				</button>
-				</div>
-			</form>
+					</button>
+				</form>
+			</div>
 		</div>
+		<div>
+			<div class="count">
+				<form th:action="@{/recruit/candidates}" th:method="get"
+					th:object="${conditionsForm}">
+					<input type="hidden" th:name="slcStatusDtlId" th:value="${1}" />
+					<button class="ttl_chk_btn">
+						<div th:text="${statusByTskType[0]}"></div>
+						<div th:text="${ttlCountByTskType[0]}"></div>
+					</button>
+				</form>
+			</div>
+			<div class="count">
+				<form th:action="@{/recruit/candidates}" th:method="get"
+					th:object="${conditionsForm}">
+					<input type="hidden" th:name="slcStatusDtlId" th:value="${2}" /> <input
+						type="hidden" th:name="to" th:value="${today}" />
+					<button class="ttl_chk_btn">
+						<div th:text="${statusByTskType[1]}"></div>
+						<div th:text="${ttlCountByTskType[1]}"></div>
+					</button>
+				</form>
+			</div>
+			<div class="count">
+				<form th:action="@{/recruit/candidates}" th:method="get"
+					th:object="${conditionsForm}">
+					<input type="hidden" th:name="slcStatusDtlId" th:value="${3}" />
+					<button class="ttl_chk_btn">
+						<div th:text="${statusByTskType[2]}"></div>
+						<div th:text="${ttlCountByTskType[2]}"></div>
+					</button>
+				</form>
+			</div>
 		</div>
-		<table>
-			<tr>
-				<td>
-					<form th:action="@{/recruit/candidates}" th:method="get"
-						th:object="${conditionsForm}">
-						<input type="hidden" th:name="slcStatusDtlId" th:value="${1}" />
-						<button class="btn">
-							<div th:text="${statusByTskType[0]}"></div>
-							<div th:text="${ttlCountByTskType[0]}"></div>
-						</button>
-					</form>
-				</td>
-				<td>
-					<form th:action="@{/recruit/candidates}" th:method="get"
-						th:object="${conditionsForm}">
-						<input type="hidden" th:name="slcStatusDtlId" th:value="${2}" />
-						<input type="hidden" th:name="to" th:value="${today}" />
-						<button class="btn">
-							<div th:text="${statusByTskType[1]}"></div>
-							<div th:text="${ttlCountByTskType[1]}"></div>
-						</button>
-					</form>
-				</td>
-
-				<td>
-					<form th:action="@{/recruit/candidates}" th:method="get"
-						th:object="${conditionsForm}">
-						<input type="hidden" th:name="slcStatusDtlId" th:value="${3}" />
-						<button class="btn">
-							<div th:text="${statusByTskType[2]}"></div>
-							<div th:text="${ttlCountByTskType[2]}"></div>
-						</button>
-					</form>
-				</td>
-			</tr>
-		</table>
 		<br>
 
 
 
 		<form th:action="@{/recruit/candidates}" th:method="get"
 			th:object="${conditionsForm}">
-			<button type="submit" name="aaa" value="aaa">今日明日の面接予定一覧</button>
+			<div class="box-3">
+				<div class="btn btn-three">
+					<button type="submit" name="aaa" value="aaa">今日明日の面接予定一覧</button>
+				</div>
+			</div>
 			<input type="hidden" th:name="from" th:value="${today}" /> <input
 				type="hidden" th:name="to" th:value="${tomorrow}" />
 		</form>
@@ -158,8 +157,6 @@
 			<p>直近の面接予定はありません</p>
 		</div>
 	</div>
-
-
 
 </body>
 </html>
