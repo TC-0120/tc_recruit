@@ -55,9 +55,14 @@
 	}
 </style>
 <script type="text/javascript" th:inline="javascript">
+	//紹介元（全件）
 	var referrerAll = [];
 
-	function getReferrerAll() {
+	/**
+	 * ロード時、紹介元のドロップダウンの初期設定
+	 *
+ 	 */
+	function setFirstReferrer() {
 		//紹介元の情報を取得
 		[# th:each="referrer: ${referrerList}"]
 			var referrer = {id:/*[[${referrer.referrerId}]]*/, name:/*[[${referrer.referrerName}]]*/,
@@ -66,59 +71,49 @@
 			referrerAll.push(referrer);
 		[/]
 
-		//selectAgentId();
 	}
 
-
-	function selectAgentId() {
-		//選択した採用エージェントIDを取得
+	/**
+	 * 紹介元のドロップダウンを設定
+	 *
+	 */
+	function setReferrer() {
+		//紹介元の選択値
 		var selectedAgentId = document.getElementById("agentId").value;
-		//紹介元のドロップダウンをセット
-		setReferrer(selectedAgentId);
-
-
-	}
-
-	function setReferrer(selectedAgentId) {
-		//紹介元の入力フォームを取得
+		//紹介元のドロップダウン
 		var referrer = document.getElementById("referrer");
+		//ドロップダウンの設定値
 		var referrerList = [];
 
+		//採用エージェントに紐づく紹介元をドロップダウンの設定値に追加
 		if (selectedAgentId == 0) {
 			var referrerDefault = {id:0, name:"---", fee:0, agentId:0};
 			referrerList.push(referrerDefault);
 		} else {
-
-		//採用エージェントIDが一致する紹介元を抽出
-		for (var i = 0; i < referrerAll.length; i++) {
-			if (referrerAll[i].agentId == selectedAgentId) {
-				referrerList.push(referrerAll[i]);
+			for (var i = 0; i < referrerAll.length; i++) {
+				if (referrerAll[i].agentId == selectedAgentId) {
+					referrerList.push(referrerAll[i]);
+				}
 			}
-		}
 		}
 
 		//紹介元のドロップダウンを初期化
 		referrer.textContent = null;
 
-		//紹介元のドロップダウンをセット
+		//紹介元のドロップダウンに値を設定
 		for (var i = 0; i < referrerList.length; i++) {
 			var op = document.createElement("option");
-
 			op.value = referrerList[i].id;
-
 			op.text = referrerList[i].name;
-
 			referrer.appendChild(op);
 		}
-
-
 	}
-
-
 </script>
 </head>
-<body onload="getReferrerAll()">
-	<div th:replace="header :: header_fragment"></div>
+<body onload="setFirstReferrer(); window.opener.location.reload()">
+	<header>
+		<img th:src="@{/images/TCLogo.png}">
+	</header>
 	<h2>一括管理画面</h2>
 	<table>
 		<thead>
@@ -174,7 +169,7 @@
 		</div>
 		<div>
 			<label>採用エージェント:</label>
-			<select id="agentId" name="agentId" onchange="selectAgentId()">
+			<select id="agentId" name="agentId" onchange="setReferrer()">
 				<option value="0">---</option>
 				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
 			</select>
