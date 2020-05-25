@@ -33,32 +33,43 @@ public class MessageStatusService {
 	public void messageStatusUpdate(MessageStatusForm msgSttFormList) {
 
 		for (int i = 0; i < msgSttFormList.getStatusMessageId().size(); i++) {
+			Integer sttMsgIdByDB = Integer
+					.parseInt((msgSttRepo.findByStatusMessageId(i + 1).getStatusMessageId()).toString());
+			String sttMsgByDB = (msgSttRepo.findByStatusMessageId(i + 1).getStatusMessage()).toString();
+			Integer slcSttIdByDB = Integer
+					.parseInt((msgSttRepo.findByStatusMessageId(i + 1).getSelectionStatusId()).toString());
+			Integer slcSttDtlIdByDB = Integer
+					.parseInt((msgSttRepo.findByStatusMessageId(i + 1).getSelectionStatusDetailId()).toString());
+			String iconByDB = String.valueOf(msgSttRepo.findByStatusMessageId(i + 1).getIcon());
+			Integer sortByDB = Integer
+					.parseInt((msgSttRepo.findByStatusMessageId(i + 1).getSort()).toString());
+
 			Integer sttMsgIdByForm = Integer.parseInt((msgSttFormList.getStatusMessageId().get(i)).toString());
 			String sttMsgByForm = (msgSttFormList.getStatusMessage().get(i)).toString();
 			Integer slcSttIdByForm = Integer.parseInt((msgSttFormList.getSelectionStatusId().get(i)).toString());
 			Integer slcSttDtlIdByForm = Integer
 					.parseInt((msgSttFormList.getSelectionStatusDetailId().get(i)).toString());
-			//入力値がある場合、それぞれ保存
-			if (sttMsgIdByForm != null) {
+
+			//DB情報と入力情報が異なる場合、DB情報書き換え実行
+			if (sttMsgIdByForm != sttMsgIdByDB
+					|| sttMsgByForm != sttMsgByDB
+					|| slcSttIdByForm != slcSttIdByDB
+					|| slcSttDtlIdByForm != slcSttDtlIdByDB) {
 				msgStt.setStatusMessageId(sttMsgIdByForm);
-			}
-			if (sttMsgByForm != null) {
 				msgStt.setStatusMessage(sttMsgByForm);
-			}
-			if (slcSttIdByForm != null) {
 				msgStt.setSelectionStatusId(slcSttIdByForm);
-			}
-			if (slcSttDtlIdByForm != null) {
 				msgStt.setSelectionStatusDetailId(slcSttDtlIdByForm);
+				msgStt.setIcon(iconByDB);
+				msgStt.setSort(sortByDB);
+
+				if(sttMsgIdByForm <= 9) {
+					msgStt.setMessageStatusFlag(1);
+				} else {
+					msgStt.setMessageStatusFlag(2);
+				}
+
+				msgSttRepo.saveAndFlush(msgStt);
 			}
-			/*詳細IDが空欄なら(detailId=10)選考中グループ(1)
-			そうでなければ要対応グループ(2)*/
-			if (slcSttDtlIdByForm == 10) {
-				msgStt.setMessageStatusFlag(1);
-			} else {
-				msgStt.setMessageStatusFlag(2);
-			}
-			msgSttRepo.saveAndFlush(msgStt);
 		}
 	}
 
