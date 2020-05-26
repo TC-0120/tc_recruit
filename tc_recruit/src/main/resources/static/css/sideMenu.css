@@ -12,7 +12,7 @@ body {
 	margin: 0 auto;
 	width: 40px;
 	box-shadow: none;
-	background-color: #68a69e;
+	background: #68a69e;
 	position: fixed;
 	height: 100%;
 	overflow: hidden;

@@ -20,9 +20,13 @@ public class MessageStatusService {
 		return msgSttRepo.findByStatusMessageId(statusMessageId);
 	}
 
-	public List<MessageStatus> findAllByOrderByStatusMessageId() {
-		return msgSttRepo.findAllByOrderByStatusMessageId();
+	public List<MessageStatus> findAllByOrderBySort() {
+		return msgSttRepo.findAllByOrderBySort();
 	}
+
+	/*	public List<MessageStatus> findByOrderBySelectionStatusIdAscSelectionStatusDetailIdAsc() {
+			return msgSttRepo.findByOrderBySelectionStatusIdAscSelectionStatusDetailIdAsc();
+		}*/
 
 	/**
 	 * ステータスメッセージの一括更新
@@ -62,12 +66,11 @@ public class MessageStatusService {
 				msgStt.setIcon(iconByDB);
 				msgStt.setSort(sortByDB);
 
-				if(sttMsgIdByForm <= 9) {
+				if (sttMsgIdByForm <= 9) {
 					msgStt.setMessageStatusFlag(1);
 				} else {
 					msgStt.setMessageStatusFlag(2);
 				}
-
 				msgSttRepo.saveAndFlush(msgStt);
 			}
 		}
@@ -83,6 +86,7 @@ public class MessageStatusService {
 		String sttMsgByForm = msgSttForm.getStatusMessage().toString();
 		Integer slcSttIdByForm = Integer.parseInt((msgSttForm.getSelectionStatusId()).toString());
 		Integer slcSttDtlIdByForm = Integer.parseInt((msgSttForm.getSelectionStatusDetailId()).toString());
+
 		//入力値がある場合、それぞれ保存
 		if (sttMsgByForm != null) {
 			msgStt.setStatusMessage(sttMsgByForm);
@@ -99,9 +103,18 @@ public class MessageStatusService {
 			msgStt.setMessageStatusFlag(1);
 		} else {
 			msgStt.setMessageStatusFlag(2);
-		}
 
-		msgSttRepo.saveAndFlush(msgStt);
+			msgSttRepo.saveAndFlush(msgStt);
+
+			List<MessageStatus> sorted = msgSttRepo
+					.findByOrderByMessageStatusFlagAscSelectionStatusIdAscSelectionStatusDetailIdAsc();
+			for (int n = 0; n < sorted.size(); n++) {
+				if (sorted.get(n).getSort() == null) {
+					msgSttRepo.updateSort(sorted.get(n + 1).getSort(), sorted.get(n).getStatusMessageId());
+				}
+			}
+		}
 	}
+
 
 }

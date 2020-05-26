@@ -42,18 +42,24 @@ public class DashBoardController {
 	public String getDashBoard(Model model) {
 		/*選考中候補者集計*/
 		Integer sttMsgId;
-		Integer ttlSlcCount = 0;
+		Integer ttlSlcAllCount = 0;
 		TotalSelectionView ttlSlc;
 		List<TotalSelectionView> ttlSlcList = new ArrayList<TotalSelectionView>();
 
-		/*選考中候補者データ*/
-		List<TotalSelectionView> ttlSlcAll = ttlSlcSvc.findAllByOrderByStatusMessageId();
+		/*選考中候補者データ(ALL)*/
+		TotalSelectionView ttlSlcAll = ttlSlcSvc.findByStatusMessageId(1);
+		/*ALL以外の選考中候補者データ全て*/
 		/*選考中(ALL)の候補者全数*/
-		for (sttMsgId = ttlSlcAll.get(1).getStatusMessageId(); sttMsgId <= ttlSlcAll.get(ttlSlcAll.size() - 1)
+		List<TotalSelectionView> ttlSlcAllList = ttlSlcSvc.findAllByOrderByStatusMessageId();
+		for (sttMsgId = ttlSlcAllList.get(1).getStatusMessageId(); sttMsgId <= ttlSlcAllList
+				.get(ttlSlcAllList.size() - 1)
 				.getStatusMessageId(); sttMsgId++) {
+
 			ttlSlc = ttlSlcSvc.findByStatusMessageId(sttMsgId);
-			ttlSlcList.add(ttlSlc);
-			ttlSlcCount += ttlSlc.getCount();
+			if (ttlSlc.getSelectionStatusId() != 9) {
+				ttlSlcList.add(ttlSlc);
+			}
+			ttlSlcAllCount += ttlSlc.getCount();
 		}
 		/*適性検査未受検者はcandedateテーブルのappitude_flg(=0)から集計*/
 		List<Candidate> candidateAll = cddSvc.findAll();
@@ -64,10 +70,12 @@ public class DashBoardController {
 			}
 		}
 
-		/*選考中候補者データ*/
+		/*選考中候補者データ(ALL)*/
 		model.addAttribute("ttlSlcAll", ttlSlcAll);
+		/*選考中候補者データ*/
+		model.addAttribute("ttlSlcList", ttlSlcList);
 		/*選考中(ALL)の候補者全数*/
-		model.addAttribute("ttlSlcCount", ttlSlcCount);
+		model.addAttribute("ttlSlcAllCount", ttlSlcAllCount);
 		/*適性検査完了者集計値*/
 		model.addAttribute("aptFlgCount", aptFlgCount);
 
@@ -103,7 +111,6 @@ public class DashBoardController {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String today = dateFormat.format(date);
 		model.addAttribute("today", today);
-
 
 		/*タスク別の集計*/
 		Integer ttlScheduleCount = 0;

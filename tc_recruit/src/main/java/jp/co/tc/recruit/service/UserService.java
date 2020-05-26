@@ -1,5 +1,6 @@
 package jp.co.tc.recruit.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class UserService implements UserDetailsService {
 	private UserRepository usrRepo;
 	User user = new User();
 
-	public List<User> findAllByOrderByUsername(){
-		return  usrRepo.findAllByOrderByUsername();
+	public List<User> findAllByOrderByUsername() {
+		return usrRepo.findAllByOrderByUsername();
 	}
 
 	@Override
@@ -40,8 +41,6 @@ public class UserService implements UserDetailsService {
 	 *
 	 */
 	public void userUpdate(UserForm userFormList) {
-		System.out.println(userFormList.getId().size());
-
 		for (int i = 0; i < userFormList.getId().size(); i++) {
 			Integer idByForm = Integer.parseInt((userFormList.getId().get(i)).toString());
 			String usernameByForm = (userFormList.getUsername().get(i)).toString();
@@ -76,4 +75,35 @@ public class UserService implements UserDetailsService {
 			usrRepo.saveAndFlush(user);
 		}
 	}
+
+	/**
+	 * 社員マスタのcsv取込
+	 *
+	 */
+	public void userCsvImport(List<String> userList) {
+		List<User> userInfo = new ArrayList<User>();
+
+		for (int k = 1; k <= (userList.size() / 4) - 1; k++) {
+			User user = new User();
+			for (int i = (4 * k); i <= ((4 * k) + 3); i++) {
+				if (i % 4 == 0) {
+					user.setUsername(userList.get(i));
+					user.setStatus(1);
+				} else if (i % 4 == 1) {
+					user.setLastName(userList.get(i));
+				} else if (i % 4 == 2) {
+					user.setFirstName(userList.get(i));
+				} else if (i % 4 == 3) {
+					if ((userList.get(i)).contains("1")) {
+						user.setAuthority(Authority.ROLE_USER);
+					} else {
+						user.setAuthority(Authority.ROLE_ADMIN);
+					}
+				}
+			}
+			userInfo.add(user);
+		}
+		usrRepo.saveAll(userInfo);
+	}
+
 }

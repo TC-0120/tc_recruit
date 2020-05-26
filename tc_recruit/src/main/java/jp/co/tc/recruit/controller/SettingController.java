@@ -63,7 +63,7 @@ public class SettingController {
 		List<SelectionStatus> slcStt;
 		List<SelectionStatusDetail> slcSttDtl;
 		List<MessageStatus> msgSttList;
-		msgSttList = msgSttSvc.findAllByOrderByStatusMessageId();
+		msgSttList = msgSttSvc.findAllByOrderBySort();
 		slcStt = slcSttSvc.findAll();
 		slcSttDtl = slcSttDtlSvc.findAll();
 

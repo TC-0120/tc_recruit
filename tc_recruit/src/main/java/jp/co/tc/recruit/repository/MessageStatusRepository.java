@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import jp.co.tc.recruit.entity.MessageStatus;
 
-public interface MessageStatusRepository extends JpaRepository<MessageStatus, Integer>{
+public interface MessageStatusRepository extends JpaRepository<MessageStatus, Integer>, MessageStatusRepositoryCustom{
 	public MessageStatus findByStatusMessageId(Integer statusMessageId);
-	public List<MessageStatus> findAllByOrderByStatusMessageId();
+	public List<MessageStatus> findAllByOrderBySort();
+	public List<MessageStatus> findByOrderByMessageStatusFlagAscSelectionStatusIdAscSelectionStatusDetailIdAsc();
 }

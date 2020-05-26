@@ -9,4 +9,5 @@ import jp.co.tc.recruit.entity.TotalSelectionView;
 public interface TotalSelectionRepository extends JpaRepository<TotalSelectionView, Integer>{
 	public TotalSelectionView findByStatusMessageId(Integer statusMessageId);
 	public List<TotalSelectionView> findAllByOrderByStatusMessageId();
+	public List<TotalSelectionView> findAllByOrderBySelectionStatusId();
 }

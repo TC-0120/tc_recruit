@@ -56,8 +56,6 @@
 }
 
 .slc_btn {
-	background: #E8E6ED;
-	background: rgba(232, 230, 237, 0.5);
 	color: #808080;
 	border: none;
 	position: relative;
@@ -68,8 +66,11 @@
 	transition: 800ms ease all;
 	outline: none;
 	border-bottom: solid 1px #D9CF59;
-		background: #fff;
-	color: #808080;
+	background: #fff;
+}
+
+.slc_btn:hover {
+	border-bottom: solid 1px #fff;
 }
 
 .slc_btn:before, .slc_btn:after {
@@ -79,7 +80,7 @@
 	right: 0;
 	height: 2px;
 	width: 0;
-	background: #D9CF59;
+	background-image: linear-gradient(to right, #c1c161 0%, #c1c161 0%, #d4d4b1 100%);
 	transition: 400ms ease all;
 }
 
@@ -94,6 +95,49 @@
 	width: 100%;
 	transition: 800ms ease all;
 }
+
+.slc_all_btn {
+	color: #808080;
+	border: none;
+	position: relative;
+	height: 90px;
+	padding: 0 2em;
+	margin: 0.2em;
+	cursor: pointer;
+	transition: 800ms ease all;
+	outline: none;
+	border-bottom: solid 1px #D9CF59;
+	background: #fff;
+}
+
+.slc_all_btn:hover {
+	border-bottom: solid 1px #fff;
+}
+
+.slc_all_btn:before, .slc_all_btn:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
+	height: 2px;
+	width: 0;
+	background: #D9CF59;
+	transition: 400ms ease all;
+}
+
+.slc_all_btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+
+.slc_all_btn:hover:before, .slc_all_btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
+
 
 .ttl_chk_btn {
 	background: #E8E6ED;
@@ -151,7 +195,7 @@ button {
 }
 
 .box-3 {
-	background-color: #ccc094;
+	background-color: #b6b79d;
 	width: 98%;
 }
 
@@ -172,4 +216,8 @@ p{
 img {
 width: 40px;
 height: 40px;
+}
+
+.inline{
+	display: inline-block;
 }

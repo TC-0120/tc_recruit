@@ -53,6 +53,8 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Authority authority;
 
+	/*	private Integer authorityId;*/
+
 	@Column(nullable = false)
 	private Integer status;
 
@@ -87,7 +89,6 @@ public class User implements UserDetails {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
 
 
 }

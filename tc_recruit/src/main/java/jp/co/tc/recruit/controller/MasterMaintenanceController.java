@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jp.co.tc.recruit.entity.User;
+import jp.co.tc.recruit.form.UploadForm;
 import jp.co.tc.recruit.form.UserForm;
 import jp.co.tc.recruit.repository.MessageStatusRepository;
 import jp.co.tc.recruit.service.MessageStatusService;
@@ -83,29 +85,39 @@ public class MasterMaintenanceController {
 	}
 
 	/**
-	 * 社員マスタの一括更新
+	 * 社員マスタのcsv取込
 	 *
 	 * @param msgSttForm
 	 * @return 社員マスタメンテナンス画面
 	 */
-	@PostMapping("sample/upload")
-	public String upload(@RequestParam("namelist.csv") MultipartFile multipartFile, Model model) {
+	@PostMapping("user/upload")
+	@Transactional(readOnly = false)
+	public String upload(@ModelAttribute("uploadForm") UploadForm uploadForm,
+			@RequestParam("userlist.csv") MultipartFile multipartFile, Model model) {
+		try {
+			File file = new File("C:\\userlist.csv");
+			FileReader filereader = new FileReader(file);
+			int ch;
+			String str = null;
+			StringBuilder user = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 
-		 try {
-		      File file = new File("C:\\");
-		      FileReader filereader = new FileReader(file);
-		      int ch;
-		      while((ch = filereader.read()) != -1){
-		        System.out.print((char)ch);
-		      }
-		      filereader.close();
-		    } catch(FileNotFoundException e) {
-		      System.out.println(e);
-		    } catch(IOException e) {
-		      System.out.println(e);
-		    }
+			while ((ch = filereader.read()) != -1) {
+				str = String.valueOf((char) ch);
+				user = sb.append(str);
+			}
+			String[] userArray = user.toString().split("[\\n,]", 0);
+			List<String> userList = Arrays.asList(userArray);
+			usrSvc.userCsvImport(userList);
 
-		return"redirect:/maintenance/user";
-}
+			filereader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println(e);
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+
+		return "redirect:/maintenance/user";
+	}
 
 }
