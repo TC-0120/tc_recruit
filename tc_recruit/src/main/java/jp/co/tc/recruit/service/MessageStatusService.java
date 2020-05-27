@@ -103,18 +103,23 @@ public class MessageStatusService {
 			msgStt.setMessageStatusFlag(1);
 		} else {
 			msgStt.setMessageStatusFlag(2);
+		}
 
-			msgSttRepo.saveAndFlush(msgStt);
+		msgSttRepo.save(msgStt);
 
-			List<MessageStatus> sorted = msgSttRepo
-					.findByOrderByMessageStatusFlagAscSelectionStatusIdAscSelectionStatusDetailIdAsc();
-			for (int n = 0; n < sorted.size(); n++) {
-				if (sorted.get(n).getSort() == null) {
-					msgSttRepo.updateSort(sorted.get(n + 1).getSort(), sorted.get(n).getStatusMessageId());
+		List<MessageStatus> sorted = msgSttRepo
+				.findByOrderByMessageStatusFlagAscSelectionStatusIdAscSelectionStatusDetailIdAsc();
+		for (int n = 0; n < sorted.size(); n++) {
+			if (sorted.get(n).getSort() == null) {
+				msgStt.setSort(sorted.get(n + 1).getSort());
+				msgSttRepo.save(msgStt);
+
+				for (int k = n + 2; k < sorted.size(); k++) {
+					MessageStatus sort = msgSttRepo.findByStatusMessageId(k);
+					sort.setSort(sorted.get(k - 1).getSort() + 1);
+					msgSttRepo.save(sort);
 				}
 			}
 		}
 	}
-
-
 }

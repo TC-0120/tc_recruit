@@ -33,5 +33,7 @@ public class TotalSelectionView implements Serializable{
 
 	private Integer count;
 
+	private Integer sort;
+
 
 }

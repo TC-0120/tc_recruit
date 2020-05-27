@@ -50,7 +50,7 @@ public class DashBoardController {
 		TotalSelectionView ttlSlcAll = ttlSlcSvc.findByStatusMessageId(1);
 		/*ALL以外の選考中候補者データ全て*/
 		/*選考中(ALL)の候補者全数*/
-		List<TotalSelectionView> ttlSlcAllList = ttlSlcSvc.findAllByOrderByStatusMessageId();
+		List<TotalSelectionView> ttlSlcAllList = ttlSlcSvc.findAllByOrderBySort();
 		for (sttMsgId = ttlSlcAllList.get(1).getStatusMessageId(); sttMsgId <= ttlSlcAllList
 				.get(ttlSlcAllList.size() - 1)
 				.getStatusMessageId(); sttMsgId++) {
@@ -79,13 +79,16 @@ public class DashBoardController {
 		/*適性検査完了者集計値*/
 		model.addAttribute("aptFlgCount", aptFlgCount);
 
+
+
 		/*要対応事項集計*/
-		Integer ttlChkCount = 0;
+		Integer ttlChkAllCount = 0;
 		TotalCheckView ttlChk;
 		/*要対応候補者データ*/
-		List<TotalCheckView> ttlChkAll = ttlChkSvc.findAllByOrderByStatusMessageId();
+		TotalCheckView ttlChkAll = ttlChkSvc.findByStatusMessageId(10);
 		/*要対応(ALL)の候補者全数*/
-		for (sttMsgId = ttlChkAll.get(1).getStatusMessageId(); sttMsgId <= ttlChkAll.get(ttlChkAll.size() - 1)
+		List<TotalCheckView> ttlChkList = ttlChkSvc.findAllByOrderBySort();
+		for (sttMsgId = ttlChkList.get(1).getStatusMessageId(); sttMsgId <= ttlChkList.get(ttlChkList.size() - 1)
 				.getStatusMessageId(); sttMsgId++) {
 			ttlChk = ttlChkSvc.findByStatusMessageId(sttMsgId);
 			if ((ttlChk.getSelectionStatusId() == 1 && ttlChk.getSelectionStatusDetailId() == 2)
@@ -95,22 +98,25 @@ public class DashBoardController {
 					|| (ttlChk.getSelectionStatusId() == 5 && ttlChk.getSelectionStatusDetailId() == 2)
 					|| (ttlChk.getSelectionStatusId() == 6 && ttlChk.getSelectionStatusDetailId() == 6)
 					|| (ttlChk.getSelectionStatusId() == 7 && ttlChk.getSelectionStatusDetailId() == 8)) {
-				ttlChkCount += ttlChk.getTotalOverDate();
+				ttlChkAllCount += ttlChk.getTotalOverDate();
 			} else {
-				ttlChkCount += ttlChk.getTotalCount();
+				ttlChkAllCount += ttlChk.getTotalCount();
 			}
 		}
 
-		/*要対応事項のデータ*/
+		/*要対応のデータ(All)*/
 		model.addAttribute("ttlChkAll", ttlChkAll);
+		/*選考中候補者データ*/
+		model.addAttribute("ttlChkList", ttlChkList);
 		/*要対応(ALL)の全数*/
-		model.addAttribute("ttlChkCount", ttlChkCount);
+		model.addAttribute("ttlChkAllCount", ttlChkAllCount);
 		/*選考ステータス詳細が選考中,承諾待ち,確定(詳細ID=2||6||8)の場合
 		 * 今日の日付を追加送信するためtodayを格納*/
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String today = dateFormat.format(date);
 		model.addAttribute("today", today);
+
 
 		/*タスク別の集計*/
 		Integer ttlScheduleCount = 0;

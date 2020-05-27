@@ -95,7 +95,7 @@ public class MasterMaintenanceController {
 	public String upload(@ModelAttribute("uploadForm") UploadForm uploadForm,
 			@RequestParam("userlist.csv") MultipartFile multipartFile, Model model) {
 		try {
-			File file = new File("C:\\userlist.csv");
+			File file = new File("C:\\" + multipartFile.getOriginalFilename());
 			FileReader filereader = new FileReader(file);
 			int ch;
 			String str = null;

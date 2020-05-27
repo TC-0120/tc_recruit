@@ -21,11 +21,11 @@
 			<div class="count">
 				<form th:action="@{/recruit/candidates}" th:method="get"
 					th:object="${conditionsForm}">
-						<input type="hidden" th:name="slcStatusId" th:value="${0}" /> <input
-							type="hidden" th:name="slcStatusDtlId" th:value="${0}" />
+					<input type="hidden" th:name="slcStatusId" th:value="${0}" /> <input
+						type="hidden" th:name="slcStatusDtlId" th:value="${0}" />
 					<button class="slc_all_btn" type="submit" name="aaa" value="aaa">
 						<div th:text="${ttlSlcAll.statusMessage}"></div>
-							<div th:text="${ttlSlcAllCount}"></div>
+						<div th:text="${ttlSlcAllCount}"></div>
 						<img th:src="${ttlSlcAll.icon}">
 					</button>
 				</form>
@@ -36,12 +36,11 @@
 				th:object="${ttlSlc}">
 				<form th:action="@{/recruit/candidates}" th:method="get"
 					th:object="${conditionsForm}">
-						<input type="hidden" th:name="slcStatusId"
-							th:value="${ttlSlc.selectionStatusId}" />
+					<input type="hidden" th:name="slcStatusId"
+						th:value="${ttlSlc.selectionStatusId}" />
 					<button class="slc_btn" type="submit" name="aaa" value="aaa">
 						<div th:text="${ttlSlc.statusMessage}"></div>
-						<div
-							th:if="${ttlSlc.selectionStatusId != 8}">
+						<div th:if="${ttlSlc.selectionStatusId != 8}">
 							<div th:text="${ttlSlc.count}"></div>
 						</div>
 						<div th:if="${ttlSlc.selectionStatusId == 8}">
@@ -53,22 +52,31 @@
 			</div>
 		</div>
 
-		<div>
-			<div class="count" th:each="ttlChk: ${ttlChkAll}"
+
+			<div class="inline">
+				<div class="count">
+					<form th:action="@{/recruit/candidates}" th:method="get"
+						th:object="${conditionsForm}">
+						<input type="hidden" th:name="slcStatusId" th:value="${0}" /> <input
+							type="hidden" th:name="slcStatusDtlId" th:value="${-1}" />
+						<button class="chk_all_btn" type="submit" name="aaa" value="aaa">
+							<div th:text="${ttlChkAll.statusMessage}"></div>
+							<div th:text="${ttlChkAllCount}"></div>
+						</button>
+					</form>
+				</div>
+			</div>
+
+		<div class="inline">
+			<div class="count" th:each="ttlChk: ${ttlChkList}"
 				th:object="${ttlChk}">
 
 				<form th:action="@{/recruit/candidates}" th:method="get"
 					th:object="${conditionsForm}">
-					<div th:if="${ttlChk.selectionStatusId == 9}">
-						<input type="hidden" th:name="slcStatusId" th:value="${0}" /> <input
-							type="hidden" th:name="slcStatusDtlId" th:value="${-1}" />
-					</div>
-					<div th:unless="${ttlChk.selectionStatusId == 9}">
-						<input type="hidden" th:name="slcStatusId"
-							th:value="${ttlChk.selectionStatusId}" /> <input type="hidden"
-							th:name="slcStatusDtlId"
-							th:value="${ttlChk.selectionStatusDetailId}" />
-					</div>
+					<input type="hidden" th:name="slcStatusId"
+						th:value="${ttlChk.selectionStatusId}" /> <input type="hidden"
+						th:name="slcStatusDtlId"
+						th:value="${ttlChk.selectionStatusDetailId}" />
 					<div
 						th:if="${ttlChk.selectionStatusDetailId == 2
 								|| ttlChk.selectionStatusDetailId == 6
@@ -96,6 +104,7 @@
 				</form>
 			</div>
 		</div>
+
 		<div>
 			<div class="count">
 				<form th:action="@{/recruit/candidates}" th:method="get"

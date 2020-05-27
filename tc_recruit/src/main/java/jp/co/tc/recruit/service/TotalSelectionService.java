@@ -26,4 +26,7 @@ public class TotalSelectionService {
 		return ttlSlcRepo.findAllByOrderBySelectionStatusId();
 	}
 
+	public List<TotalSelectionView> findAllByOrderBySort() {
+		return ttlSlcRepo.findAllByOrderBySort();
+	}
 }

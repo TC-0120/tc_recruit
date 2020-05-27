@@ -30,4 +30,8 @@ public class TotalCheckService {
 		return ttlChkRepo.findAllByOrderBySelectionStatusIdAscSelectionStatusDetailIdAsc();
 	}
 
+	public List<TotalCheckView> findAllByOrderBySort() {
+		return ttlChkRepo.findAllByOrderBySort();
+	}
+
 }
