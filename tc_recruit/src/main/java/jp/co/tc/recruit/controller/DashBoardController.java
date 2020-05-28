@@ -80,17 +80,21 @@ public class DashBoardController {
 		model.addAttribute("aptFlgCount", aptFlgCount);
 
 
-
 		/*要対応事項集計*/
 		Integer ttlChkAllCount = 0;
 		TotalCheckView ttlChk;
-		/*要対応候補者データ*/
+		List<TotalCheckView> ttlChkList = new ArrayList<TotalCheckView>();;
+		/*要対応のデータ(All)*/
 		TotalCheckView ttlChkAll = ttlChkSvc.findByStatusMessageId(10);
+		/*選考中候補者データ*/
+		List<TotalCheckView> ttlChkListAll = ttlChkSvc.findAllByOrderBySort();
 		/*要対応(ALL)の候補者全数*/
-		List<TotalCheckView> ttlChkList = ttlChkSvc.findAllByOrderBySort();
-		for (sttMsgId = ttlChkList.get(1).getStatusMessageId(); sttMsgId <= ttlChkList.get(ttlChkList.size() - 1)
-				.getStatusMessageId(); sttMsgId++) {
+		for (sttMsgId = ttlChkListAll.get(1).getSort(); sttMsgId < ttlChkListAll.get(ttlChkListAll.size() - 1)
+				.getSort(); sttMsgId++) {
 			ttlChk = ttlChkSvc.findByStatusMessageId(sttMsgId);
+			if (ttlChk.getSelectionStatusId() != 9) {
+				ttlChkList.add(ttlChk);
+			}
 			if ((ttlChk.getSelectionStatusId() == 1 && ttlChk.getSelectionStatusDetailId() == 2)
 					|| (ttlChk.getSelectionStatusId() == 2 && ttlChk.getSelectionStatusDetailId() == 2)
 					|| (ttlChk.getSelectionStatusId() == 3 && ttlChk.getSelectionStatusDetailId() == 2)
@@ -118,12 +122,15 @@ public class DashBoardController {
 		model.addAttribute("today", today);
 
 
+
 		/*タスク別の集計*/
 		Integer ttlScheduleCount = 0;
 		Integer ttlAssessmentCount = 0;
 		Integer ttlUnreportCount = 0;
 		TotalCheckView ttlTskChk;
-		for (sttMsgId = 11; sttMsgId <= 26; sttMsgId++) {
+
+		for (sttMsgId = ttlChkListAll.get(1).getSort(); sttMsgId < ttlChkListAll.get(ttlChkListAll.size() - 1)
+				.getSort(); sttMsgId++) {
 			ttlTskChk = ttlChkSvc.findByStatusMessageId(sttMsgId);
 			/*メッセージステータスが日程調整,合否判定,合格未通知
 			 * (total_check_viewの管理下で、詳細ID=1||2||3)の場合、それぞれ集計*/

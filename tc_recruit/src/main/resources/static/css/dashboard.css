@@ -1,14 +1,21 @@
 @import
 	'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
-
+body {
+	font-family: 'Varela Round', sans-serif;
+}
 .main {
 	width: 84%;
 	float: right;
 	margin-top: 2em;
+	height: 100%;
 }
 
 .side_menu {
 	width: 15%;
+	float: left;
+}
+
+.left {
 	float: left;
 }
 
@@ -17,7 +24,6 @@
 }
 
 .chk_btn {
-	background: rgba(232, 230, 237, 0.5);
 	color: #808080;
 	border: none;
 	position: relative;
@@ -28,8 +34,12 @@
 	transition: 800ms ease all;
 	outline: none;
 	border-bottom: solid 1px #A2CFDE;
-		background: #fff;
+	background: #fff;
 	color: #808080;
+}
+
+.chk_btn:hover {
+	border-bottom: solid 1px #fff;
 }
 
 .chk_btn:before, .chk_btn:after {
@@ -39,7 +49,7 @@
 	right: 0;
 	height: 2px;
 	width: 0;
-	background: #A2CFDE;
+	background-color: #A2CFDE;
 	transition: 400ms ease all;
 }
 
@@ -80,7 +90,7 @@
 	right: 0;
 	height: 2px;
 	width: 0;
-	background-image: linear-gradient(to right, #c1c161 0%, #c1c161 0%, #d4d4b1 100%);
+	background-color: #D9CF59;
 	transition: 400ms ease all;
 }
 
@@ -138,7 +148,6 @@
 	transition: 800ms ease all;
 }
 
-
 .ttl_chk_btn {
 	background: #E8E6ED;
 	background: rgba(232, 230, 237, 0.5);
@@ -152,7 +161,7 @@
 	transition: 800ms ease all;
 	outline: none;
 	border-bottom: solid 1px #507faf;
-		background: #fff;
+	background: #fff;
 	color: #808080;
 }
 
@@ -180,7 +189,7 @@
 }
 
 button {
-	color:white;
+	color: white;
 	border: none; /* 枠線を消す */
 	outline: none; /* クリックしたときに表示される枠線を消す */
 	background: transparent; /* 背景の灰色を消す */
@@ -209,15 +218,56 @@ button {
 	background-color: rgba(255, 255, 255, .3);
 }
 
-p{
+p {
 	color: #808080;
 }
 
 img {
-width: 40px;
-height: 40px;
+	width: 40px;
+	height: 40px;
 }
 
-.inline{
+.inline {
 	display: inline-block;
+}
+
+.chk_all_btn {
+	float: left;
+	width: 10%;
+}
+
+.chk_btn_right {
+	float: left;
+	width: 90%;
+}
+
+.tskType, .ltsPln {
+	clear: left;
+}
+
+table {
+border-collapse: collapse;
+width: 400px;
+font-size: 12px;
+margin: 20px;
+text-align: left;
+}
+table th    {
+color: #808080;
+padding-left: 10px;
+border-bottom: 3px solid #d4d5c3
+}
+table td    {
+padding: 10px;
+color: #808080;
+border-bottom: 1px solid rgba(212,212,212,0.5);
+}
+
+.ttlChk, .ltsPln {
+	padding-top: 20px;
+}
+
+.text {
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
