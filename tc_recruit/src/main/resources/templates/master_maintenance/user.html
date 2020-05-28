@@ -2,18 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<link rel="stylesheet"
-	href="./webjars/bootstrap/3.3.1/css/bootstrap.min.css" type="text/css"></link>
-<script type="text/javascript"
-	src="./webjars/jquery/2.1.4/jquery.min.js"></script>
-<script type="text/javascript"
-	src="./webjars/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="./javascript/data_upload_view.js"></script>
-<script type="text/javascript" src="./javascript/common.js"></script>
-<script type="text/javascript"
-	src="./javascript/datetimepicker/jquery.datetimepicker.js"></script>
 <title>masterMaintenanceOfStatus</title>
 <style type="text/css">
 .input {
@@ -21,14 +9,23 @@
 	margin: 10px;
 }
 </style>
+
+<script>
+  function submitAction(url) {
+		document.updateForm.action = url;
+		document.updateForm.submit();
+	}
+</script>
 </head>
 <body>
 	<h2>マスタメンテナンス</h2>
 	<div class="input">
 		<p>社員マスタ</p>
-		<form th:name="User" th:action="@{/maintenance/user/update}"
+		<form th:name="User"
 			th:object="${User}" th:method="post">
-			<input type="submit" value="一括変更">
+			<input type="text" name="sarchWord">
+			<button id="sarchButton" type="button" onclick="submitAction('/maintenance/user/sarch')">検索</button>
+			<button id="updateButton" type="button" onclick="submitAction('/maintenance/user/update')">一括変更</button>
 			<table border=1>
 				<tr>
 					<td>ユーザ―名</td>

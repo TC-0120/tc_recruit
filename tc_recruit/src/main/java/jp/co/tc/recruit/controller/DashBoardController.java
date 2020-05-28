@@ -50,12 +50,12 @@ public class DashBoardController {
 		TotalSelectionView ttlSlcAll = ttlSlcSvc.findByStatusMessageId(1);
 		/*ALL以外の選考中候補者データ全て*/
 		/*選考中(ALL)の候補者全数*/
-		List<TotalSelectionView> ttlSlcAllList = ttlSlcSvc.findAllByOrderBySort();
+		List<TotalSelectionView> ttlSlcAllList = ttlSlcSvc.findAll();
 		for (sttMsgId = ttlSlcAllList.get(1).getStatusMessageId(); sttMsgId <= ttlSlcAllList
 				.get(ttlSlcAllList.size() - 1)
 				.getStatusMessageId(); sttMsgId++) {
 
-			ttlSlc = ttlSlcSvc.findByStatusMessageId(sttMsgId);
+			ttlSlc = ttlSlcSvc.findBySort(sttMsgId);
 			if (ttlSlc.getSelectionStatusId() != 9) {
 				ttlSlcList.add(ttlSlc);
 			}
@@ -87,11 +87,11 @@ public class DashBoardController {
 		/*要対応のデータ(All)*/
 		TotalCheckView ttlChkAll = ttlChkSvc.findByStatusMessageId(10);
 		/*選考中候補者データ*/
-		List<TotalCheckView> ttlChkListAll = ttlChkSvc.findAllByOrderBySort();
+		List<TotalCheckView> ttlChkListAll = ttlChkSvc.findAll();
 		/*要対応(ALL)の候補者全数*/
-		for (sttMsgId = ttlChkListAll.get(1).getSort(); sttMsgId < ttlChkListAll.get(ttlChkListAll.size() - 1)
-				.getSort(); sttMsgId++) {
-			ttlChk = ttlChkSvc.findByStatusMessageId(sttMsgId);
+		for (int sort = ttlChkListAll.get(1).getSort(); sort < ttlChkListAll.get(ttlChkListAll.size() - 1)
+				.getSort(); sort++) {
+			ttlChk = ttlChkSvc.findBySort(sort);
 			if (ttlChk.getSelectionStatusId() != 9) {
 				ttlChkList.add(ttlChk);
 			}

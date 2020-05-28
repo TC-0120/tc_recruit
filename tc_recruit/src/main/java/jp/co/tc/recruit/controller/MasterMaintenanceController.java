@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,17 +71,36 @@ public class MasterMaintenanceController {
 		return "master_maintenance/user";
 	}
 
+
+	/**
+	 * 社員の検索
+	 *
+	 * @param userForm
+	 * @return 社員マスタメンテナンス画面
+	 */
+	@PostMapping("user/sarch")
+	@Transactional(readOnly = false)
+	public String userSarch(
+			@ModelAttribute("User") UserForm userForm, Model model) {
+		List<User> userList = new ArrayList<User>();
+		String[] userArray = userForm.getSarchWord().toString().split("( |　)+", 0);
+
+		userList = usrSvc.userSarch(userArray);
+		model.addAttribute("sarchList", userList);
+		return "redirect:/maintenance/user";
+	}
+
 	/**
 	 * 社員マスタの一括更新
 	 *
-	 * @param msgSttForm
+	 * @param userForm
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@PostMapping("user/update")
 	@Transactional(readOnly = false)
 	public String userUpdate(
 			@ModelAttribute("User") UserForm userForm, Model model) {
-		usrSvc.userUpdate(userForm);
+		usrSvc.userMultipleUpdate(userForm);
 		return "redirect:/maintenance/user";
 	}
 

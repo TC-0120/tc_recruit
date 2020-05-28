@@ -29,4 +29,12 @@ public class TotalSelectionService {
 	public List<TotalSelectionView> findAllByOrderBySort() {
 		return ttlSlcRepo.findAllByOrderBySort();
 	}
+
+	public List<TotalSelectionView> findAll() {
+		return ttlSlcRepo.findAll();
+	}
+
+	public TotalSelectionView findBySort(Integer sort) {
+		return ttlSlcRepo.findBySort(sort);
+	}
 }

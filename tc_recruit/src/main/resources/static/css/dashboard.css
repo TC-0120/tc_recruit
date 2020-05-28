@@ -1,16 +1,27 @@
-@import
-	'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
-body {
-	font-family: 'Varela Round', sans-serif;
-}
-.main {
+@import url('https://fonts.googleapis.com/css?family=Varela+Round');
+
+#main {
+	/* width: 94%; */
 	width: 84%;
 	float: right;
 	margin-top: 2em;
 	height: 100%;
 }
 
-.side_menu {
+#side_menu {
+	/* width: 5%; */
+	width: 15%;
+	float: left;
+}
+
+.main_checked {
+	width: 84%;
+	float: right;
+	margin-top: 2em;
+	height: 100%;
+}
+
+.side_menu_checked {
 	width: 15%;
 	float: left;
 }
@@ -69,9 +80,8 @@ body {
 	color: #808080;
 	border: none;
 	position: relative;
-	height: 90px;
+	height: 100px;
 	padding: 0 2em;
-	margin: 0.2em;
 	cursor: pointer;
 	transition: 800ms ease all;
 	outline: none;
@@ -106,47 +116,6 @@ body {
 	transition: 800ms ease all;
 }
 
-.slc_all_btn {
-	color: #808080;
-	border: none;
-	position: relative;
-	height: 90px;
-	padding: 0 2em;
-	margin: 0.2em;
-	cursor: pointer;
-	transition: 800ms ease all;
-	outline: none;
-	border-bottom: solid 1px #D9CF59;
-	background: #fff;
-}
-
-.slc_all_btn:hover {
-	border-bottom: solid 1px #fff;
-}
-
-.slc_all_btn:before, .slc_all_btn:after {
-	content: '';
-	position: absolute;
-	top: 0;
-	right: 0;
-	background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
-	height: 2px;
-	width: 0;
-	background: #D9CF59;
-	transition: 400ms ease all;
-}
-
-.slc_all_btn:after {
-	right: inherit;
-	top: inherit;
-	left: 0;
-	bottom: 0;
-}
-
-.slc_all_btn:hover:before, .slc_all_btn:hover:after {
-	width: 100%;
-	transition: 800ms ease all;
-}
 
 .ttl_chk_btn {
 	background: #E8E6ED;
@@ -270,4 +239,8 @@ border-bottom: 1px solid rgba(212,212,212,0.5);
 .text {
 	padding-top: 5px;
 	padding-bottom: 5px;
+}
+
+.tex {
+	padding-top: 5px;
 }

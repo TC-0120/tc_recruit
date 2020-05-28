@@ -12,4 +12,5 @@ public interface TotalCheckRepository extends JpaRepository<TotalCheckView, Inte
 	public List<TotalCheckView> findAllByOrderByStatusMessageId();
 	public List<TotalCheckView>findAllByOrderBySelectionStatusIdAscSelectionStatusDetailIdAsc();
 	public List<TotalCheckView> findAllByOrderBySort();
+	public TotalCheckView findBySort(Integer sort);
 }

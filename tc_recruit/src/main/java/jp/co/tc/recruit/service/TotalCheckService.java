@@ -34,4 +34,8 @@ public class TotalCheckService {
 		return ttlChkRepo.findAllByOrderBySort();
 	}
 
+	public TotalCheckView findBySort(Integer sort) {
+		return ttlChkRepo.findBySort(sort);
+	}
+
 }

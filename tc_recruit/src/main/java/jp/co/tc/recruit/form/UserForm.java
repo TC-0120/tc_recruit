@@ -19,6 +19,7 @@ public class UserForm {
         private List<String> password;
         private List<Authority> authority;
         private List<Integer> status;
+        private String[] sarchWord;
 
 	public UserForm() {
 		id = null;
@@ -28,6 +29,7 @@ public class UserForm {
 		password = null;
 		authority = null;
 		status = null;
+		sarchWord = null;
 	}
 
 }

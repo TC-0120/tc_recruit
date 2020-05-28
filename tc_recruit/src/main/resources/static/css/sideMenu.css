@@ -56,6 +56,14 @@ input[type="checkbox"]:checked ~ #sidebarMenu {
 	transform: translateX(0);
 }
 
+/* input[type="checkbox"]:checked ~ #main {
+	width: 84%;
+}
+
+input[type="checkbox"]:checked ~ #side_menu {
+	width: 15%;
+} */
+
 input[type=checkbox] {
 	transition: all 0.3s;
 	box-sizing: border-box;

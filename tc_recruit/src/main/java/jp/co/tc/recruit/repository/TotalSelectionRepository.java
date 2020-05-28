@@ -11,4 +11,6 @@ public interface TotalSelectionRepository extends JpaRepository<TotalSelectionVi
 	public List<TotalSelectionView> findAllByOrderByStatusMessageId();
 	public List<TotalSelectionView> findAllByOrderBySelectionStatusId();
 	public List<TotalSelectionView> findAllByOrderBySort();
+	public TotalSelectionView findBySort(Integer sort);
+	public List<TotalSelectionView> findAll();
 }

@@ -40,7 +40,8 @@ public class UserService implements UserDetailsService {
 	 * 社員マスタの一括更新
 	 *
 	 */
-	public void userUpdate(UserForm userFormList) {
+	public void userMultipleUpdate(UserForm userFormList) {
+
 		for (int i = 0; i < userFormList.getId().size(); i++) {
 			Integer idByForm = Integer.parseInt((userFormList.getId().get(i)).toString());
 			String usernameByForm = (userFormList.getUsername().get(i)).toString();
@@ -49,6 +50,8 @@ public class UserService implements UserDetailsService {
 			Authority authorityByForm = userFormList.getAuthority().get(i);
 			Integer statusByForm = Integer.parseInt((userFormList.getStatus().get(i)).toString());
 			String passwordByForm = (userFormList.getPassword().get(i)).toString();
+
+
 
 			//入力値がある場合、それぞれ保存
 			if (idByForm != null) {
@@ -104,6 +107,27 @@ public class UserService implements UserDetailsService {
 			userInfo.add(user);
 		}
 		usrRepo.saveAll(userInfo);
+	}
+
+	public List<User> userSarch(String[] userArray) {
+		List<User> sarchList = new ArrayList<User>();
+		List<User> sarchUsername = null;
+		List<User> sarchLastName = null;
+		List<User> sarchFirstName = null;
+		List<User> sarchAuthority = null;
+
+		for(int i = 0; i < userArray.length; i++) {
+			sarchUsername = usrRepo.findByUsernameLike("%" + userArray[i] + "%");
+			sarchLastName = usrRepo.findByLastNameLike("%" + userArray[i] + "%");
+			sarchFirstName = usrRepo.findByFirstNameLike("%" + userArray[i] + "%");
+			sarchAuthority = usrRepo.findByAuthorityLike("%" + userArray[i] + "%");
+
+			sarchList.addAll(sarchUsername);
+			sarchList.addAll(sarchLastName);
+			sarchList.addAll(sarchFirstName);
+			sarchList.addAll(sarchAuthority);
+		}
+		return sarchList;
 	}
 
 }
