@@ -46,6 +46,7 @@ public class MasterMaintenanceController {
 	@Autowired
 	UserService usrSvc;
 
+
 	/**
 	 * メンテナンス可能項目の表示
 	 *
@@ -65,7 +66,7 @@ public class MasterMaintenanceController {
 	@GetMapping("user")
 	public String userUpdateInput(
 			@ModelAttribute("User") UserForm userForm, Model model) {
-		List<User> usrList;
+		List<User> usrList = new ArrayList<User>();
 		usrList = usrSvc.findAllByOrderByUsername();
 		model.addAttribute("usrList", usrList);
 		return "master_maintenance/user";
@@ -82,12 +83,12 @@ public class MasterMaintenanceController {
 	@Transactional(readOnly = false)
 	public String userSarch(
 			@ModelAttribute("User") UserForm userForm, Model model) {
-		List<User> userList = new ArrayList<User>();
-		String[] userArray = userForm.getSarchWord().toString().split("( |　)+", 0);
-
-		userList = usrSvc.userSarch(userArray);
-		model.addAttribute("sarchList", userList);
-		return "redirect:/maintenance/user";
+		List<User> usrList = new ArrayList<User>();
+		String[] userArray = Arrays.toString(userForm.getSarchWord())
+				.replace("[", "").replace("]", "").split("( |　)+", 0);
+		usrList = usrSvc.userSarch(userArray);
+		model.addAttribute("usrList", usrList);
+		return "/master_maintenance/user";
 	}
 
 	/**

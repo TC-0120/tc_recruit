@@ -6,9 +6,8 @@ import jp.co.tc.recruit.entity.User.Authority;
 import lombok.Data;
 
 /**
- * ステータス変更フォームクラス
+ * ユーザーフォームクラス
  *
- * 未使用
  */
 @Data
 public class UserForm {

@@ -10,10 +10,10 @@
 }
 </style>
 
-<script>
+<script type="text/javascript">
   function submitAction(url) {
-		document.updateForm.action = url;
-		document.updateForm.submit();
+		document.User.action = '/maintenance/user' + url;
+		document.User.submit();
 	}
 </script>
 </head>
@@ -21,11 +21,11 @@
 	<h2>マスタメンテナンス</h2>
 	<div class="input">
 		<p>社員マスタ</p>
-		<form th:name="User"
+		<form th:name="User" th:action="@{/maintenance/user}"
 			th:object="${User}" th:method="post">
 			<input type="text" name="sarchWord">
-			<button id="sarchButton" type="button" onclick="submitAction('/maintenance/user/sarch')">検索</button>
-			<button id="updateButton" type="button" onclick="submitAction('/maintenance/user/update')">一括変更</button>
+			<button id="sarchButton" type="button" onclick="submitAction('/sarch')">検索</button>
+			<button id="updateButton" type="button" onclick="submitAction('/update')">一括変更</button>
 			<table border=1>
 				<tr>
 					<td>ユーザ―名</td>
