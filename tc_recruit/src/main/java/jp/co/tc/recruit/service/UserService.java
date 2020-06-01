@@ -18,10 +18,9 @@ import jp.co.tc.recruit.repository.UserRepository;
 public class UserService implements UserDetailsService {
 	@Autowired
 	private UserRepository usrRepo;
-	User user = new User();
 
-	public List<User> findAllByOrderByUsername() {
-		return usrRepo.findAllByOrderByUsername();
+	public List<User> findAll() {
+		return usrRepo.findAll();
 	}
 
 	@Override
@@ -43,37 +42,45 @@ public class UserService implements UserDetailsService {
 	public void userMultipleUpdate(UserForm userFormList) {
 
 		for (int i = 0; i < userFormList.getId().size(); i++) {
-			Integer idByForm = Integer.parseInt((userFormList.getId().get(i)).toString());
+			int idByForm = Integer.parseInt((userFormList.getId().get(i)).toString());
 			String usernameByForm = (userFormList.getUsername().get(i)).toString();
 			String firstNameByForm = (userFormList.getFirstName().get(i)).toString();
 			String lastNameByForm = (userFormList.getLastName().get(i)).toString();
 			Authority authorityByForm = userFormList.getAuthority().get(i);
-			Integer statusByForm = Integer.parseInt((userFormList.getStatus().get(i)).toString());
-			String passwordByForm = (userFormList.getPassword().get(i)).toString();
+			Integer statusBooleanByForm = Integer.parseInt((userFormList.getStatusBoolean().get(i)).toString());
+			/*String passwordByForm = (userFormList.getPassword().get(i)).toString();*/
 
-			//入力値がある場合、それぞれ保存
-			if (idByForm != null) {
-				user.setId(idByForm);
+			/*Integer idByDB = Integer.parseInt(((User)usrRepo.findById(idByForm)).getId().toString());*/
+			User userInfo = usrRepo.findById(idByForm);
+			String usernameByDB = userInfo.getUsername().toString();
+			String firstNameByDB = userInfo.getFirstName().toString();
+			String lastNameByDB = userInfo.getLastName().toString();
+			String authorityByDB = userInfo.getAuthority().toString();
+			Integer statusByDB = Integer.parseInt(userInfo.getStatus().toString());
+
+
+			//入力値とDB値が異なる場合、それぞれ保存
+			if (!(usernameByForm.equals(usernameByDB))) {
+				userInfo.setUsername(usernameByForm);
+				/*usrRepo.save(user);*/
 			}
-			if (usernameByForm != null) {
-				user.setUsername(usernameByForm);
+			if (!(firstNameByForm.equals(firstNameByDB))) {
+				userInfo.setFirstName(firstNameByForm);
+				/*usrRepo.save(user);*/
 			}
-			if (firstNameByForm != null) {
-				user.setFirstName(firstNameByForm);
+			if (!(lastNameByForm.equals(lastNameByDB))) {
+				userInfo.setLastName(lastNameByForm);
+				/*usrRepo.save(user);*/
 			}
-			if (lastNameByForm != null) {
-				user.setLastName(lastNameByForm);
+			if (authorityByForm.name() != authorityByDB) {
+				userInfo.setAuthority(authorityByForm);
+				/*usrRepo.save(user);*/
 			}
-			if (passwordByForm != null) {
-				user.setPassword(passwordByForm);
+			if (statusBooleanByForm != statusByDB) {
+				userInfo.setStatus(statusBooleanByForm);
+				/*usrRepo.save(user);*/
 			}
-			if (authorityByForm != null) {
-				user.setAuthority(authorityByForm);
-			}
-			if (statusByForm != null) {
-				user.setStatus(statusByForm);
-			}
-			usrRepo.save(user);
+			usrRepo.save(userInfo);
 		}
 	}
 
@@ -84,6 +91,8 @@ public class UserService implements UserDetailsService {
 	public void userCsvImport(List<String> userList) {
 		List<User> userInfo = new ArrayList<User>();
 
+		/*2行目から値取得
+		ユーザー名/姓/名/権限(0,1 → ROLE_ADMIN,ROLE_USER)をそれぞれ登録*/
 		for (int k = 1; k <= (userList.size() / 4) - 1; k++) {
 			User user = new User();
 			for (int i = (4 * k); i <= ((4 * k) + 3); i++) {
@@ -111,13 +120,16 @@ public class UserService implements UserDetailsService {
 	 * 社員マスタから検索
 	 *
 	 */
-	public List<User> userSarch(String[] userArray) {
+	public List<User> userSarch(UserForm userForm, String[] userArray) {
 		List<User> sarchList = new ArrayList<User>();
 		List<User> sarchUsername = null;
 		List<User> sarchLastName = null;
 		List<User> sarchFirstName = null;
-		/*List<User> sarchAuthority = null;*/
+		List<Integer> sarchAuthority = userForm.getAuthorityInt();
+		Integer sarchStatus = userForm.getStatus().get(0);
+		List<User>removeList = new ArrayList<User>();
 
+		/*OR条件であいまい検索*/
 		for (int i = 0; i < userArray.length; i++) {
 			sarchUsername = usrRepo.findByUsernameLike("%" + userArray[i] + "%");
 			sarchLastName = usrRepo.findByLastNameLike("%" + userArray[i] + "%");
@@ -130,6 +142,24 @@ public class UserService implements UserDetailsService {
 			sarchList.addAll(sarchFirstName);
 			/*sarchList.addAll(sarchAuthority);*/
 		}
+
+		/*権限チェックボックスに選択値があったとき*/
+		if(sarchAuthority.get(0) == 0 && sarchAuthority.get(1) == 1) {
+			//何もしない
+		} else if (sarchAuthority.get(0) == 0) {
+			removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
+			sarchList.removeAll(removeList);
+		} else if(sarchAuthority.get(0) == 1 || sarchAuthority.get(1) == 1){
+			removeList = usrRepo.findByAuthority(Authority.ROLE_ADMIN);
+			sarchList.removeAll(removeList);
+		}
+
+		/*有効/無効ステータスにチェックが入ったとき*/
+		if(sarchStatus != null) {
+			removeList = usrRepo.findByStatus(0);
+			sarchList.removeAll(removeList);
+		}
+
 		/*重複データ削除*/
 		for (int n = 0; n < sarchList.size() - 1; n++) {
 			for (int k = sarchList.size() - 1; k > n; k--) {

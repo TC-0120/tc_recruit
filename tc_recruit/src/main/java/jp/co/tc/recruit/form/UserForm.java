@@ -17,7 +17,9 @@ public class UserForm {
         private List<String> lastName;
         private List<String> password;
         private List<Authority> authority;
+        private List<Integer> authorityInt;
         private List<Integer> status;
+        private List<Integer> statusBoolean;
         private String[] sarchWord;
 
 	public UserForm() {
@@ -27,7 +29,9 @@ public class UserForm {
 		lastName = null;
 		password = null;
 		authority = null;
+		authorityInt = null;
 		status = null;
+		statusBoolean = null;
 		sarchWord = null;
 	}
 

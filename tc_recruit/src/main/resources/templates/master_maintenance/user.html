@@ -11,7 +11,7 @@
 </style>
 
 <script type="text/javascript">
-  function submitAction(url) {
+	function submitAction(url) {
 		document.User.action = '/maintenance/user' + url;
 		document.User.submit();
 	}
@@ -21,11 +21,21 @@
 	<h2>マスタメンテナンス</h2>
 	<div class="input">
 		<p>社員マスタ</p>
-		<form th:name="User" th:action="@{/maintenance/user}"
+		<form th:name="User" th:action="@{/maintenance/user/sarch}"
 			th:object="${User}" th:method="post">
-			<input type="text" name="sarchWord">
-			<button id="sarchButton" type="button" onclick="submitAction('/sarch')">検索</button>
-			<button id="updateButton" type="button" onclick="submitAction('/update')">一括変更</button>
+			<input type="text" name="sarchWord" th:value="${userArray}">
+			<input type="checkbox" value="0"
+				th:checked="${User.authorityInt == 0}" th:field="*{authorityInt}">管理者
+			<input type="checkbox" value="1"
+				th:checked="${User.authorityInt == 1}" th:field="*{authorityInt}">一般
+			<input type="checkbox" value="0" th:field="*{status}">無効ユーザーを除く
+
+			<button id="sarchButton" type="button"
+				onclick="submitAction('/sarch')">検索</button>
+			<br>
+
+			<button id="updateButton" type="button"
+				onclick="submitAction('/update')">一括変更</button>
 			<table border=1>
 				<tr>
 					<td>ユーザ―名</td>
@@ -34,14 +44,15 @@
 					<td>権限</td>
 					<td>有効/無効</td>
 				</tr>
-				<tr th:each="usr: ${usrList}">
-					<td><input th:name="username" th:value="${usr.username}">
-						<input type="hidden" th:name="password" th:value="${usr.password}">
+				<tr th:each="usr: ${usrList}" id="user">
+					<td><input id="username" th:name="username"
+						th:value="${usr.username}" onChange="alertValue(this)"> <input
+						type="hidden" th:name="password" th:value="${usr.password}">
 						<input type="hidden" th:name="id" th:value="${usr.id}"></td>
-					<td><input th:name="lastName" th:value="${usr.lastName}">
-					</td>
-					<td><input th:name="firstName" th:value="${usr.firstName}">
-					</td>
+					<td><input id="lastName" th:name="lastName"
+						th:value="${usr.lastName}" onChange="alertValue(this)"></td>
+					<td><input id="firstName" th:name="firstName"
+						th:value="${usr.firstName}" onChange="alertValue(this)"></td>
 					<td><div th:if="${usr.authority.name() == 'ROLE_ADMIN'}">
 							<select name="authority" id="authority">
 								<option value="ROLE_ADMIN" selected>管理者</option>
@@ -57,12 +68,14 @@
 
 					<td>
 						<div th:if="${usr.status == 0}">
-							<input type="hidden" name="status" value="1"> <input
-								type="checkbox" name="status" value="0" checked="checked">無効
+							<input type="hidden" id="statusBoolean" name="statusBoolean" value="0">
+							<input type="checkbox" id="checkbox" name="status" checked
+								value="0" onchange="buttonCheck()">無効
 						</div>
 						<div th:if="${usr.status == 1}">
-							<input type="hidden" name="status" value="1"> <input
-								type="checkbox" name="status" value="0">無効
+							<input type="hidden" id="statusBoolean" name="statusBoolean" value="1">
+							<input type="checkbox" id="checkbox" name="status" value="1"
+								onchange="buttonCheck()">無効
 						</div>
 					</td>
 				</tr>
