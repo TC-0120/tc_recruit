@@ -20,6 +20,9 @@ public class UserForm {
         private List<Integer> authorityInt;
         private List<Integer> status;
         private List<Integer> statusBoolean;
+        private Integer sarchAuthorityAdmin;
+        private Integer sarchAuthorityUser;
+        private Integer sarchStatusBoolean;
         private String[] sarchWord;
 
 	public UserForm() {
@@ -33,6 +36,9 @@ public class UserForm {
 		status = null;
 		statusBoolean = null;
 		sarchWord = null;
+		sarchAuthorityAdmin = null;
+		sarchAuthorityUser = null;
+		sarchStatusBoolean = null;
 	}
 
 }

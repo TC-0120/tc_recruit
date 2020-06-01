@@ -67,7 +67,7 @@ public class MasterMaintenanceController {
 	public String userUpdateInput(
 			@ModelAttribute("User") UserForm userForm, Model model) {
 		List<User> usrList = new ArrayList<User>();
-		usrList = usrSvc.findAll();
+		usrList = usrSvc.findAllByOrderByUsername();
 		model.addAttribute("usrList", usrList);
 		return "master_maintenance/user";
 	}
@@ -87,7 +87,18 @@ public class MasterMaintenanceController {
 		List<User> usrList = new ArrayList<User>();
 		String[] userArray = Arrays.toString(userForm.getSarchWord())
 				.replace("[", "").replace("]", "").split("( |　)+", 0);
+		/*各チェックボックスにチェックなしで検索された場合*/
+		if(userForm.getSarchAuthorityAdmin() == null) {
+			userForm.setSarchAuthorityAdmin(1);
+		}
+		if(userForm.getSarchAuthorityUser() == null) {
+			userForm.setSarchAuthorityUser(0);
+		}
+		if(userForm.getSarchStatusBoolean() == null) {
+			userForm.setSarchStatusBoolean(1);
+		}
 		usrList = usrSvc.userSarch(userForm, userArray);
+
 		/*検索値を所持してuser.htmlへ*/
 		String userArrayStr = String.join(" ", userArray);
 

@@ -19,8 +19,8 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private UserRepository usrRepo;
 
-	public List<User> findAll() {
-		return usrRepo.findAll();
+	public List<User> findAllByOrderByUsername() {
+		return usrRepo.findAllByOrderByUsername();
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class UserService implements UserDetailsService {
 	 * 社員マスタの一括更新
 	 *
 	 */
-	public void userMultipleUpdate(UserForm userFormList) {
+	public /*List<UserForm>*/void userMultipleUpdate(UserForm userFormList) {
 
 		for (int i = 0; i < userFormList.getId().size(); i++) {
 			int idByForm = Integer.parseInt((userFormList.getId().get(i)).toString());
@@ -62,26 +62,29 @@ public class UserService implements UserDetailsService {
 			//入力値とDB値が異なる場合、それぞれ保存
 			if (!(usernameByForm.equals(usernameByDB))) {
 				userInfo.setUsername(usernameByForm);
-				/*usrRepo.save(user);*/
+				usrRepo.save(userInfo);
 			}
 			if (!(firstNameByForm.equals(firstNameByDB))) {
 				userInfo.setFirstName(firstNameByForm);
-				/*usrRepo.save(user);*/
+				usrRepo.save(userInfo);
 			}
 			if (!(lastNameByForm.equals(lastNameByDB))) {
 				userInfo.setLastName(lastNameByForm);
-				/*usrRepo.save(user);*/
+				usrRepo.save(userInfo);
 			}
 			if (authorityByForm.name() != authorityByDB) {
 				userInfo.setAuthority(authorityByForm);
-				/*usrRepo.save(user);*/
+				usrRepo.save(userInfo);
 			}
 			if (statusBooleanByForm != statusByDB) {
 				userInfo.setStatus(statusBooleanByForm);
-				/*usrRepo.save(user);*/
+				usrRepo.save(userInfo);
 			}
-			usrRepo.save(userInfo);
 		}
+		/*		Comparator<User> user = Comparator.comparing(User::getUsername);
+				userInfo.sort(user);
+
+				return userFormList;*/
 	}
 
 	/**
@@ -125,8 +128,9 @@ public class UserService implements UserDetailsService {
 		List<User> sarchUsername = null;
 		List<User> sarchLastName = null;
 		List<User> sarchFirstName = null;
-		List<Integer> sarchAuthority = userForm.getAuthorityInt();
-		Integer sarchStatus = userForm.getStatus().get(0);
+		Integer sarchAuthorityAdmin = userForm.getSarchAuthorityAdmin();
+		Integer sarchAuthorityUser = userForm.getSarchAuthorityUser();
+		Integer sarchStatusBoolean = userForm.getSarchStatusBoolean();
 		List<User>removeList = new ArrayList<User>();
 
 		/*OR条件であいまい検索*/
@@ -144,18 +148,18 @@ public class UserService implements UserDetailsService {
 		}
 
 		/*権限チェックボックスに選択値があったとき*/
-		if(sarchAuthority.get(0) == 0 && sarchAuthority.get(1) == 1) {
+		if(sarchAuthorityAdmin == 0 && sarchAuthorityUser == 1) {
 			//何もしない
-		} else if (sarchAuthority.get(0) == 0) {
+		} else if (sarchAuthorityAdmin == 0) {
 			removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
 			sarchList.removeAll(removeList);
-		} else if(sarchAuthority.get(0) == 1 || sarchAuthority.get(1) == 1){
+		} else if(sarchAuthorityUser == 1){
 			removeList = usrRepo.findByAuthority(Authority.ROLE_ADMIN);
 			sarchList.removeAll(removeList);
 		}
 
 		/*有効/無効ステータスにチェックが入ったとき*/
-		if(sarchStatus != null) {
+		if(sarchStatusBoolean == 0) {
 			removeList = usrRepo.findByStatus(0);
 			sarchList.removeAll(removeList);
 		}
