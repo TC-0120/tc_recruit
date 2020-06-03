@@ -27,10 +27,11 @@ public class PasswordController {
 	public String PasswordRegist(@ModelAttribute("passwordRegist") UserForm userForm, Model model) {
 		String password = userForm.getPassword().get(0);
 		String passwordConfirm = userForm.getPassword().get(1);
+		String username = userForm.getUsername().get(0);
 		String message = "入力内容が異なります";
 
 		if(password.equals(passwordConfirm)) {
-			usrSvc.passwordRegist(password);
+			usrSvc.passwordRegist(password, username);
 		} else {
 			model.addAttribute("message", message);
 			return "/password_setting";

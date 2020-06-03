@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,8 +64,8 @@ public class MasterMaintenanceController {
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@GetMapping("user")
-	public String userUpdateInput(
-			@ModelAttribute("User") UserForm userForm, Model model) {
+	public String userUpdateInput(@ModelAttribute("User") UserForm userForm,
+			@ModelAttribute("UploadUser") UserForm userFormCsv, BindingResult result, Model model) {
 		List<User> usrList = new ArrayList<User>();
 		usrList = usrSvc.findAllByOrderByUsername();
 		model.addAttribute("usrList", usrList);
@@ -130,8 +131,10 @@ public class MasterMaintenanceController {
 	 */
 	@PostMapping("user/upload")
 	@Transactional(readOnly = false)
-	public String upload(@ModelAttribute("UploadUser") UserForm userForm,
+	public String upload(@ModelAttribute("UploadUser") UserForm userFormCsv,
 			@RequestParam("userlist.csv") MultipartFile multipartFile, Model model) {
+		Boolean res = false;
+
 		try {
 			File file = new File("C:\\" + multipartFile.getOriginalFilename());
 			FileReader filereader = new FileReader(file);
@@ -144,9 +147,19 @@ public class MasterMaintenanceController {
 				str = String.valueOf((char)n);
 				user = stringBuilder.append(str);
 			}
+
+			//読み込んだデータを改行で区切ってList化
 			String[] userArray = user.toString().split("[\\n,]", 0);
 			List<String> userList = Arrays.asList(userArray);
-			usrSvc.userCsvImport(userList);
+
+			List<String> message = usrSvc.userCsvImport(userList);
+			if(!(message.isEmpty())) {
+				model.addAttribute("message", message);
+				res = true;
+				model.addAttribute("res", res);
+			} else {
+				model.addAttribute("res", res);
+			}
 
 			filereader.close();
 		} catch (FileNotFoundException e) {

@@ -2,6 +2,7 @@ package jp.co.tc.recruit.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,14 +21,16 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private UserRepository usrRepo;
 	@Autowired
-    PasswordEncoder passwordEncoder;
+	PasswordEncoder passwordEncoder;
 
 	public List<User> findAllByOrderByUsername() {
 		return usrRepo.findAllByOrderByUsername();
 	}
+
 	public List<User> findAllByOrderByAuthority() {
 		return usrRepo.findAllByOrderByAuthority();
 	}
+
 	public List<User> findAllByOrderByStatusDesc() {
 		return usrRepo.findAllByOrderByStatusDesc();
 	}
@@ -67,7 +70,6 @@ public class UserService implements UserDetailsService {
 			String authorityByDB = userInfo.getAuthority().toString();
 			Integer statusByDB = Integer.parseInt(userInfo.getStatus().toString());
 
-
 			//入力値とDB値が異なる場合、それぞれ保存
 			if (!(usernameByForm.equals(usernameByDB))) {
 				userInfo.setUsername(usernameByForm);
@@ -100,8 +102,15 @@ public class UserService implements UserDetailsService {
 	 * 社員マスタのcsv取込
 	 *
 	 */
-	public void userCsvImport(List<String> userList) {
+	public List<String> userCsvImport(List<String> userList) {
 		List<User> userInfo = new ArrayList<User>();
+		List<String> message = new ArrayList<String>();
+
+		//それぞれバリデーションチェック
+		Pattern usernamePattern = Pattern.compile("^TC(-\\d{4})$");
+		Pattern lastNamePattern = Pattern.compile("{1,10}$");
+		Pattern firstNamePattern = Pattern.compile("{1,10}$");
+		Pattern authorityPattern = Pattern.compile("{1}$");
 
 		/*2行目から値取得
 		ユーザー名/姓/名/権限(0,1 → ROLE_ADMIN,ROLE_USER)をそれぞれ登録*/
@@ -109,23 +118,44 @@ public class UserService implements UserDetailsService {
 			User user = new User();
 			for (int i = (4 * k); i <= ((4 * k) + 3); i++) {
 				if (i % 4 == 0) {
-					user.setUsername(userList.get(i));
-					user.setStatus(1);
-				} else if (i % 4 == 1) {
-					user.setLastName(userList.get(i));
-				} else if (i % 4 == 2) {
-					user.setFirstName(userList.get(i));
-				} else if (i % 4 == 3) {
-					if ((userList.get(i)).contains("1")) {
-						user.setAuthority(Authority.ROLE_USER);
+					if (usernamePattern.matcher(userList.get(i)).matches() == false) {
+						message.add("TC-0000形式で入力してください");
 					} else {
-						user.setAuthority(Authority.ROLE_ADMIN);
+						user.setUsername(userList.get(i));
+						user.setStatus(1);
+					}
+				} else if (i % 4 == 1) {
+					if (lastNamePattern.matcher(userList.get(i)).matches() == false) {
+						message.add("1文字以上10文字以下で入力してください");
+					} else {
+						user.setLastName(userList.get(i));
+					}
+				} else if (i % 4 == 2) {
+					if (firstNamePattern.matcher(userList.get(i)).matches() == false) {
+						message.add("1文字以上10文字以下で入力してください");
+					} else {
+						user.setFirstName(userList.get(i));
+					}
+				} else if (i % 4 == 3) {
+					if (authorityPattern.matcher(userList.get(i)).matches() == false) {
+						message.add("管理者は「0」、一般は「1」を入力してください");
+					} else {
+						if ((userList.get(i)).contains("1")) {
+							user.setAuthority(Authority.ROLE_USER);
+						} else {
+							user.setAuthority(Authority.ROLE_ADMIN);
+						}
 					}
 				}
 			}
 			userInfo.add(user);
 		}
-		usrRepo.saveAll(userInfo);
+		if (message.isEmpty()) {
+			usrRepo.saveAll(userInfo);
+		} else {
+			//DB登録しない
+		}
+		return message;
 	}
 
 	/**
@@ -140,7 +170,7 @@ public class UserService implements UserDetailsService {
 		Integer sarchAuthorityAdmin = userForm.getSarchAuthorityAdmin();
 		Integer sarchAuthorityUser = userForm.getSarchAuthorityUser();
 		Integer sarchStatusBoolean = userForm.getSarchStatusBoolean();
-		List<User>removeList = new ArrayList<User>();
+		List<User> removeList = new ArrayList<User>();
 
 		/*OR条件であいまい検索*/
 		for (int i = 0; i < userArray.length; i++) {
@@ -157,18 +187,18 @@ public class UserService implements UserDetailsService {
 		}
 
 		/*権限チェックボックスに選択値があったとき*/
-		if(sarchAuthorityAdmin == 1 && sarchAuthorityUser == 1) {
+		if (sarchAuthorityAdmin == 1 && sarchAuthorityUser == 1) {
 			//何もしない
 		} else if (sarchAuthorityAdmin == 1) {
 			removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
 			sarchList.removeAll(removeList);
-		} else if(sarchAuthorityUser == 1){
+		} else if (sarchAuthorityUser == 1) {
 			removeList = usrRepo.findByAuthority(Authority.ROLE_ADMIN);
 			sarchList.removeAll(removeList);
 		}
 
 		/*有効/無効ステータスにチェックが入ったとき*/
-		if(sarchStatusBoolean == 1) {
+		if (sarchStatusBoolean == 1) {
 			removeList = usrRepo.findByStatus(0);
 			sarchList.removeAll(removeList);
 		}
@@ -184,13 +214,13 @@ public class UserService implements UserDetailsService {
 		return sarchList;
 	}
 
+	public void passwordRegist(String password, String username) {
 
-	public void passwordRegist(String password) {
-		User user = new User();
+		User userInfo = usrRepo.findByUsername(username);
 		//パスワードをハッシュ化してセット
-		user.setPassword(passwordEncoder.encode(password));
+		userInfo.setPassword(passwordEncoder.encode(password));
 
-		usrRepo.save(user);
+		usrRepo.save(userInfo);
 	}
 
 }

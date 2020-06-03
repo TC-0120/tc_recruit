@@ -48,7 +48,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		//条件が入力されていない場合、全件検索、並び替えをして結果を返す
 		if (ssId == SlcStatusConstant.ALL && ssdId == SlcStatusDtlConstant.ALL && from.isEmpty() && to.isEmpty()) {
 			//並び替え
-			queryStr += sort(cf.getOrder(), cf.getDirection());
+			queryStr += " WHERE slcStatusDtlId NOT IN(4,5,9)" + sort(cf.getOrder(), cf.getDirection());
 
 			return em.createQuery(queryStr).getResultList();
 		}
@@ -65,7 +65,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			firstFlag = false;
 
 			//SQL文を追加
-			queryStr += " slcStatusId = :ssId";
+			queryStr += " slcStatusId = :ssId AND slcStatusDtlId NOT IN(4,5,9)";
 		}
 
 		//選択したステータス詳細が一覧でない場合
@@ -148,6 +148,8 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		try {
 			//日付のフォーマットを指定（時刻を切り捨てる）
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			//時間も考慮したいので修正
+			/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm");*/
 
 			//fromが入力されている場合
 			if (!from.isEmpty()) {
