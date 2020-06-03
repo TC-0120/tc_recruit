@@ -22,6 +22,12 @@ public class UserService implements UserDetailsService {
 	public List<User> findAllByOrderByUsername() {
 		return usrRepo.findAllByOrderByUsername();
 	}
+	public List<User> findAllByOrderByAuthority() {
+		return usrRepo.findAllByOrderByAuthority();
+	}
+	public List<User> findAllByOrderByStatusDesc() {
+		return usrRepo.findAllByOrderByStatusDesc();
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -148,9 +154,9 @@ public class UserService implements UserDetailsService {
 		}
 
 		/*権限チェックボックスに選択値があったとき*/
-		if(sarchAuthorityAdmin == 0 && sarchAuthorityUser == 1) {
+		if(sarchAuthorityAdmin == 1 && sarchAuthorityUser == 1) {
 			//何もしない
-		} else if (sarchAuthorityAdmin == 0) {
+		} else if (sarchAuthorityAdmin == 1) {
 			removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
 			sarchList.removeAll(removeList);
 		} else if(sarchAuthorityUser == 1){
@@ -159,7 +165,7 @@ public class UserService implements UserDetailsService {
 		}
 
 		/*有効/無効ステータスにチェックが入ったとき*/
-		if(sarchStatusBoolean == 0) {
+		if(sarchStatusBoolean == 1) {
 			removeList = usrRepo.findByStatus(0);
 			sarchList.removeAll(removeList);
 		}

@@ -13,6 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,12 +41,16 @@ public class User implements UserDetails {
 	private Integer id;
 
 	@Column(nullable = false, unique = true)
+	@NotNull
+	@Pattern(regexp = "^TC(-\\d{4})$")
 	private String username;
 
 	@Column(name = "first_name", nullable = false, unique = true)
+	@Size(min = 1, max = 10)
 	private String firstName;
 
 	@Column(name = "last_name", nullable = false, unique = true)
+	@Size(min = 1, max = 10)
 	private String lastName;
 
 	@Column(nullable = false)

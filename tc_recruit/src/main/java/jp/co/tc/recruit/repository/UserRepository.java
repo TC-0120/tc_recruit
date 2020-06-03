@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	public List<User> findByAuthority(Authority authority);
 	public List<User> findByStatus(Integer i);
 	public User findById(int i);
+	public List<User> findAllByOrderByAuthority();
+	public List<User> findAllByOrderByStatusDesc();
  }

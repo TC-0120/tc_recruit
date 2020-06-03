@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jp.co.tc.recruit.entity.User;
-import jp.co.tc.recruit.form.UploadForm;
 import jp.co.tc.recruit.form.UserForm;
 import jp.co.tc.recruit.repository.MessageStatusRepository;
 import jp.co.tc.recruit.service.MessageStatusService;
@@ -80,7 +79,7 @@ public class MasterMaintenanceController {
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@PostMapping("user/sarch")
-	@Transactional(readOnly = false)
+	/*@Transactional(readOnly = false)*/
 	public String userSarch(
 			@ModelAttribute("User") UserForm userForm, Model model) {
 		/*検索値の配列変換と該当Userの検索*/
@@ -106,7 +105,7 @@ public class MasterMaintenanceController {
 		model.addAttribute("usrList", usrList);
 		/*検索値*/
 		model.addAttribute("userArray", userArrayStr);
-		return "/master_maintenance/user";
+		return "master_maintenance/user";
 	}
 
 	/**
@@ -131,19 +130,19 @@ public class MasterMaintenanceController {
 	 */
 	@PostMapping("user/upload")
 	@Transactional(readOnly = false)
-	public String upload(@ModelAttribute("uploadForm") UploadForm uploadForm,
+	public String upload(@ModelAttribute("UploadUser") UserForm userForm,
 			@RequestParam("userlist.csv") MultipartFile multipartFile, Model model) {
 		try {
 			File file = new File("C:\\" + multipartFile.getOriginalFilename());
 			FileReader filereader = new FileReader(file);
-			int ch;
+			int n;
 			String str = null;
 			StringBuilder user = new StringBuilder();
-			StringBuilder sb = new StringBuilder();
+			StringBuilder stringBuilder = new StringBuilder();
 
-			while ((ch = filereader.read()) != -1) {
-				str = String.valueOf((char) ch);
-				user = sb.append(str);
+			while ((n = filereader.read()) != -1) {
+				str = String.valueOf((char)n);
+				user = stringBuilder.append(str);
 			}
 			String[] userArray = user.toString().split("[\\n,]", 0);
 			List<String> userList = Arrays.asList(userArray);
@@ -157,6 +156,36 @@ public class MasterMaintenanceController {
 		}
 
 		return "redirect:/maintenance/user";
+	}
+
+
+	/**
+	 * 社員マスタのソート
+	 *
+	 * @param userForm
+	 * @return 社員マスタメンテナンス画面
+	 */
+	@PostMapping("user/sort")
+	@Transactional(readOnly = false)
+	public String userSort(
+			@ModelAttribute("User") UserForm userForm, Model model) {
+		List<User> usrList = new ArrayList<User>();
+
+		if(userForm.getSortUsername() == 1) {
+			usrList = usrSvc.findAllByOrderByUsername();
+		} else if(userForm.getSortLastName() == 2) {
+			//ふりがな振ってから
+		} else if(userForm.getSortFirstName() == 3) {
+			//ふりがな振ってから
+		} else if(userForm.getSortAuthority() == 4) {
+			usrList = usrSvc.findAllByOrderByAuthority();
+		} else if(userForm.getSortStatus() == 5) {
+			usrList = usrSvc.findAllByOrderByStatusDesc();
+		}
+
+		model.addAttribute("usrList", usrList);
+
+		return "master_maintenance/user";
 	}
 
 }
