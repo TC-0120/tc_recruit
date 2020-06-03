@@ -71,7 +71,11 @@ public class CandidatesView {
 	private Date slcDate;
 
 	public String getSlcDate() {
+<<<<<<< HEAD
 		if (slcDate == null) {
+=======
+		if(slcDate == null) {
+>>>>>>> masterMaintenance
 			return null;
 		}
 		return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(slcDate);

@@ -1,24 +1,28 @@
 package jp.co.tc.recruit.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "TOTAL_CHECK")
-public class TotalCheckView implements Serializable {
+@Table(name = "LATEST_PLAN")
+public class LatestPlanView implements Serializable {
 	@Id
-	@Column(name = "status_message_id")
-	private Integer statusMessageId;
+	@Column(name = "candidate_id")
+	private Integer candidateId;
 
-	@Column(name = "status_message")
-	private String statusMessage;
+	@Column(name = "candidate_name")
+	private String candidateName;
 
 	@Column(name="selection_status_id")
 	private Integer selectionStatusId;
@@ -32,14 +36,11 @@ public class TotalCheckView implements Serializable {
 	@Column(name="selection_status_detail_name")
 	private String selectionStatusDetailName;
 
-	@Column(name="message_status_flag")
-	private Integer messageStatusFlag;
+	@Column(name="selection_date", nullable=true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date selectionDate;
 
-	private Integer sort;
-
-	@Column(name = "total_count")
-	private Integer totalCount;
-
-	@Column(name = "total_over_date")
-	private Integer totalOverDate;
+	public String getSelectionDate() {
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(selectionDate);
+	}
 }

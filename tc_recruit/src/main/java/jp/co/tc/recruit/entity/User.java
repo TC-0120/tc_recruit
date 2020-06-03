@@ -13,6 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,17 +36,21 @@ public class User implements UserDetails {
 
 	@Id
 	@Column(nullable = false, unique = true)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_seq")
-	@SequenceGenerator(name = "id_seq", sequenceName = "id_seq", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
+	@SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false, unique = true)
+	@NotNull
+	@Pattern(regexp = "^TC(-\\d{4})$")
 	private String username;
 
 	@Column(name = "first_name", nullable = false, unique = true)
+	@Size(min = 1, max = 10)
 	private String firstName;
 
 	@Column(name = "last_name", nullable = false, unique = true)
+	@Size(min = 1, max = 10)
 	private String lastName;
 
 	@Column(nullable = false)
@@ -52,6 +59,8 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Authority authority;
+
+	/*	private Integer authorityId;*/
 
 	@Column(nullable = false)
 	private Integer status;
@@ -88,4 +97,8 @@ public class User implements UserDetails {
 		return serialVersionUID;
 	}
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> masterMaintenance
 }

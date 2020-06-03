@@ -117,7 +117,7 @@
 	<h2>候補者一覧画面</h2>
 	<a href="#" onclick="window.open('/recruit/candidates/register', 'register_window', 'width=500, height=500')">新規登録</a><br/><br/>
 
-	<form name="conditionsForm" th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
+	<form name="conditionsForm" th:action="@{/maintenance/user}" th:method="get" th:object="${conditionsForm}">
 		<div>
 			<label>選考ステータス</label>
 			<select id="slcStatus" th:field="*{slcStatusId}" onchange="setSlcStatusDtl()">
@@ -223,7 +223,12 @@
 			<td class="referrer" th:text="*{referrerName}"></td>
 			<td class="slc_status" th:text="*{slcStatusName}"></td>
 			<td class="slc_status_dtl" th:text="*{slcStatusDtlName}"></td>
+<<<<<<< HEAD
 			<td class="slc_date"><div th:if="*{(slcStatusDtlId == 2 || slcStatusDtlId == 6 || slcStatusDtlId == 8) && slcDate != null}" th:text="*{slcDate}"></div></td>
+=======
+			<td class="slc_date"><div th:if="*{(slcStatusDtlId == 2 || slcStatusDtlId == 6
+			|| slcStatusDtlId == 8) && slcDate != null}" th:text="*{slcDate}"></div></td>
+>>>>>>> masterMaintenance
 
 		</tr>
 		</tbody>
