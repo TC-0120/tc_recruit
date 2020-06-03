@@ -137,10 +137,10 @@
 
 		<form name="UploadUser" th:object="${UploadUser}" th:action="@{/maintenance/user/upload}"
 			method="post" enctype="multipart/form-data">
-			<p th:errors="${UploadUser.username}"></p>
+			<!-- <p th:errors="${UploadUser.username}"></p>
 			<p th:errors="${UploadUser.firstName}"></p>
 			<p th:errors="${UploadUser.lastName}"></p>
-			<p th:errors="${UploadUser.authority}"></p>
+			<p th:errors="${UploadUser.authority}"></p> -->
 
 			<input type="file" name="userlist.csv" /><br />
 			<button type="submit">upload</button>

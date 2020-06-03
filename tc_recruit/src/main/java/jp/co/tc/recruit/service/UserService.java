@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jp.co.tc.recruit.entity.User;
@@ -18,6 +19,8 @@ import jp.co.tc.recruit.repository.UserRepository;
 public class UserService implements UserDetailsService {
 	@Autowired
 	private UserRepository usrRepo;
+	@Autowired
+    PasswordEncoder passwordEncoder;
 
 	public List<User> findAllByOrderByUsername() {
 		return usrRepo.findAllByOrderByUsername();
@@ -179,6 +182,15 @@ public class UserService implements UserDetailsService {
 			}
 		}
 		return sarchList;
+	}
+
+
+	public void passwordRegist(String password) {
+		User user = new User();
+		//パスワードをハッシュ化してセット
+		user.setPassword(passwordEncoder.encode(password));
+
+		usrRepo.save(user);
 	}
 
 }
