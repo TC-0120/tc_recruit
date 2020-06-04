@@ -26,8 +26,14 @@ public class MessageStatus {
 	@Column(name = "selection_status_id")
 	private Integer selectionStatusId;
 
+	@Column(name = "selection_status_name")
+	private String selectionStatusName;
+
 	@Column(name = "selection_status_detail_id")
 	private Integer selectionStatusDetailId;
+
+	@Column(name = "selection_status_detail_name")
+	private String selectionStatusDetailName;
 
 	private String icon;
 

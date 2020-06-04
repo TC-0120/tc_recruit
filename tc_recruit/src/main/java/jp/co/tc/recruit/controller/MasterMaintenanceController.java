@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,8 +62,7 @@ public class MasterMaintenanceController {
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@GetMapping("user")
-	public String userUpdateInput(@ModelAttribute("User") UserForm userForm,
-			@ModelAttribute("UploadUser") UserForm userFormCsv, BindingResult result, Model model) {
+	public String userUpdateInput(@ModelAttribute("User") UserForm userForm, Model model) {
 		List<User> usrList = new ArrayList<User>();
 		usrList = usrSvc.findAllByOrderByUsername();
 		model.addAttribute("usrList", usrList);
@@ -130,6 +128,7 @@ public class MasterMaintenanceController {
 	@PostMapping("user/upload")
 	@Transactional(readOnly = false)
 	public String upload(@ModelAttribute("UploadUser") UserForm userFormCsv,
+			@ModelAttribute("User") UserForm userForm,
 			@RequestParam("userlist.csv") MultipartFile multipartFile, Model model) {
 		Boolean res = false;
 
@@ -166,7 +165,16 @@ public class MasterMaintenanceController {
 			System.out.println(e);
 		}
 
-		return "redirect:/maintenance/user";
+		//検索フォームとフォームが異なるのでクリアな検索条件で値をセット
+		List<User> usrList = usrSvc.findAllByOrderByUsername();
+		userForm.setSarchWord(null);
+		userForm.setSarchAuthorityAdmin(0);
+		userForm.setSarchAuthorityUser(0);
+		userForm.setSarchStatusBoolean(0);
+		model.addAttribute("userForm", userForm);
+		model.addAttribute("usrList", usrList);
+
+		return "master_maintenance/user";
 	}
 
 	/**
@@ -174,10 +182,10 @@ public class MasterMaintenanceController {
 	 *
 	 * @param userForm
 	 * @return 社員マスタメンテナンス画面
-	 */
-	@PostMapping("user/sort")
-	@Transactional(readOnly = false)
-	public String userSort(
+	 *//*
+		@PostMapping("user/sort")
+		@Transactional(readOnly = false)
+		public String userSort(
 			@ModelAttribute("User") UserForm userForm, Model model) {
 		List<User> usrList = new ArrayList<User>();
 
@@ -205,6 +213,6 @@ public class MasterMaintenanceController {
 
 		model.addAttribute("usrList", usrList);
 		return "master_maintenance/user";
-	}
-
+		}
+		*/
 }

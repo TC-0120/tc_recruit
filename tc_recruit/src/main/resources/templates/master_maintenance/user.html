@@ -134,18 +134,13 @@
 
 	<div class="input">
 		<label>csv取込</label>
-
-
 				<table>
 					<tr th:each="message : ${message}" th:object="${message}">
 						<td th:text="${message}"></td>
 					</tr>
 				</table>
-
-
 		<form name="UploadUser" th:object="${UploadUser}" th:action="@{/maintenance/user/upload}"
 			method="post" enctype="multipart/form-data">
-
 
 			<input type="file" name="userlist.csv" /><br />
 			<button type="submit">upload</button>

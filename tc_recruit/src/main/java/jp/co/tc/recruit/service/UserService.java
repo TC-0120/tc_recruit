@@ -120,9 +120,9 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/{
 
 		//それぞれバリデーションチェック
 		Pattern usernamePattern = Pattern.compile("^TC(-\\d{4})$");
-		Pattern lastNamePattern = Pattern.compile("{1,10}$");
-		Pattern firstNamePattern = Pattern.compile("{1,10}$");
-		Pattern authorityPattern = Pattern.compile("{1}$");
+		/*		Pattern lastNamePattern = Pattern.compile("\\p{Han}");
+				Pattern firstNamePattern = Pattern.compile("\\p{Han}");*/
+		Pattern authorityPattern = Pattern.compile("[01]{1}");
 
 		/*2行目から値取得
 		ユーザー名/姓/名/権限(0,1 → ROLE_ADMIN,ROLE_USER)をそれぞれ登録*/
@@ -136,19 +136,19 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/{
 						user.setUsername(userList.get(i));
 						user.setStatus(1);
 					}
-				} else if (i % 4 == 1) {
+				} /*else if (i % 4 == 1) {
 					if (lastNamePattern.matcher(userList.get(i)).matches() == false) {
 						message.add("1文字以上10文字以下で入力してください");
 					} else {
 						user.setLastName(userList.get(i));
 					}
-				} else if (i % 4 == 2) {
+					} else if (i % 4 == 2) {
 					if (firstNamePattern.matcher(userList.get(i)).matches() == false) {
 						message.add("1文字以上10文字以下で入力してください");
 					} else {
 						user.setFirstName(userList.get(i));
 					}
-				} else if (i % 4 == 3) {
+					}*/ else if (i % 4 == 3) {
 					if (authorityPattern.matcher(userList.get(i)).matches() == false) {
 						message.add("管理者は「0」、一般は「1」を入力してください");
 					} else {
@@ -158,6 +158,9 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/{
 							user.setAuthority(Authority.ROLE_ADMIN);
 						}
 					}
+
+					user.setLastName(userList.get(i));
+					user.setFirstName(userList.get(i));
 				}
 			}
 			userInfo.add(user);
