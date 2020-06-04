@@ -43,7 +43,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		boolean firstFlag = true;
 
 		//SQL文
-		String queryStr  = "from CandidatesView";
+		String queryStr = "from CandidatesView";
 
 		//条件が入力されていない場合、全件検索、並び替えをして結果を返す
 		if (ssId == SlcStatusConstant.ALL && ssdId == SlcStatusDtlConstant.ALL && from.isEmpty() && to.isEmpty()) {
@@ -126,12 +126,12 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		if (ssdId == SlcStatusDtlConstant.NEED_RESPOND) {
 			//選択したステータス詳細が要対応の場合
 			query.setParameter("adjusting", SlcStatusDtlConstant.ADJUSTING)
-				 .setParameter("passing", SlcStatusDtlConstant.PASSING)
-				 .setParameter("acceptance", SlcStatusDtlConstant.ACCEPTANCE)
-				 .setParameter("selecting", SlcStatusDtlConstant.SELECTING)
-				 .setParameter("waitingAcceptance", SlcStatusDtlConstant.WATING_ACCEPTANCE)
-				 .setParameter("confirmed", SlcStatusDtlConstant.CONFIRMED)
-				 .setParameter("today", Calendar.getInstance().getTime());
+					.setParameter("passing", SlcStatusDtlConstant.PASSING)
+					.setParameter("acceptance", SlcStatusDtlConstant.ACCEPTANCE)
+					.setParameter("selecting", SlcStatusDtlConstant.SELECTING)
+					.setParameter("waitingAcceptance", SlcStatusDtlConstant.WATING_ACCEPTANCE)
+					.setParameter("confirmed", SlcStatusDtlConstant.CONFIRMED)
+					.setParameter("today", Calendar.getInstance().getTime());
 
 		} else if (ssdId != SlcStatusDtlConstant.ALL) {
 			//選択したステータス詳細が一覧、要対応以外の場合
@@ -141,19 +141,18 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		//日程検索が入力されている場合
 		if (!from.isEmpty() || !to.isEmpty()) {
 			query.setParameter("selectingDate", SlcStatusDtlConstant.SELECTING)
-			 	 .setParameter("waitingAcceptanceDate", SlcStatusDtlConstant.WATING_ACCEPTANCE)
-			 	 .setParameter("confirmedDate", SlcStatusDtlConstant.CONFIRMED);
+					.setParameter("waitingAcceptanceDate", SlcStatusDtlConstant.WATING_ACCEPTANCE)
+					.setParameter("confirmedDate", SlcStatusDtlConstant.CONFIRMED);
 		}
 
 		try {
+
 			//日付のフォーマットを指定（時刻を切り捨てる）
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			//時間も考慮したいので修正
-			/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm");*/
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 			//fromが入力されている場合
 			if (!from.isEmpty()) {
-				query.setParameter("from", sdf.parse(from));
+				query.setParameter("from", sdf.parse(from.replace("T", " ")));
 			}
 
 			//toが入力されている場合
@@ -161,7 +160,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 				//日付を取得
 				Calendar cal = Calendar.getInstance();
 				//入力値をDate型に変換、代入
-				cal.setTime(sdf.parse(to));
+				cal.setTime(sdf.parse(to.replace("T", " ")));
 				//日付を一日足す（足さないと入力日が含まれない）
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				query.setParameter("to", cal.getTime());
@@ -172,7 +171,6 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		}
 
 		return query.getResultList();
-
 
 	}
 

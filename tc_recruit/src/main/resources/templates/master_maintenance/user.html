@@ -116,13 +116,13 @@
 
 					<td>
 						<div th:if="${usr.status == 0}">
-							<input type="hidden" class="statusBoolean" name="statusBoolean"
-								value="0"> <input type="checkbox" class="checkbox"
+							<input type="hidden" name="statusBoolean"
+								value="0"> <input type="checkbox"
 								name="status" checked value="0" onchange="buttonChecked()">無効
 						</div>
 						<div th:if="${usr.status == 1}">
-							<input type="hidden" class="statusBoolean" name="statusBoolean"
-								value="1"> <input type="checkbox" class="checkbox"
+							<input type="hidden" name="statusBoolean"
+								value="1"> <input type="checkbox"
 								name="status" value="1" onchange="buttonChecked()">無効
 						</div>
 					</td>
@@ -135,15 +135,17 @@
 	<div class="input">
 		<label>csv取込</label>
 
-		<form name="UploadUser" th:object="${UploadUser}" th:action="@{/maintenance/user/upload}"
-			method="post" enctype="multipart/form-data">
-			<div th:if="${res == true}">
+
 				<table>
 					<tr th:each="message : ${message}" th:object="${message}">
 						<td th:text="${message}"></td>
 					</tr>
 				</table>
-    		</div>
+
+
+		<form name="UploadUser" th:object="${UploadUser}" th:action="@{/maintenance/user/upload}"
+			method="post" enctype="multipart/form-data">
+
 
 			<input type="file" name="userlist.csv" /><br />
 			<button type="submit">upload</button>

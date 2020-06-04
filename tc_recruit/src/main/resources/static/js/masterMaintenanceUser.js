@@ -7,16 +7,17 @@
 }*/
 
 function buttonChecked() {
-	const user = document.getElementsByClassName("user");
-	const statusBoolean = document.getElementsByClassName("statusBoolean");
-	const checkbox = document.getElementsByClassName("checkbox")
+	const user = document.getElementsByName("user");
+	const statusBoolean = document.getElementsByName("statusBoolean");
+	const status = document.getElementsByName("status");
 
 	for (const i = 0; i < user.length; i++) {
-		if (checkbox[i].checked) {
+		if (status[i].checked) {
 			statusBoolean[i].value = "0";
 		} else {
 			statusBoolean[i].value = "1";
 		}
+		console.log(statusBoolean[i].value);
 	}
 }
 

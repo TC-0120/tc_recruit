@@ -46,7 +46,6 @@ public class MasterMaintenanceController {
 	@Autowired
 	UserService usrSvc;
 
-
 	/**
 	 * メンテナンス可能項目の表示
 	 *
@@ -72,7 +71,6 @@ public class MasterMaintenanceController {
 		return "master_maintenance/user";
 	}
 
-
 	/**
 	 * 社員の検索
 	 *
@@ -88,14 +86,14 @@ public class MasterMaintenanceController {
 		String[] userArray = Arrays.toString(userForm.getSarchWord())
 				.replace("[", "").replace("]", "").split("( |　)+", 0);
 		/*各チェックボックスにチェックなしで検索された場合*/
-		if(userForm.getSarchAuthorityAdmin() == null) {
-			userForm.setSarchAuthorityAdmin(1);
+		if (userForm.getSarchAuthorityAdmin() == null) {
+			userForm.setSarchAuthorityAdmin(0);
 		}
-		if(userForm.getSarchAuthorityUser() == null) {
+		if (userForm.getSarchAuthorityUser() == null) {
 			userForm.setSarchAuthorityUser(0);
 		}
-		if(userForm.getSarchStatusBoolean() == null) {
-			userForm.setSarchStatusBoolean(1);
+		if (userForm.getSarchStatusBoolean() == null) {
+			userForm.setSarchStatusBoolean(0);
 		}
 		usrList = usrSvc.userSarch(userForm, userArray);
 
@@ -144,7 +142,7 @@ public class MasterMaintenanceController {
 			StringBuilder stringBuilder = new StringBuilder();
 
 			while ((n = filereader.read()) != -1) {
-				str = String.valueOf((char)n);
+				str = String.valueOf((char) n);
 				user = stringBuilder.append(str);
 			}
 
@@ -153,7 +151,7 @@ public class MasterMaintenanceController {
 			List<String> userList = Arrays.asList(userArray);
 
 			List<String> message = usrSvc.userCsvImport(userList);
-			if(!(message.isEmpty())) {
+			if (!(message.isEmpty())) {
 				model.addAttribute("message", message);
 				res = true;
 				model.addAttribute("res", res);
@@ -170,7 +168,6 @@ public class MasterMaintenanceController {
 
 		return "redirect:/maintenance/user";
 	}
-
 
 	/**
 	 * 社員マスタのソート
@@ -196,8 +193,17 @@ public class MasterMaintenanceController {
 			usrList = usrSvc.findAllByOrderByStatusDesc();
 		}
 
-		model.addAttribute("usrList", usrList);
+		//ユーザーフォームで受け取ったデータのみ表示する
+		for (int n = 0; n < usrList.size(); n++) {
+			for (int k = 0; k < userForm.getId().size(); k++) {
+				if (usrList.get(n).getId().equals(userForm.getId().get(k))) {
+					User user = usrSvc.findById(k);
+					usrList.add(user);
+				}
+			}
+		}
 
+		model.addAttribute("usrList", usrList);
 		return "master_maintenance/user";
 	}
 

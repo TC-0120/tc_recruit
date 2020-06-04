@@ -117,9 +117,10 @@ public class DashBoardController {
 		/*選考ステータス詳細が選考中,承諾待ち,確定(詳細ID=2||6||8)の場合
 		 * 今日の日付を追加送信するためtodayを格納*/
 		Date date = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String today = dateFormat.format(date);
-		model.addAttribute("today", today);
+		String todayT = today.replace(" ", "T");
+		model.addAttribute("today", todayT);
 
 
 
@@ -165,8 +166,9 @@ public class DashBoardController {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.DAY_OF_MONTH, 1);
-		String tomorrow = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(cal.getTime());
-		model.addAttribute("tomorrow", tomorrow);
+		String tomorrow = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).format(cal.getTime());
+		String tomorrowT = tomorrow.replace(" ", "T");
+		model.addAttribute("tomorrow", tomorrowT);
 
 		return "dashboard";
 	}
