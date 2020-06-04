@@ -78,7 +78,7 @@ public class MasterMaintenanceController {
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@PostMapping("user/sarch")
-	/*@Transactional(readOnly = false)*/
+	@Transactional(readOnly = true)
 	public String userSarch(
 			@ModelAttribute("User") UserForm userForm, Model model) {
 		/*検索値の配列変換と該当Userの検索*/

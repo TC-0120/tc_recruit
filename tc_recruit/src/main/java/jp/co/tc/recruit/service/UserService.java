@@ -17,7 +17,7 @@ import jp.co.tc.recruit.form.UserForm;
 import jp.co.tc.recruit.repository.UserRepository;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService/*, Comparator<User>*/{
 	@Autowired
 	private UserRepository usrRepo;
 	@Autowired
@@ -184,60 +184,64 @@ public class UserService implements UserDetailsService {
 		Integer sarchStatusBoolean = userForm.getSarchStatusBoolean();
 		List<User> removeList = new ArrayList<User>();
 
-		/*if(userForm.getSortUsername() == 1) {
-			sarchList = usrRepo.findAllByOrderByUsername();
-		} else if(userForm.getSortLastName() == 2) {
+		//デフォルトはusername順
+		if(userForm.getSortLastName() == 2) {
 			//ふりがな振ってから
 		} else if(userForm.getSortFirstName() == 3) {
 			//ふりがな振ってから
 		} else if(userForm.getSortAuthority() == 4) {
-			sarchList = usrRepo.findAllByOrderByAuthority();
+			sarchList  = usrRepo.findAllByOrderByAuthority();
 		} else if(userForm.getSortStatus() == 5) {
-			sarchList = usrRepo.findAllByOrderByStatusDesc();
-		}*/
-
-		/*OR条件であいまい検索*/
-		for (int i = 0; i < userArray.length; i++) {
-			sarchUsername = usrRepo.findByUsernameLike("%" + userArray[i] + "%");
-			sarchLastName = usrRepo.findByLastNameLike("%" + userArray[i] + "%");
-			sarchFirstName = usrRepo.findByFirstNameLike("%" + userArray[i] + "%");
-
-			/*sarchAuthority = usrRepo.findByAuthorityLike("%" + userArray[i] + "%");*/
-
-			sarchList.addAll(sarchUsername);
-			sarchList.addAll(sarchLastName);
-			sarchList.addAll(sarchFirstName);
-			/*sarchList.addAll(sarchAuthority);*/
+			sarchList  = usrRepo.findAllByOrderByStatusDesc();
+		} else {
+			sarchList  = usrRepo.findAllByOrderByUsername();
 		}
 
-			/*権限チェックボックスに選択値があったとき*/
-			if (sarchAuthorityAdmin == 1 && sarchAuthorityUser == 1) {
-				//何もしない
-			} else if (sarchAuthorityAdmin == 1) {
-				removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
-				sarchList.removeAll(removeList);
-			} else if (sarchAuthorityUser == 1) {
-				removeList = usrRepo.findByAuthority(Authority.ROLE_ADMIN);
-				sarchList.removeAll(removeList);
+	/*OR条件であいまい検索*/
+	for(int i = 0;i<userArray.length;i++){
+		sarchUsername = usrRepo.findByUsernameLike("%" + userArray[i] + "%");
+		sarchLastName = usrRepo.findByLastNameLike("%" + userArray[i] + "%");
+		sarchFirstName = usrRepo.findByFirstNameLike("%" + userArray[i] + "%");
+		/*sarchAuthority = usrRepo.findByAuthorityLike("%" + userArray[i] + "%");*/
+
+		sarchList.addAll(sarchUsername);
+		sarchList.addAll(sarchLastName);
+		sarchList.addAll(sarchFirstName);
+		/*sarchList.addAll(sarchAuthority);*/
+	}
+
+	/*権限チェックボックスに選択値があったとき*/
+	if(sarchAuthorityAdmin==1&&sarchAuthorityUser==1)
+	{
+		//何もしない
+	}else if(sarchAuthorityAdmin==1)
+	{
+		removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
+		sarchList.removeAll(removeList);
+	}else if(sarchAuthorityUser==1)
+	{
+		removeList = usrRepo.findByAuthority(Authority.ROLE_ADMIN);
+		sarchList.removeAll(removeList);
+	}
+
+	/*有効/無効ステータスにチェックが入ったとき*/
+	if(sarchStatusBoolean==1)
+	{
+		removeList = usrRepo.findByStatus(0);
+		sarchList.removeAll(removeList);
+	}
+
+	/*重複データ削除*/
+	for(
+	int n = 0;n<sarchList.size()-1;n++)
+	{
+		for (int k = sarchList.size() - 1; k > n; k--) {
+			if (sarchList.get(n).getId().equals(sarchList.get(k).getId())) {
+				sarchList.remove(k);
 			}
-
-			/*有効/無効ステータスにチェックが入ったとき*/
-			if (sarchStatusBoolean == 1) {
-				removeList = usrRepo.findByStatus(0);
-				sarchList.removeAll(removeList);
-			}
-
-			/*重複データ削除*/
-			for (int n = 0; n < sarchList.size() - 1; n++) {
-				for (int k = sarchList.size() - 1; k > n; k--) {
-					if (sarchList.get(n).getId().equals(sarchList.get(k).getId())) {
-						sarchList.remove(k);
-					}
-				}
-			}
-
-
-		return sarchList;
+		}
+	}
+	return sarchList;
 	}
 
 	public void passwordRegist(String password, String username) {
@@ -248,11 +252,5 @@ public class UserService implements UserDetailsService {
 
 		usrRepo.save(userInfo);
 	}
-
-
-
-
-
-
 
 }
