@@ -7,11 +7,10 @@
 }*/
 
 function buttonChecked() {
-	const user = document.getElementsByName("user");
 	const statusBoolean = document.getElementsByName("statusBoolean");
 	const status = document.getElementsByName("status");
 
-	for (const i = 0; i < user.length; i++) {
+	for (var i = 0; i < status.length; i++) {
 		if (status[i].checked) {
 			statusBoolean[i].value = "0";
 		} else {
