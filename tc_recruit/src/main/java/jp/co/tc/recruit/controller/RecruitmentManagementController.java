@@ -63,7 +63,6 @@ public class RecruitmentManagementController {
 	public String index(@ModelAttribute("conditionsForm") ConditionsForm conditionsForm, Model model) {
 		//入力された検索条件から候補者情報を取得、格納
 		model.addAttribute("candidates", candidatesViewService.findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(conditionsForm));
-		System.out.println(candidatesViewService.findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(conditionsForm));
 		//検索ドロップダウン用のリスト（選考ステータス、詳細）を格納
 		model.addAttribute("slcStatusList", slcStatusService.findAll());
 		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
