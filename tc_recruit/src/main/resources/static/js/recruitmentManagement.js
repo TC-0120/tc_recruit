@@ -220,4 +220,3 @@
 			freeSearchWord.disabled = false;
 		}
 	}
-
