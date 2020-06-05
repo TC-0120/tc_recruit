@@ -1,4 +1,13 @@
-function checked() {
-		document.getElementById("main").classList.toggle("main_checked");
-		document.getElementById("side_menu").classList.toggle("side_menu_checked");
+function OpenSideBar() {
+	const checkbox = document.getElementById("openSidebarMenu");
+	const sideMenu = document.getElementById("side_menu");
+	const main = document.getElementById("main");
+
+	if(checkbox.checked){
+		sideMenu.style.width = "15%";
+		main.style.width = "84%";
+	} else {
+		sideMenu.style.width = "5%";
+		main.style.width = "94%";
+	}
 };

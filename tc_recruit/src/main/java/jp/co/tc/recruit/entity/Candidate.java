@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -25,8 +26,9 @@ import lombok.Data;
 public class Candidate implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="candidate_id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "candidate_sequence")
+	@SequenceGenerator(name = "candidate_sequence", sequenceName = "candidate_sequence", allocationSize = 1)
 	private Integer candidateId;
 
 	@Column(name="candidate_name")
