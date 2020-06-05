@@ -23,7 +23,7 @@ public class SelectionStatusService {
 
 
 	public List<SelectionStatus> findAll() {
-		return slcStatusRepo.findByOrderBySlcStatusId();
+		return slcStatusRepo.findAllByOrderBySlcStatusId();
 	}
 
 

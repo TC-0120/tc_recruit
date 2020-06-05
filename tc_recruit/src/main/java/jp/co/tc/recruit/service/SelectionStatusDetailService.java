@@ -21,7 +21,7 @@ public class SelectionStatusDetailService {
 	SelectionStatusDetailRepository slcStatusDtlRepo;
 
 	public List<SelectionStatusDetail> findAll() {
-		return slcStatusDtlRepo.findByOrderBySlcStatusDtlId();
+		return slcStatusDtlRepo.findAllByOrderBySlcStatusDtlId();
 	}
 
 }
