@@ -8,11 +8,124 @@
 	color: red;
 }
 </style>
-<script type="text/javascript" th:src="@{/js/recruitmentManagement.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+	/**
+	 * 選考結果も設定
+	 *
+	 */
+	function setSlcResult(slcStatusDtlId) {
+		//選考ステータス詳細が1(調整中)、2(選考中)の場合、選考結果を保留中(0)
+		if (slcStatusDtlId >= 3 && slcStatusDtlId <= 9) {
+			document.getElementById('slcResult').value = slcStatusDtlId;
+		} else {
+			document.getElementById('slcResult').value = '0';
+		}
+	}
+
+	/**
+	 * 日程登録確認(日程が被っている場合)
+	 *
+	 */
+	function confirmSlcDate() {
+		var candidateList = [];
+		var candidateId = /*[[${candidate.candidateId}]]*/
+		var slcStatusId = /*[[${candidate.slcStatus.slcStatusId}]]*/
+		var slcDate = document.getElementById("slcDate").value
+							  .replace("-","/").replace("-","/")
+							  .substring(0, 10);
+
+		//面接、入社手続きのステータスでない場合、submit
+		if (slcStatusId <= 2 || slcStatusId == 6 || slcStatusId == 8) {
+			return confirmUpdateSelection();
+		}
+
+		//選考日程が登録されている候補者情報を取得
+		[# th:each="candidates: ${candidatesHasSlcDate}"]
+			var candidate = {id:/*[[${candidates.candidateId}]]*/, name:/*[[${candidates.candidateName}]]*/,
+				slcStatus:/*[[${candidates.slcStatusName}]]*/, slcDate:/*[[${candidates.slcDate}]]*/};
+			var slcStatusId = /*[[${candidates.slcStatusId}]]*/;
+
+			if (candidateId == candidate.id && slcDate == candidate.slcDate.substring(0, 10)) {
+				//フォームの候補者IDと日程の値がリストの値と等しい
+				//すなわち、日程が変更されていない場合、通常の変更確認
+				return confirmUpdateSelection();
+			}
+
+			if ((slcStatusId >= 3 && slcStatusId <= 5) || slcStatusId == 7) {
+				candidateList.push(candidate);
+			}
+		[/]
+
+
+		var flag = false;
+
+
+		// 選考日程が被っているか判定
+		for (var i = 0; i < candidateList.length; i++) {
+			if (slcDate == candidateList[i].slcDate.substring(0, 10)) {
+				var message = "同日に予定があります。\n"
+							+ "\nID:"+ candidateList[i].id
+							+"\n氏名:" + candidateList[i].name
+							+"\n選考ステータス:" + candidateList[i].slcStatus
+							+"\n日程:" + candidateList[i].slcDate;
+				alert(message);
+
+				flag = true;
+			}
+		}
+
+		// 過去かどうか判定する？
+		// その場合、日付の処理方法を変更する必要あり
+
+		//変更確認
+		if(flag) {
+			if(window.confirm("同日に予定がありますが、変更しますか？")){
+
+				return true;
+
+			} else{
+
+				return false;
+
+			}
+		} else {
+			//日程が被っていない場合も変更確認
+			return confirmUpdateSelection();
+		}
+
+	}
+
+	/**
+	 * 更新確認(日程が被っていない場合)
+	 *
+	 */
+	function confirmUpdateSelection() {
+		if(window.confirm("この内容で更新しますか？")){
+			return true;
+		} else{
+			return false;
+		}
+	}
+
+	/**
+	 * ステータス繰り上げ確認
+	 *
+	 */
+	function confirmPromoteSlcStatus() {
+		if(window.confirm("次の選考ステータスに進みますが、よろしいですか？")){
+			return true;
+		} else{
+			return false;
+		}
+	}
+</script>
 </head>
-<body th:onload="selectSlcResult([[${candidate.slcStatusDtl.slcStatusDtlId}]])">
+<body th:onload="setSlcResult([[${candidate.slcStatusDtl.slcStatusDtlId}]]); window.opener.location.reload()">
+	<header>
+		<img th:src="@{/images/TCLogo.png}">
+	</header>
 	<h2>選考情報変更画面</h2>
-	<form th:action="@{/recruit/candidates/selection}" th:method="post" th:object="${candidate}">
+	<form th:action="@{/recruit/candidates/selection}" th:method="post" th:object="${candidate}" onsubmit="return confirmSlcDate()()">
 		<div>
 			<label>ID</label>
 			<div th:text="*{candidateId}">/</div>
@@ -32,8 +145,8 @@
 		<div>
 			<label th:if="*{slcStatus.slcStatusId <= 5}">選考日程</label>
 			<label th:if="*{slcStatus.slcStatusId == 6}">承諾期限</label>
-			<label th:if="*{slcStatus.slcStatusId == 7}">入社手続き日程</label>
-			<input type="datetime-local" name="slcDateString" th:value="${slcDateString}" />
+			<label th:if="*{slcStatus.slcStatusId == 7 && slcStatusDtl.slcStatusDtlId != 9}">入社手続き日程</label>
+			<input th:if="*{slcStatusDtl.slcStatusDtlId != 9}" id="slcDate" type="datetime-local" name="slcDateString" th:value="${slcDateString}" />
 		</div>
 		<div>
 			<div th:if="*{slcStatus.slcStatusId >= 2 && slcStatus.slcStatusId <= 5}">
@@ -59,12 +172,17 @@
 		</div>
 		<input type="hidden" th:field="${selection.slcPK.candidateId}" />
 		<input type="hidden" th:field="${selection.slcPK.slcStatusId}" />
-		<input type="submit" value="更新"/>
+		<input th:if="*{slcStatusDtl.slcStatusDtlId != 9}" type="submit" value="更新"/>
 	</form>
-		<form th:action="@{/recruit/candidates/seleciton/nextStatus}" th:method="post">
+		<form th:action="@{/recruit/candidates/seleciton/nextStatus}" th:method="post" onsubmit="return confirmPromoteSlcStatus()">
 			<input type="hidden" name="candidateId" th:value="${candidate.candidateId}">
 			<div th:if="${candidate.slcStatusDtl.slcStatusDtlId == 3}">
-				<input type="submit" value="次選考調整"/>
+				<div th:if="${candidate.slcStatus.slcStatusId != 5}">
+					<input type="submit" value="次選考調整"/>
+				</div>
+				<div th:if="${candidate.slcStatus.slcStatusId == 5}">
+					<input type="submit" value="内定通知"/>
+				</div>
 			</div>
 			<div th:if="${candidate.slcStatusDtl.slcStatusDtlId == 7}">
 				<input type="submit" value="入社手続き調整"/>

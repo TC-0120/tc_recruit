@@ -38,6 +38,8 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		Integer ssdId = cf.getSlcStatusDtlId();
 		String from = cf.getFrom();
 		String to = cf.getTo();
+		Integer fsId = cf.getFreeSearchId();
+		String fsWord = cf.getFreeSearchWord();
 
 		//WHERE句の初めかどうかのフラグ
 		boolean firstFlag = true;
@@ -46,7 +48,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		String queryStr = "from CandidatesView";
 
 		//条件が入力されていない場合、全件検索、並び替えをして結果を返す
-		if (ssId == SlcStatusConstant.ALL && ssdId == SlcStatusDtlConstant.ALL && from.isEmpty() && to.isEmpty()) {
+		if (ssId == SlcStatusConstant.ALL && ssdId == SlcStatusDtlConstant.ALL && from.isEmpty() && to.isEmpty() && fsId == ConditionsForm.SEARCH_NO_SELECT) {
 			//並び替え
 			queryStr += " WHERE slcStatusDtlId NOT IN(4,5,9)" + sort(cf.getOrder(), cf.getDirection());
 
@@ -78,12 +80,38 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 
 			if (ssdId == SlcStatusDtlConstant.NEED_RESPOND) {
 				//選択したステータス詳細が要対応の場合
-				queryStr += " slcStatusDtlId = :adjusting OR slcStatusDtlId = :passing OR slcStatusDtlId = :acceptance "
+				queryStr += " (slcStatusDtlId = :adjusting OR slcStatusDtlId = :passing OR slcStatusDtlId = :acceptance "
 						+ "OR ((slcStatusDtlId = :selecting OR slcStatusDtlId = :waitingAcceptance OR slcStatusDtlId = :confirmed) "
-						+ "AND slcDate < :today)";
+						+ "AND slcDate < :today))";
 			} else {
 				//選択したステータス詳細が一覧、要対応以外の場合
 				queryStr += " slcStatusDtlId = :ssdId";
+			}
+		}
+
+		//自由検索が入力されている場合
+		if (fsId != ConditionsForm.SEARCH_NO_SELECT) {
+			//WHERE句の初めでない場合
+			if (!firstFlag) {
+				queryStr += " AND";
+			}
+			firstFlag = false;
+
+			switch(fsId) {
+			case ConditionsForm.SEARCH_CANDIDATE_NAME:
+				queryStr += " (candidateName LIKE :keyword OR candidateFurigana LIKE :keyword)";
+				break;
+			case ConditionsForm.SEARCH_EDU_BACK:
+				queryStr += " eduBack LIKE :keyword";
+				break;
+			case ConditionsForm.SEARCH_AGENT:
+				queryStr += " agentName LIKE :keyword";
+				break;
+			case ConditionsForm.SEARCH_REFERRER:
+				queryStr += " referrerName LIKE :keyword";
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -136,6 +164,11 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		} else if (ssdId != SlcStatusDtlConstant.ALL) {
 			//選択したステータス詳細が一覧、要対応以外の場合
 			query.setParameter("ssdId", ssdId);
+		}
+
+		//自由検索が入力されている場合
+		if (fsId != ConditionsForm.SEARCH_NO_SELECT) {
+			query.setParameter("keyword", "%" + fsWord + "%");
 		}
 
 		//日程検索が入力されている場合

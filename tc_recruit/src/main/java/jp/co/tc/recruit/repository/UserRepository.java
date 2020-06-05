@@ -10,6 +10,7 @@ import jp.co.tc.recruit.entity.User.Authority;
 public interface UserRepository extends JpaRepository<User, Integer>{
 
 	public User findByUsername(String username);
+
 	public List<User> findAllByOrderByUsername();
 	public List<User> findAllById(Integer id);
 	public List<User> findByUsernameLike(String username);
@@ -22,3 +23,4 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	public List<User> findAllByOrderByAuthority();
 	public List<User> findAllByOrderByStatusDesc();
  }
+
