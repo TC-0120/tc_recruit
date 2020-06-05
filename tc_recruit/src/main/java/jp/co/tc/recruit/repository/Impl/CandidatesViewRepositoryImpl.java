@@ -48,7 +48,8 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		String queryStr = "from CandidatesView";
 
 		//条件が入力されていない場合、全件検索、並び替えをして結果を返す
-		if (ssId == SlcStatusConstant.ALL && ssdId == SlcStatusDtlConstant.ALL && from.isEmpty() && to.isEmpty() && fsId == ConditionsForm.SEARCH_NO_SELECT) {
+		if (ssId == SlcStatusConstant.ALL && ssdId == SlcStatusDtlConstant.ALL && from.isEmpty() && to.isEmpty()
+				&& fsId == ConditionsForm.SEARCH_NO_SELECT) {
 			//並び替え
 			queryStr += " WHERE slcStatusDtlId NOT IN(4,5,9)" + sort(cf.getOrder(), cf.getDirection());
 
@@ -97,7 +98,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			}
 			firstFlag = false;
 
-			switch(fsId) {
+			switch (fsId) {
 			case ConditionsForm.SEARCH_CANDIDATE_NAME:
 				queryStr += " (candidateName LIKE :keyword OR candidateFurigana LIKE :keyword)";
 				break;
@@ -133,6 +134,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			//toが入力されている場合
 			if (!to.isEmpty()) {
 				queryStr += " AND slcDate < :to";
+				System.out.println(queryStr);
 			}
 
 			queryStr += ")";
@@ -199,6 +201,30 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 				query.setParameter("to", cal.getTime());
 			}
 
+			/*//日付のフォーマットを指定（時刻を切り捨てる）
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+			//fromが入力されている場合
+			if (!from.isEmpty()) {
+				String matchPatternFrom = from.replace("T", " ");
+				Date sdfStr = sdf.parse(str);
+				query.setParameter("from", matchPatternFrom);
+				System.out.println(matchPatternFrom);
+			}
+
+			//toが入力されている場合
+			if (!to.isEmpty()) {
+				//日付を取得
+				Calendar cal = Calendar.getInstance();
+				//入力値をDate型に変換、代入
+				cal.setTime(sdf.parse(to));
+				//日付を一日足す（足さないと入力日が含まれない）
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				String matchPatternFrom = to.replace("T", " ");
+				query.setParameter("to", cal.getTime());
+				System.out.println(cal.getTime());
+			}*/
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -256,6 +282,8 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			//降順の場合
 			queryStr += " DESC";
 		}
+
+		System.out.println(queryStr);
 
 		return queryStr;
 	}

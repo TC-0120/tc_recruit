@@ -130,7 +130,6 @@ public class MasterMaintenanceController {
 	public String upload(@ModelAttribute("UploadUser") UserForm userFormCsv,
 			@ModelAttribute("User") UserForm userForm,
 			@RequestParam("userlist.csv") MultipartFile multipartFile, Model model) {
-		Boolean res = false;
 
 		try {
 			File file = new File("C:\\" + multipartFile.getOriginalFilename());
@@ -148,14 +147,9 @@ public class MasterMaintenanceController {
 			//読み込んだデータを改行で区切ってList化
 			String[] userArray = user.toString().split("[\\n,]", 0);
 			List<String> userList = Arrays.asList(userArray);
-
 			List<String> message = usrSvc.userCsvImport(userList);
 			if (!(message.isEmpty())) {
 				model.addAttribute("message", message);
-				res = true;
-				model.addAttribute("res", res);
-			} else {
-				model.addAttribute("res", res);
 			}
 
 			filereader.close();

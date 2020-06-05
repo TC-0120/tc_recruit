@@ -17,7 +17,7 @@ import jp.co.tc.recruit.form.UserForm;
 import jp.co.tc.recruit.repository.UserRepository;
 
 @Service
-public class UserService implements UserDetailsService/*, Comparator<User>*/{
+public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 	@Autowired
 	private UserRepository usrRepo;
 	@Autowired
@@ -122,7 +122,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/{
 		Pattern usernamePattern = Pattern.compile("^TC(-\\d{4})$");
 		/*		Pattern lastNamePattern = Pattern.compile("\\p{Han}");
 				Pattern firstNamePattern = Pattern.compile("\\p{Han}");*/
-		Pattern authorityPattern = Pattern.compile("[01]{1}");
+		/*Pattern authorityPattern = Pattern.compile("[01]{1}");*/
 
 		/*2行目から値取得
 		ユーザー名/姓/名/権限(0,1 → ROLE_ADMIN,ROLE_USER)をそれぞれ登録*/
@@ -131,26 +131,29 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/{
 			for (int i = (4 * k); i <= ((4 * k) + 3); i++) {
 				if (i % 4 == 0) {
 					if (usernamePattern.matcher(userList.get(i)).matches() == false) {
-						message.add("TC-0000形式で入力してください");
+						message.add((k+1) + "行目　ユーザー名はTC-0000形式で入力してください");
 					} else {
 						user.setUsername(userList.get(i));
 						user.setStatus(1);
 					}
-				} /*else if (i % 4 == 1) {
-					if (lastNamePattern.matcher(userList.get(i)).matches() == false) {
-						message.add("1文字以上10文字以下で入力してください");
+				} else if (i % 4 == 1) {
+					if (userList.get(i).length() >= 1 && userList.get(i).length() > 10 || userList.get(i).isEmpty()) {
+						message.add((k+1) + "行目　姓は1文字以上10文字以下で入力してください");
 					} else {
 						user.setLastName(userList.get(i));
 					}
-					} else if (i % 4 == 2) {
-					if (firstNamePattern.matcher(userList.get(i)).matches() == false) {
-						message.add("1文字以上10文字以下で入力してください");
+				} else if (i % 4 == 2) {
+					if (userList.get(i).length() >= 1 && userList.get(i).length() > 10 || userList.get(i).isEmpty()) {
+						message.add((k+1) + "行目　名は1文字以上10文字以下で入力してください");
 					} else {
 						user.setFirstName(userList.get(i));
 					}
-					}*/ else if (i % 4 == 3) {
-					if (authorityPattern.matcher(userList.get(i)).matches() == false) {
-						message.add("管理者は「0」、一般は「1」を入力してください");
+				} else if (i % 4 == 3) {
+					System.out.println(userList.get(i).length() == 2);
+					System.out.println(userList.get(i).contains("0"));
+					System.out.println(userList.get(i).contains("1"));
+					if (userList.get(i).length() != 2 && (userList.get(i).contains("0") || userList.get(i).contains("1"))) {
+						message.add((k+1) + "行目　権限は管理者「0」,一般「1」を入力してください");
 					} else {
 						if ((userList.get(i)).contains("1")) {
 							user.setAuthority(Authority.ROLE_USER);
@@ -158,9 +161,6 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/{
 							user.setAuthority(Authority.ROLE_ADMIN);
 						}
 					}
-
-					user.setLastName(userList.get(i));
-					user.setFirstName(userList.get(i));
 				}
 			}
 			userInfo.add(user);
@@ -188,63 +188,57 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/{
 		List<User> removeList = new ArrayList<User>();
 
 		//デフォルトはusername順
-		if(userForm.getSortLastName() == 2) {
+		if (userForm.getSortLastName() == 2) {
 			//ふりがな振ってから
-		} else if(userForm.getSortFirstName() == 3) {
+		} else if (userForm.getSortFirstName() == 3) {
 			//ふりがな振ってから
-		} else if(userForm.getSortAuthority() == 4) {
-			sarchList  = usrRepo.findAllByOrderByAuthority();
-		} else if(userForm.getSortStatus() == 5) {
-			sarchList  = usrRepo.findAllByOrderByStatusDesc();
+		} else if (userForm.getSortAuthority() == 4) {
+			sarchList = usrRepo.findAllByOrderByAuthority();
+		} else if (userForm.getSortStatus() == 5) {
+			sarchList = usrRepo.findAllByOrderByStatusDesc();
 		} else {
-			sarchList  = usrRepo.findAllByOrderByUsername();
+			sarchList = usrRepo.findAllByOrderByUsername();
 		}
 
-	/*OR条件であいまい検索*/
-	for(int i = 0;i<userArray.length;i++){
-		sarchUsername = usrRepo.findByUsernameLike("%" + userArray[i] + "%");
-		sarchLastName = usrRepo.findByLastNameLike("%" + userArray[i] + "%");
-		sarchFirstName = usrRepo.findByFirstNameLike("%" + userArray[i] + "%");
-		/*sarchAuthority = usrRepo.findByAuthorityLike("%" + userArray[i] + "%");*/
+		/*OR条件であいまい検索*/
+		for (int i = 0; i < userArray.length; i++) {
+			sarchUsername = usrRepo.findByUsernameLike("%" + userArray[i] + "%");
+			sarchLastName = usrRepo.findByLastNameLike("%" + userArray[i] + "%");
+			sarchFirstName = usrRepo.findByFirstNameLike("%" + userArray[i] + "%");
+			/*sarchAuthority = usrRepo.findByAuthorityLike("%" + userArray[i] + "%");*/
 
-		sarchList.addAll(sarchUsername);
-		sarchList.addAll(sarchLastName);
-		sarchList.addAll(sarchFirstName);
-		/*sarchList.addAll(sarchAuthority);*/
-	}
+			sarchList.addAll(sarchUsername);
+			sarchList.addAll(sarchLastName);
+			sarchList.addAll(sarchFirstName);
+			/*sarchList.addAll(sarchAuthority);*/
+		}
 
-	/*権限チェックボックスに選択値があったとき*/
-	if(sarchAuthorityAdmin==1&&sarchAuthorityUser==1)
-	{
-		//何もしない
-	}else if(sarchAuthorityAdmin==1)
-	{
-		removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
-		sarchList.removeAll(removeList);
-	}else if(sarchAuthorityUser==1)
-	{
-		removeList = usrRepo.findByAuthority(Authority.ROLE_ADMIN);
-		sarchList.removeAll(removeList);
-	}
+		/*権限チェックボックスに選択値があったとき*/
+		if (sarchAuthorityAdmin == 1 && sarchAuthorityUser == 1) {
+			//何もしない
+		} else if (sarchAuthorityAdmin == 1) {
+			removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
+			sarchList.removeAll(removeList);
+		} else if (sarchAuthorityUser == 1) {
+			removeList = usrRepo.findByAuthority(Authority.ROLE_ADMIN);
+			sarchList.removeAll(removeList);
+		}
 
-	/*有効/無効ステータスにチェックが入ったとき*/
-	if(sarchStatusBoolean==1)
-	{
-		removeList = usrRepo.findByStatus(0);
-		sarchList.removeAll(removeList);
-	}
+		/*有効/無効ステータスにチェックが入ったとき*/
+		if (sarchStatusBoolean == 1) {
+			removeList = usrRepo.findByStatus(0);
+			sarchList.removeAll(removeList);
+		}
 
-	/*重複データ削除*/
-	for(
-	int n = 0;n<sarchList.size()-1;n++)
-	{
-		for (int k = sarchList.size() - 1; k > n; k--) {
-			if (sarchList.get(n).getId().equals(sarchList.get(k).getId())) {
-				sarchList.remove(k);
+		/*重複データ削除*/
+		for (int n = 0; n < sarchList.size() - 1; n++) {
+			for (int k = sarchList.size() - 1; k > n; k--) {
+				if (sarchList.get(n).getId().equals(sarchList.get(k).getId())) {
+					sarchList.remove(k);
+				}
 			}
 		}
-	}
-	return sarchList;
+		return sarchList;
 	}
 
 	public void passwordRegist(String password, String username) {
