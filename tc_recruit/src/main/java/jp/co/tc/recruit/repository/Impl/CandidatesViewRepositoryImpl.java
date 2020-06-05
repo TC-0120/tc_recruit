@@ -134,7 +134,6 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			//toが入力されている場合
 			if (!to.isEmpty()) {
 				queryStr += " AND slcDate < :to";
-				System.out.println(queryStr);
 			}
 
 			queryStr += ")";
@@ -188,6 +187,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			//fromが入力されている場合
 			if (!from.isEmpty()) {
 				query.setParameter("from", sdf.parse(from.replace("T", " ")));
+				System.out.println(sdf.parse(from.replace("T", " ")));
 			}
 
 			//toが入力されている場合
@@ -283,7 +283,6 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			queryStr += " DESC";
 		}
 
-		System.out.println(queryStr);
 
 		return queryStr;
 	}

@@ -118,6 +118,11 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 		List<User> userInfo = new ArrayList<User>();
 		List<String> message = new ArrayList<String>();
 
+		//例外キャッチに修正
+		List<User> userListAll = usrRepo.findAll();
+		User userListById = new User();
+
+
 		//それぞれバリデーションチェック
 		Pattern usernamePattern = Pattern.compile("^TC(-\\d{4})$");
 		/*		Pattern lastNamePattern = Pattern.compile("\\p{Han}");
@@ -130,11 +135,19 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 			User user = new User();
 			for (int i = (4 * k); i <= ((4 * k) + 3); i++) {
 				if (i % 4 == 0) {
+					//例外キャッチに修正
+					for(int n = 1; n <= userListAll.size(); n++) {
+						userListById = usrRepo.findById(n);
+						if(userListById.getUsername() == userList.get(i)) {
+							message.add((k+1) + "行目　同一のユーザー名が登録されています");
+						}
+					}
 					if (usernamePattern.matcher(userList.get(i)).matches() == false) {
 						message.add((k+1) + "行目　ユーザー名はTC-0000形式で入力してください");
 					} else {
 						user.setUsername(userList.get(i));
 						user.setStatus(1);
+
 					}
 				} else if (i % 4 == 1) {
 					if (userList.get(i).length() >= 1 && userList.get(i).length() > 10 || userList.get(i).isEmpty()) {
