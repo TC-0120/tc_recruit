@@ -25,9 +25,9 @@
 					<td>ステータス詳細</td>
 				</tr>
 				<tr th:each="msgStt: ${msgSttList}">
-					<td><input th:name="statusMessage"
-						th:value="${msgStt.statusMessage}"> <input type="hidden"
-						th:name="statusMessageId" th:value="${msgStt.statusMessageId}">
+					<td>
+						<input th:name="statusMessage" th:value="${msgStt.statusMessage}">
+						<input type="hidden" th:name="statusMessageId" th:value="${msgStt.statusMessageId}">
 					</td>
 
 					<td th:text="${msgStt.selectionStatusName}">

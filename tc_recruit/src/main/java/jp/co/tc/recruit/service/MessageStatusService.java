@@ -34,34 +34,30 @@ public class MessageStatusService {
 
 		for (int i = 0; i < msgSttFormList.getStatusMessageId().size() - 1; i++) {
 
-			Integer sttMsgIdByDB = Integer
-					.parseInt((msgSttRepo.findByStatusMessageId(i + 1).getStatusMessageId()).toString());
+			/*Integer sttMsgIdByDB = Integer
+					.parseInt((msgSttRepo.findByStatusMessageId(i + 1).getStatusMessageId()).toString());*/
 			String sttMsgByDB = (msgSttRepo.findByStatusMessageId(i + 1).getStatusMessage()).toString();
-			Integer slcSttIdByDB = Integer
+			/*Integer slcSttIdByDB = Integer
 					.parseInt((msgSttRepo.findByStatusMessageId(i + 1).getSelectionStatusId()).toString());
 			Integer slcSttDtlIdByDB = Integer
-					.parseInt((msgSttRepo.findByStatusMessageId(i + 1).getSelectionStatusDetailId()).toString());
-			Integer sttMsgIdByForm = Integer.parseInt((msgSttFormList.getStatusMessageId().get(i)).toString());
+					.parseInt((msgSttRepo.findByStatusMessageId(i + 1).getSelectionStatusDetailId()).toString());*/
+			/*Integer sttMsgIdByForm = Integer.parseInt((msgSttFormList.getStatusMessageId().get(i)).toString());*/
 			String sttMsgByForm = (msgSttFormList.getStatusMessage().get(i)).toString();
-			Integer slcSttIdByForm = Integer.parseInt((msgSttFormList.getSelectionStatusId().get(i)).toString());
+			/*Integer slcSttIdByForm = Integer.parseInt((msgSttFormList.getSelectionStatusId().get(i)).toString());
 			Integer slcSttDtlIdByForm = Integer
 					.parseInt((msgSttFormList.getSelectionStatusDetailId().get(i)).toString());
-
+			*/
 			//DB情報と入力情報が異なる場合、DB情報書き換え実行
 			MessageStatus msgStt = msgSttRepo.findByStatusMessageId(i + 1);
-			if (sttMsgIdByForm != sttMsgIdByDB) {
-				msgStt.setStatusMessageId(sttMsgIdByForm);
-				msgSttRepo.save(msgStt);
-			}
 			if (sttMsgByForm != sttMsgByDB) {
 				msgStt.setStatusMessage(sttMsgByForm);
 				msgSttRepo.save(msgStt);
 			}
-			if (slcSttIdByForm != slcSttIdByDB) {
+			/*if (slcSttIdByForm != slcSttIdByDB) {
 				msgStt.setSelectionStatusId(slcSttIdByForm);
 				msgSttRepo.save(msgStt);
 
-				/*選考ステータスIdが変更されたらソートも並び替え
+				選考ステータスIdが変更されたらソートも並び替え
 				List<MessageStatus> sorted = msgSttRepo
 						.findByOrderByMessageStatusFlagAscSelectionStatusIdAscSelectionStatusDetailIdAsc();
 				msgStt.setSort(null);
@@ -74,14 +70,14 @@ public class MessageStatusService {
 						sort.setSort(sorted.get(k - 1).getSort() + 1);
 						msgSttRepo.save(sort);
 					}
-				}*/
-			}
-			if (slcSttDtlIdByForm != slcSttDtlIdByDB) {
+				}
+			}*/
+			/*if (slcSttDtlIdByForm != slcSttDtlIdByDB) {
 				msgStt.setSelectionStatusDetailId(slcSttDtlIdByForm);
 				msgSttRepo.save(msgStt);
 
-				/*選考ステータスIDが9以下なら選考中グループ(1)
-				そうでなければ要対応グループ(2)*/
+				選考ステータスIDが9以下なら選考中グループ(1)
+				そうでなければ要対応グループ(2)
 				if (sttMsgIdByForm <= 9) {
 					msgStt.setMessageStatusFlag(1);
 					msgSttRepo.save(msgStt);
@@ -90,7 +86,7 @@ public class MessageStatusService {
 					msgSttRepo.save(msgStt);
 				}
 
-				/*//選考ステータスIdが変更されたらソートも並び替え
+				//選考ステータスIdが変更されたらソートも並び替え
 				List<MessageStatus> sorted = msgSttRepo
 						.findByOrderByMessageStatusFlagAscSelectionStatusIdAscSelectionStatusDetailIdAsc();
 				msgStt.setSort(sorted.get(sttMsgIdByForm + 1).getSort());
@@ -99,14 +95,10 @@ public class MessageStatusService {
 					MessageStatus sort = msgSttRepo.findByStatusMessageId(k);
 					sort.setSort(sorted.get(k - 1).getSort());
 					msgSttRepo.save(sort);
-				}*/
-			}
-			if (sttMsgIdByForm != sttMsgIdByDB) {
-				msgStt.setStatusMessageId(sttMsgIdByForm);
-				msgSttRepo.save(msgStt);
-			}
-
-			}}
+				}
+			}*/
+		}
+	}
 
 	/**
 	 * ステータスメッセージの挿入
