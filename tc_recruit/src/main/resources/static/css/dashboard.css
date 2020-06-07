@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Varela+Round');
 
 #main {
-	width: 84%;
+	width: 94%;
 	float: right;
 	margin-top: 2em;
 	height: 100%;
 }
 
 #side_menu {
-	width: 15%;
+	width: 5%;
 	float: left;
 }
 

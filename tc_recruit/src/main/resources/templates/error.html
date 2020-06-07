@@ -7,7 +7,7 @@
 <body>
 <h1 th:text="${status} + ' ' + ${error}"></h1>
 <p th:text="${message}"></p>
-<form method="post" th:action="@{/}">
+<form method="post" th:action="@{/login}">
 <input class="btn" type="submit" value="ログイン画面に戻る">
 </form>
 </body>

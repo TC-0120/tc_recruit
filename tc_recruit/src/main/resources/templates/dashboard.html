@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="utf-8" />
 <title>DashBoard</title>
@@ -11,8 +12,10 @@
 
 <body>
 	<!-- サイドメニュー -->
+	<div role="presentation" sec:authorize="hasRole('ADMIN')" name="role">
 	<div id="side_menu">
 		<div th:include="side_menu::sideMenu"></div>
+	</div>
 	</div>
 
 	<!-- ダッシュボード -->

@@ -49,7 +49,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers("/", "/login", "/login?**", "dashboard", "/password", "/password/regist")
 				.permitAll()
-				//("/","/login")以外は認証が必要
+				.antMatchers("/maintenance", "/setting", "/maintenance/**", "/setting/**").hasAuthority("ROLE_ADMIN")
+				//上記以外は認証が必要
 				.anyRequest().authenticated()
 				.and()
 				//ログインしていないとき
@@ -75,13 +76,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 		.and()
 		.exceptionHandling()
-				// 通常のRequestとAjaxを両方対応するSessionTimeout用
+		// 通常のRequestとAjaxを両方対応するSessionTimeout用
 		.authenticationEntryPoint(authenticationEntryPoint())
 		// csrfはsessionがないと動かない。SessionTimeout時にPOSTすると403 Forbiddenを必ず返してしまうため、
 		// MissingCsrfTokenExceptionの時はリダイレクトを、それ以外の時は通常の扱いとする。
 		.accessDeniedHandler(accessDeniedHandler());
-	}
 
+	}
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		//DBによる独自認証を行う

@@ -71,8 +71,8 @@ public class MessageStatusService {
 						msgSttRepo.save(sort);
 					}
 				}
-			}*/
-			/*if (slcSttDtlIdByForm != slcSttDtlIdByDB) {
+			}
+			if (slcSttDtlIdByForm != slcSttDtlIdByDB) {
 				msgStt.setSelectionStatusDetailId(slcSttDtlIdByForm);
 				msgSttRepo.save(msgStt);
 
