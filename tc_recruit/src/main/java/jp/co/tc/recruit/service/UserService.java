@@ -147,7 +147,6 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 					} else {
 						user.setUsername(userList.get(i));
 						user.setStatus(1);
-
 					}
 				} else if (i % 4 == 1) {
 					if (userList.get(i).length() >= 1 && userList.get(i).length() > 10 || userList.get(i).isEmpty()) {
@@ -254,6 +253,11 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 		return sarchList;
 	}
 
+
+	/**
+	 * パスワード登録
+	 *
+	 */
 	public void passwordRegist(String password, String username) {
 
 		User userInfo = usrRepo.findByUsername(username);
@@ -261,6 +265,15 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 		userInfo.setPassword(passwordEncoder.encode(password));
 
 		usrRepo.save(userInfo);
+	}
+
+
+	/**
+	 * 一件ずつ新規登録
+	 *
+	 */
+	public void usrRegist(User user) {
+		usrRepo.save(user);
 	}
 
 }

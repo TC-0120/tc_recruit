@@ -49,6 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers("/", "/login", "/login?**", "dashboard", "/password", "/password/regist")
 				.permitAll()
+				//ADMINのみ直貼りOK
 				.antMatchers("/maintenance", "/setting", "/maintenance/**", "/setting/**").hasAuthority("ROLE_ADMIN")
 				//上記以外は認証が必要
 				.anyRequest().authenticated()
@@ -69,6 +70,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.and()
 				.logout()
+				/*.logoutRequestMatcher(new AntPathRequestMacher("/logout"))*/
+				.logoutUrl("/logout")
 				// ログアウトでログインページに戻る
 				.logoutSuccessUrl("/login")
 				// セッションを破棄する

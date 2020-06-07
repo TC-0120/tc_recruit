@@ -3,5 +3,5 @@
   ユーザー名：<span sec:authentication="principal.lastName"></span><span sec:authentication="principal.firstName"></span>&nbsp;&nbsp;
   権限：<span sec:authorize="hasAuthority('ROLE_ADMIN')">管理者</span>
   		<span sec:authorize="hasAuthority('ROLE_USER')">一般</span>&nbsp;&nbsp;
-  <a>ログアウト</a>
+  <a th:href="@{/logout}">ログアウト</a>
 </header>

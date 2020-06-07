@@ -145,6 +145,16 @@
 			<input type="file" name="userlist.csv" /><br />
 			<button type="submit">upload</button>
 		</form>
-	</div>
+		<br><br>
+
+		<label>新規登録</label>
+		<form name="RegistUser" th:object="${RegistUser}" th:action="@{/maintenance/user/regist}">
+		社員番号<input type="text" name="username"><br>
+		姓<input type="text" name="lastName"><br>
+		名<input type="text" name="firstName"><br>
+		権限<input type="radio" name="authority" value="0">管理者
+			<input type="radio" name="authority" value="1">一般<br>
+		<button type="submit">登録</button>
+ 	</div>
 </body>
 </html>
