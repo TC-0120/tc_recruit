@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -130,6 +131,7 @@ public class MasterMaintenanceController {
 	public String upload(@ModelAttribute("UploadUser") UserForm userFormCsv,
 			@ModelAttribute("User") UserForm userForm,
 			@RequestParam("userlist.csv") MultipartFile multipartFile, Model model) {
+		List<String> message = new ArrayList<String>();
 
 		try {
 			File file = new File("C:\\" + multipartFile.getOriginalFilename());
@@ -147,16 +149,20 @@ public class MasterMaintenanceController {
 			//読み込んだデータを改行で区切ってList化
 			String[] userArray = user.toString().split("[\\n,]", 0);
 			List<String> userList = Arrays.asList(userArray);
-			List<String> message = usrSvc.userCsvImport(userList);
-			if (!(message.isEmpty())) {
-				model.addAttribute("message", message);
-			}
+			message = usrSvc.userCsvImport(userList);
 
 			filereader.close();
+
+		} catch(SQLException e){
+			message.add("ユーザーデータが重複しています");
 		} catch (FileNotFoundException e) {
-			System.out.println(e);
+			message.add("ファイルが見つかりませんでした");
 		} catch (IOException e) {
-			System.out.println(e);
+			message.add("取込に失敗しました");
+		}
+
+		if (!(message.isEmpty())) {
+			model.addAttribute("message", message);
 		}
 
 		//検索フォームとフォームが異なるのでクリアな検索条件で値をセット

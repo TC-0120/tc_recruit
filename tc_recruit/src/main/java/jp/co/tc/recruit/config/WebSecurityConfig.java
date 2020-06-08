@@ -70,7 +70,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.and()
 				.logout()
-				/*.logoutRequestMatcher(new AntPathRequestMacher("/logout"))*/
 				.logoutUrl("/logout")
 				// ログアウトでログインページに戻る
 				.logoutSuccessUrl("/login")

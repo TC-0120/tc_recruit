@@ -51,8 +51,8 @@ public class DashBoardController {
 		/*ALL以外の選考中候補者データ全て*/
 		/*選考中(ALL)の候補者全数*/
 		List<TotalSelectionView> ttlSlcAllList = ttlSlcSvc.findAll();
-		for (sttMsgId = ttlSlcAllList.get(1).getStatusMessageId(); 
-				sttMsgId <= ttlSlcAllList.get(ttlSlcAllList.size() - 1).getStatusMessageId(); 
+		for (sttMsgId = ttlSlcAllList.get(1).getStatusMessageId();
+				sttMsgId <= ttlSlcAllList.get(ttlSlcAllList.size() - 1).getStatusMessageId();
 				sttMsgId++) {
 			ttlSlc = ttlSlcSvc.findBySort(sttMsgId);
 			if (ttlSlc.getSelectionStatusId() != 9) {
@@ -161,13 +161,19 @@ public class DashBoardController {
 		/*今日明日のタスクリストEmptyか否か*/
 		model.addAttribute("result", result);
 		/*今日明日の面接予定者一覧ボタン押下で
-		 * 明日の日付を送信するためtomorrowを格納*/
+		 * 当日の0:00 と 明日の日付を送信するためtomorrowを格納*/
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		String tomorrow = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).format(cal.getTime());
 		String tomorrowT = tomorrow.replace(" ", "T");
 		model.addAttribute("tomorrow", tomorrowT);
+
+		Date todayMidnight = new Date();
+		DateFormat todayMidnightDateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00");
+		String todayMidnightStr = todayMidnightDateFormat.format(todayMidnight);
+		model.addAttribute("todayMidnight", todayMidnightStr);
+		System.out.println(todayMidnightStr);
 
 		return "dashboard";
 	}

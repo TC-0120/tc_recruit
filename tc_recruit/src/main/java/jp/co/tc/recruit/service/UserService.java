@@ -1,5 +1,6 @@
 package jp.co.tc.recruit.service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -114,13 +115,11 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 	 * 社員マスタのcsv取込
 	 *
 	 */
-	public List<String> userCsvImport(List<String> userList) {
+	public List<String> userCsvImport(List<String> userList) throws SQLException {
 		List<User> userInfo = new ArrayList<User>();
 		List<String> message = new ArrayList<String>();
-
-		//例外キャッチに修正
-		List<User> userListAll = usrRepo.findAll();
-		User userListById = new User();
+		/*List<User> userListAll = usrRepo.findAll();
+		User userListById = new User();*/
 
 
 		//それぞれバリデーションチェック
@@ -131,52 +130,50 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 
 		/*2行目から値取得
 		ユーザー名/姓/名/権限(0,1 → ROLE_ADMIN,ROLE_USER)をそれぞれ登録*/
-		for (int k = 1; k <= (userList.size() / 4) - 1; k++) {
-			User user = new User();
-			for (int i = (4 * k); i <= ((4 * k) + 3); i++) {
-				if (i % 4 == 0) {
-					//例外キャッチに修正
-					for(int n = 1; n <= userListAll.size(); n++) {
-						userListById = usrRepo.findById(n);
-						if(userListById.getUsername() == userList.get(i)) {
-							message.add((k+1) + "行目　同一のユーザー名が登録されています");
-						}
-					}
-					if (usernamePattern.matcher(userList.get(i)).matches() == false) {
-						message.add((k+1) + "行目　ユーザー名はTC-0000形式で入力してください");
-					} else {
-						user.setUsername(userList.get(i));
-						user.setStatus(1);
-					}
-				} else if (i % 4 == 1) {
-					if (userList.get(i).length() >= 1 && userList.get(i).length() > 10 || userList.get(i).isEmpty()) {
-						message.add((k+1) + "行目　姓は1文字以上10文字以下で入力してください");
-					} else {
-						user.setLastName(userList.get(i));
-					}
-				} else if (i % 4 == 2) {
-					if (userList.get(i).length() >= 1 && userList.get(i).length() > 10 || userList.get(i).isEmpty()) {
-						message.add((k+1) + "行目　名は1文字以上10文字以下で入力してください");
-					} else {
-						user.setFirstName(userList.get(i));
-					}
-				} else if (i % 4 == 3) {
-					System.out.println(userList.get(i).length() == 2);
-					System.out.println(userList.get(i).contains("0"));
-					System.out.println(userList.get(i).contains("1"));
-					if (userList.get(i).length() != 2 && (userList.get(i).contains("0") || userList.get(i).contains("1"))) {
-						message.add((k+1) + "行目　権限は管理者「0」,一般「1」を入力してください");
-					} else {
-						if ((userList.get(i)).contains("1")) {
-							user.setAuthority(Authority.ROLE_USER);
+
+
+			for (int k = 1; k <= (userList.size() / 4) - 1; k++) {
+				User user = new User();
+				for (int i = (4 * k); i <= ((4 * k) + 3); i++) {
+					if (i % 4 == 0) {
+						if (usernamePattern.matcher(userList.get(i)).matches() == false) {
+							message.add((k + 1) + "行目　ユーザー名はTC-0000形式で入力してください");
 						} else {
-							user.setAuthority(Authority.ROLE_ADMIN);
+							user.setUsername(userList.get(i));
+							user.setStatus(1);
+						}
+					} else if (i % 4 == 1) {
+						if (userList.get(i).length() >= 1 && userList.get(i).length() > 10
+								|| userList.get(i).isEmpty()) {
+							message.add((k + 1) + "行目　姓は1文字以上10文字以下で入力してください");
+						} else {
+							user.setLastName(userList.get(i));
+						}
+					} else if (i % 4 == 2) {
+						if (userList.get(i).length() >= 1 && userList.get(i).length() > 10
+								|| userList.get(i).isEmpty()) {
+							message.add((k + 1) + "行目　名は1文字以上10文字以下で入力してください");
+						} else {
+							user.setFirstName(userList.get(i));
+						}
+					} else if (i % 4 == 3) {
+						System.out.println(userList.get(i).length() == 2);
+						System.out.println(userList.get(i).contains("0"));
+						System.out.println(userList.get(i).contains("1"));
+						if (userList.get(i).length() != 2
+								&& (userList.get(i).contains("0") || userList.get(i).contains("1"))) {
+							message.add((k + 1) + "行目　権限は管理者「0」,一般「1」を入力してください");
+						} else {
+							if ((userList.get(i)).contains("1")) {
+								user.setAuthority(Authority.ROLE_USER);
+							} else {
+								user.setAuthority(Authority.ROLE_ADMIN);
+							}
 						}
 					}
 				}
+				userInfo.add(user);
 			}
-			userInfo.add(user);
-		}
 		if (message.isEmpty()) {
 			usrRepo.saveAll(userInfo);
 		} else {
@@ -220,19 +217,19 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 			sarchFirstName = usrRepo.findByFirstNameLike("%" + userArray[i] + "%");
 			/*sarchAuthority = usrRepo.findByAuthorityLike("%" + userArray[i] + "%");*/
 
-			for(int n = 0; n < sortList.size(); n++) {
-				for(int k = 0; k < sarchUsername.size(); k++) {
-					if(sarchUsername.get(k) == sortList.get(n)) {
+			for (int n = 0; n < sortList.size(); n++) {
+				for (int k = 0; k < sarchUsername.size(); k++) {
+					if (sarchUsername.get(k) == sortList.get(n)) {
 						sarchList.addAll(sarchUsername);
 					}
 				}
-				for(int j = 0; j < sarchLastName.size(); j++) {
-					if(sarchLastName.get(j) == sortList.get(n)) {
+				for (int j = 0; j < sarchLastName.size(); j++) {
+					if (sarchLastName.get(j) == sortList.get(n)) {
 						sarchList.addAll(sarchLastName);
 					}
 				}
-				for(int m = 0; m < sarchFirstName.size(); m++) {
-					if(sarchFirstName.get(m) == sortList.get(n)) {
+				for (int m = 0; m < sarchFirstName.size(); m++) {
+					if (sarchFirstName.get(m) == sortList.get(n)) {
 						sarchList.addAll(sarchFirstName);
 					}
 				}
@@ -268,7 +265,6 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 		return sarchList;
 	}
 
-
 	/**
 	 * パスワード登録
 	 *
@@ -281,7 +277,6 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 
 		usrRepo.save(userInfo);
 	}
-
 
 	/**
 	 * 一件ずつ新規登録

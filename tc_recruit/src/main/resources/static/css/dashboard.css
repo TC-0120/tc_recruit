@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Varela+Round');
+/* .header {
+	padding-left: 20px
+} */
 
 #main {
 	width: 94%;
 	float: right;
-	margin-top: 2em;
+	/* margin-top: 2em; */
 	height: 100%;
 }
 
@@ -72,6 +75,10 @@
 .chk_btn:hover:before, .chk_btn:hover:after {
 	width: 100%;
 	transition: 800ms ease all;
+}
+
+.ttlSlc {
+	margin-top: 20px;
 }
 
 .slc_btn {

@@ -11,6 +11,8 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 </head>
 
 <body>
+
+
 	<!-- サイドメニュー -->
 	<div role="presentation" sec:authorize="hasRole('ADMIN')" name="role">
 	<div id="side_menu">
@@ -18,8 +20,13 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	</div>
 	</div>
 
+
+
 	<!-- ダッシュボード -->
-	<div id="main">
+		<div id="main">
+		<!-- ヘッダー -->
+		<div th:replace="header :: header_fragment" class="header"></div>
+
 		<div class="ttlSlc">
 			<div class="inline">
 				<form th:action="@{/recruit/candidates}" th:method="get"
@@ -154,7 +161,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 						<button type="submit" name="aaa" value="aaa">今日明日の面接予定一覧</button>
 					</div>
 				</div>
-				<input type="hidden" th:name="from" th:value="${today}" /> <input
+				<input type="hidden" th:name="from" th:value="${todayMidnight}" /> <input
 					type="hidden" th:name="to" th:value="${tomorrow}" />
 			</form>
 

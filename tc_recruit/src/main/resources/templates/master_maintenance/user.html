@@ -18,6 +18,7 @@
 </script>
 </head>
 <body>
+	<div th:replace="header :: header_fragment" class="header"></div>
 	<h2>マスタメンテナンス</h2>
 	<div class="input">
 		<p>社員マスタ</p>
@@ -25,70 +26,55 @@
 			th:action="@{/maintenance/user/sarch}">
 			<input type="text" name="sarchWord" th:value="${userArray}">
 
-			<label>
-				<input type="checkbox" value="ROLE_ADMIN"
+			<label> <input type="checkbox" value="ROLE_ADMIN"
 				name="sarchCheckboxAdmin"
 				th:checked="${User.sarchAuthorityAdmin == 1}"
 				onchange="buttonCheckAuthorityAdmin()">管理者
-			</label>
-				<input
-				type="hidden" value="0" name="sarchAuthorityAdmin"
-				th:field="*{sarchAuthorityAdmin}">
-
-			<label>
-				<input
+			</label> <input type="hidden" value="0" name="sarchAuthorityAdmin"
+				th:field="*{sarchAuthorityAdmin}"> <label> <input
 				type="checkbox" value="ROLE_USER" name="sarchCheckboxUser"
 				th:checked="${User.sarchAuthorityUser == 1}"
 				onchange="buttonCheckAuthorityUser()">一般
-			</label>
-				<input
-				type="hidden" value="0" name="sarchAuthorityUser"
-				th:field="*{sarchAuthorityUser}">
-
-			<label>
-				<input
+			</label> <input type="hidden" value="0" name="sarchAuthorityUser"
+				th:field="*{sarchAuthorityUser}"> <label> <input
 				type="checkbox" value="0" name="sarchCheckbox"
 				th:checked="${User.sarchStatusBoolean == 1}"
 				onchange="buttonCheckStatus()">無効ユーザーを除く
-			</label>
-				<input
-				type="hidden" value="0" th:field="*{sarchStatusBoolean}"
+			</label> <input type="hidden" value="0" th:field="*{sarchStatusBoolean}"
 				name="sarchStatusBoolean">
 
 
-			<button type="button"
-				onclick="submitAction('/sarch')">検索</button>
+			<button type="button" onclick="submitAction('/sarch')">検索</button>
 			<br>
 
-			<button type="button"
-				onclick="submitAction('/update')">一括変更</button>
+			<button type="button" onclick="submitAction('/update')">一括変更</button>
 
 			<table border=1>
 				<tr>
 					<td>
 						<button name="sortUsername" type="button" value="0"
-							onclick="sort(1);submitAction('/sarch')">ユーザ―名</button>
-							<input type="hidden" name="sortUsername" value="0">
+							onclick="sort(1);submitAction('/sarch')">ユーザ―名</button> <input
+						type="hidden" name="sortUsername" value="0">
 					</td>
 					<td>
 						<button name="sortLastName" type="button" value="0"
-							onclick="sort(2);submitAction('/sarch')">姓</button>
-						<input type="hidden" name="sortLastName" value="0">
+							onclick="sort(2);submitAction('/sarch')">姓</button> <input
+						type="hidden" name="sortLastName" value="0">
 					</td>
 					<td>
 						<button name="sortFirstName" type="button" value="0"
-							onclick="sort(3);submitAction('/sarch')">名</button>
-						<input type="hidden" name="sortFirstName" value="0">
+							onclick="sort(3);submitAction('/sarch')">名</button> <input
+						type="hidden" name="sortFirstName" value="0">
 					</td>
 					<td>
 						<button name="sortAuthority" type="button" value="0"
-							onclick="sort(4);submitAction('/sarch')">権限</button>
-						<input type="hidden" name="sortAuthority" value="0">
+							onclick="sort(4);submitAction('/sarch')">権限</button> <input
+						type="hidden" name="sortAuthority" value="0">
 					</td>
 					<td>
 						<button name="sortStatus" type="button" value="0"
-							onclick="sort(5);submitAction('/sarch')">有効/無効</button>
-						<input type="hidden" name="sortStatus" value="0">
+							onclick="sort(5);submitAction('/sarch')">有効/無効</button> <input
+						type="hidden" name="sortStatus" value="0">
 					</td>
 
 				</tr>
@@ -116,14 +102,14 @@
 
 					<td>
 						<div th:if="${usr.status == 0}">
-							<input type="hidden" name="statusBoolean"
-								value="0"> <input type="checkbox"
-								name="status" checked value="0" onchange="buttonChecked()">無効
+							<input type="hidden" name="statusBoolean" value="0"> <input
+								type="checkbox" name="status" checked value="0"
+								onchange="buttonChecked()">無効
 						</div>
 						<div th:if="${usr.status == 1}">
-							<input type="hidden" name="statusBoolean"
-								value="1"> <input type="checkbox"
-								name="status" value="1" onchange="buttonChecked()">無効
+							<input type="hidden" name="statusBoolean" value="1"> <input
+								type="checkbox" name="status" value="1"
+								onchange="buttonChecked()">無効
 						</div>
 					</td>
 				</tr>
@@ -134,27 +120,28 @@
 
 	<div class="input">
 		<label>csv取込</label>
-				<table>
-					<tr th:each="message : ${message}" th:object="${message}">
-						<td th:text="${message}"></td>
-					</tr>
-				</table>
-		<form name="UploadUser" th:object="${UploadUser}" th:action="@{/maintenance/user/upload}"
-			method="post" enctype="multipart/form-data">
+		<table>
+			<tr th:each="message : ${message}" th:object="${message}">
+				<td th:text="${message}"></td>
+			</tr>
+		</table>
+		<form name="UploadUser" th:object="${UploadUser}"
+			th:action="@{/maintenance/user/upload}" method="post"
+			enctype="multipart/form-data">
 
 			<input type="file" name="userlist.csv" /><br />
 			<button type="submit">upload</button>
 		</form>
-		<br><br>
-
-		<label>新規登録</label>
-		<form name="RegistUser" th:object="${RegistUser}" th:action="@{/maintenance/user/regist}">
-		社員番号<input type="text" name="username"><br>
-		姓<input type="text" name="lastName"><br>
-		名<input type="text" name="firstName"><br>
-		権限<input type="radio" name="authority" value="0">管理者
-			<input type="radio" name="authority" value="1">一般<br>
-		<button type="submit">登録</button>
- 	</div>
+		<br>
+		<br> <label>新規登録</label>
+		<form name="RegistUser" th:object="${RegistUser}"
+			th:action="@{/maintenance/user/regist}">
+			社員番号<input type="text" name="username"><br> 姓<input
+				type="text" name="lastName"><br> 名<input type="text"
+				name="firstName"><br> 権限<input type="radio"
+				name="authority" value="0">管理者 <input type="radio"
+				name="authority" value="1">一般<br>
+			<button type="submit">登録</button>
+	</div>
 </body>
 </html>
