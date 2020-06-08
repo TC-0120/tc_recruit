@@ -172,8 +172,9 @@ public class DashBoardController {
 		Date todayMidnight = new Date();
 		DateFormat todayMidnightDateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00");
 		String todayMidnightStr = todayMidnightDateFormat.format(todayMidnight);
-		model.addAttribute("todayMidnight", todayMidnightStr);
-		System.out.println(todayMidnightStr);
+		String todayMidnightStrT = todayMidnightStr.replace(" ", "T");
+		model.addAttribute("todayMidnight", todayMidnightStrT);
+		System.out.println(todayMidnightStrT);
 
 		return "dashboard";
 	}
