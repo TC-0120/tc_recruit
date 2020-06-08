@@ -191,6 +191,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 	 */
 	public List<User> userSarch(UserForm userForm, String[] userArray) {
 		List<User> sarchList = new ArrayList<User>();
+		List<User> sortList = new ArrayList<User>();
 		List<User> sarchUsername = null;
 		List<User> sarchLastName = null;
 		List<User> sarchFirstName = null;
@@ -205,11 +206,11 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 		} else if (userForm.getSortFirstName() == 3) {
 			//ふりがな振ってから
 		} else if (userForm.getSortAuthority() == 4) {
-			sarchList = usrRepo.findAllByOrderByAuthority();
+			sortList = usrRepo.findAllByOrderByAuthority();
 		} else if (userForm.getSortStatus() == 5) {
-			sarchList = usrRepo.findAllByOrderByStatusDesc();
+			sortList = usrRepo.findAllByOrderByStatusDesc();
 		} else {
-			sarchList = usrRepo.findAllByOrderByUsername();
+			sortList = usrRepo.findAllByOrderByUsername();
 		}
 
 		/*OR条件であいまい検索*/
@@ -219,9 +220,23 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 			sarchFirstName = usrRepo.findByFirstNameLike("%" + userArray[i] + "%");
 			/*sarchAuthority = usrRepo.findByAuthorityLike("%" + userArray[i] + "%");*/
 
-			sarchList.addAll(sarchUsername);
-			sarchList.addAll(sarchLastName);
-			sarchList.addAll(sarchFirstName);
+			for(int n = 0; n < sortList.size(); n++) {
+				for(int k = 0; k < sarchUsername.size(); k++) {
+					if(sarchUsername.get(k) == sortList.get(n)) {
+						sarchList.addAll(sarchUsername);
+					}
+				}
+				for(int j = 0; j < sarchLastName.size(); j++) {
+					if(sarchLastName.get(j) == sortList.get(n)) {
+						sarchList.addAll(sarchLastName);
+					}
+				}
+				for(int m = 0; m < sarchFirstName.size(); m++) {
+					if(sarchFirstName.get(m) == sortList.get(n)) {
+						sarchList.addAll(sarchFirstName);
+					}
+				}
+			}
 			/*sarchList.addAll(sarchAuthority);*/
 		}
 
