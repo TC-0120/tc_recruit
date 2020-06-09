@@ -1,8 +1,10 @@
 package jp.co.tc.recruit.repository.Impl;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -192,20 +194,22 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 
 			//fromが入力されている場合
 			if (!from.isEmpty()) {
-				query.setParameter("from", sdf.parse(from.replace("T", " ")));
-				System.out.println(sdf.parse(from.replace("T", " ")));
+				Date fromDate = sdf.parse(from.replace("T", " "));
+				Timestamp fromTimestamp = new Timestamp(fromDate.getTime());
+				query.setParameter("from", fromTimestamp);
 			}
 
 			//toが入力されている場合
 			if (!to.isEmpty()) {
 				//日付を取得
-				Calendar cal = Calendar.getInstance();
+				/*Calendar cal = Calendar.getInstance();
 				//入力値をDate型に変換、代入
 				cal.setTime(sdf.parse(to.replace("T", " ")));
 				//日付を一日足す（足さないと入力日が含まれない）
-				cal.add(Calendar.DAY_OF_MONTH, 1);
-				query.setParameter("to", cal.getTime());
-				System.out.println(cal.getTime());
+				cal.add(Calendar.DAY_OF_MONTH, 1);*/
+				Date toDate = sdf.parse(to.replace("T", " "));
+				Timestamp toTimestamp = new Timestamp(toDate.getTime());
+				query.setParameter("to", toTimestamp);
 			}
 
 			/*//日付を取得
