@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -153,8 +152,6 @@ public class MasterMaintenanceController {
 
 			filereader.close();
 
-		} catch(SQLException e){
-			message.add("ユーザーデータが重複しています");
 		} catch (FileNotFoundException e) {
 			message.add("ファイルが見つかりませんでした");
 		} catch (IOException e) {
