@@ -161,20 +161,21 @@ public class DashBoardController {
 		/*今日明日のタスクリストEmptyか否か*/
 		model.addAttribute("result", result);
 		/*今日明日の面接予定者一覧ボタン押下で
-		 * 当日の0:00 と 明日の日付を送信するためtomorrowを格納*/
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.DAY_OF_MONTH, 1);
-		String tomorrow = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).format(cal.getTime());
-		String tomorrowT = tomorrow.replace(" ", "T");
-		model.addAttribute("tomorrow", tomorrowT);
-
+		 * fromに当日0:00 toに明日23:59を送信する*/
 		Date todayMidnight = new Date();
 		DateFormat todayMidnightDateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00");
 		String todayMidnightStr = todayMidnightDateFormat.format(todayMidnight);
+		//候補者一覧htmlのtype=date-localに合わせてタイムゾーンを挿入
 		String todayMidnightStrT = todayMidnightStr.replace(" ", "T");
 		model.addAttribute("todayMidnight", todayMidnightStrT);
-		System.out.println(todayMidnightStrT);
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		String tomorrow = new SimpleDateFormat("yyyy-MM-dd 23:59", Locale.US).format(cal.getTime());
+		//候補者一覧htmlのtype=date-localに合わせてタイムゾーンを挿入
+		String tomorrowT = tomorrow.replace(" ", "T");
+		model.addAttribute("tomorrow", tomorrowT);
 
 		return "dashboard";
 	}

@@ -1,5 +1,6 @@
 package jp.co.tc.recruit.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +19,7 @@ public interface CandidatesViewRepository extends JpaRepository<CandidatesView, 
 	public CandidatesView findByCandidateId(Integer cId);
 
 	public List<CandidatesView> findBySlcStatusDtlIdOrSlcStatusDtlId(Integer ssdId1, Integer ssdId2);
+
+	public List<CandidatesView> findAllBySlcDateLessThan(Date date);
 }
 

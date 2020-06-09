@@ -9,10 +9,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import jp.co.tc.recruit.constant.SlcStatusConstant;
 import jp.co.tc.recruit.constant.SlcStatusDtlConstant;
 import jp.co.tc.recruit.entity.CandidatesView;
 import jp.co.tc.recruit.form.ConditionsForm;
+import jp.co.tc.recruit.repository.CandidatesViewRepository;
 import jp.co.tc.recruit.repository.CandidatesViewRepositoryCustom;
 
 /**
@@ -25,6 +28,9 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 
 	@PersistenceContext
 	private EntityManager em;
+
+	@Autowired
+	CandidatesViewRepository cddViewRepo;
 
 	/**
 	 * 選考ステータス、詳細、選考日程検索
@@ -199,7 +205,19 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 				//日付を一日足す（足さないと入力日が含まれない）
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				query.setParameter("to", cal.getTime());
+				System.out.println(cal.getTime());
 			}
+
+			/*//日付を取得
+			Calendar cal = Calendar.getInstance();
+			String toT = to.replace("T", " ");
+			//入力値をDate型に変換、代入
+			cal.setTime(sdf.parse(toT));
+			//日付を一日足す（足さないと入力日が含まれない）
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			System.out.println(cal.getTime());
+			String toStr = sdf.format(cal.getTime()).replace("T", " ");
+			query.setParameter("to", to_char(slcDate, 'yyyy-MM-dd HH24:mm') = sdf.format(cal.getTime()).replace("T", " "));*/
 
 			/*//日付のフォーマットを指定（時刻を切り捨てる）
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -282,7 +300,6 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			//降順の場合
 			queryStr += " DESC";
 		}
-
 
 		return queryStr;
 	}

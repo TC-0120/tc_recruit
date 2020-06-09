@@ -72,9 +72,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 			String lastNameByForm = (userFormList.getLastName().get(i)).toString();
 			Authority authorityByForm = userFormList.getAuthority().get(i);
 			Integer statusBooleanByForm = Integer.parseInt((userFormList.getStatusBoolean().get(i)).toString());
-			/*String passwordByForm = (userFormList.getPassword().get(i)).toString();*/
 
-			/*Integer idByDB = Integer.parseInt(((User)usrRepo.findById(idByForm)).getId().toString());*/
 			User userInfo = usrRepo.findById(idByForm);
 			String usernameByDB = userInfo.getUsername().toString();
 			String firstNameByDB = userInfo.getFirstName().toString();
@@ -104,10 +102,6 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 				usrRepo.save(userInfo);
 			}
 		}
-		/*		Comparator<User> user = Comparator.comparing(User::getUsername);
-				userInfo.sort(user);
-
-				return userFormList;*/
 	}
 
 	/**
@@ -117,30 +111,24 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 	public List<String> userCsvImport(List<String> userList) {
 		List<User> importUser = new ArrayList<User>();
 		List<String> message = new ArrayList<String>();
-		List<User> userInfo = usrRepo.findAll();
-
 		boolean usernameExist = false;
-		/*List<User> userListAll = usrRepo.findAll();
-		User userListById = new User();*/
 
-		//それぞれバリデーションチェック
+		//バリデーション
 		Pattern usernamePattern = Pattern.compile("^TC(-\\d{4})$");
-		/*		Pattern lastNamePattern = Pattern.compile("\\p{Han}");
-				Pattern firstNamePattern = Pattern.compile("\\p{Han}");*/
-		/*Pattern authorityPattern = Pattern.compile("[01]{1}");*/
 
 		/*2行目から値取得
-		ユーザー名/姓/名/権限(0,1 → ROLE_ADMIN,ROLE_USER)をそれぞれ登録*/
+		 *バリデーションチェックを通過した場合
+		 *ユーザー名/姓/名/権限(0,1 → ROLE_ADMIN,ROLE_USER)をそれぞれ登録*/
 		for (int k = 1; k <= (userList.size() / 4) - 1; k++) {
 			User user = new User();
 			for (int i = (4 * k); i <= ((4 * k) + 3); i++) {
 				//ユーザ―名入力値判定
 				if (i % 4 == 0) {
-					//同一のユーザー名が存在したら
+					//同一のユーザー名の存在チェック
 					String usernameByCsvfile = userList.get(i);
 					usernameExist = usrRepo.existsByUsername(usernameByCsvfile);
 					if (usernameExist == true) {
-						message.add("同一のユーザー名が存在します。");
+						message.add((k + 1) + "行目　同一のユーザー名が存在します。");
 					}
 					//usernameの入力チェック
 					if (usernamePattern.matcher(userList.get(i)).matches() == false) {
@@ -167,9 +155,6 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 					}
 				//権限入力値判定
 				} else if (i % 4 == 3) {
-					System.out.println(userList.get(i).length() == 2);
-					System.out.println(userList.get(i).contains("0"));
-					System.out.println(userList.get(i).contains("1"));
 					if (userList.get(i).length() != 2
 							&& (userList.get(i).contains("0") || userList.get(i).contains("1"))) {
 						message.add((k + 1) + "行目　権限は管理者「0」,一般「1」を入力してください");

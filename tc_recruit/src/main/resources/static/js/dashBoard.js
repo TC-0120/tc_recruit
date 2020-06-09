@@ -11,3 +11,9 @@ function OpenSideBar() {
 		main.style.width = "94%";
 	}
 };
+
+/*window.addEventListener('popstate', function back() {
+	const checkboxBack = document.getElementById("openSidebarMenu");
+
+	checkboxBack.value = false;
+}*/
