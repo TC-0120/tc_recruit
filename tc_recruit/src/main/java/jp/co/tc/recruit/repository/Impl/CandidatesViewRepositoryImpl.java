@@ -196,7 +196,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			if (!from.isEmpty()) {
 				Date fromDate = sdf.parse(from.replace("T", " "));
 				Timestamp fromTimestamp = new Timestamp(fromDate.getTime());
-				query.setParameter("from", fromTimestamp);
+				query.setParameter("from", fromDate);
 			}
 
 			//toが入力されている場合
@@ -209,7 +209,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 				cal.add(Calendar.DAY_OF_MONTH, 1);*/
 				Date toDate = sdf.parse(to.replace("T", " "));
 				Timestamp toTimestamp = new Timestamp(toDate.getTime());
-				query.setParameter("to", toTimestamp);
+				query.setParameter("to", toDate);
 			}
 
 			/*//日付を取得
@@ -228,10 +228,9 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 
 			//fromが入力されている場合
 			if (!from.isEmpty()) {
-				String matchPatternFrom = from.replace("T", " ");
-				Date sdfStr = sdf.parse(str);
-				query.setParameter("from", matchPatternFrom);
-				System.out.println(matchPatternFrom);
+				String matchPatternFrom = ;
+				Date fromDate = sdf.parse(from.replace("T", " "));
+				query.setParameter("from", fromDate);
 			}
 
 			//toが入力されている場合
@@ -244,7 +243,6 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				String matchPatternFrom = to.replace("T", " ");
 				query.setParameter("to", cal.getTime());
-				System.out.println(cal.getTime());
 			}*/
 
 		} catch (ParseException e) {
