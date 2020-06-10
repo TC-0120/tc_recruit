@@ -65,6 +65,4 @@ public class DateFormatter {
 		}
 	}*/
 
-	private DateFormatter() {
-	}
 }
