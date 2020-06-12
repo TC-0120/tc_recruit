@@ -1,6 +1,7 @@
 package jp.co.tc.recruit.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -137,7 +138,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 						user.setUsername(userList.get(i));
 						user.setStatus(1);
 					}
-				//姓入力値判定
+					//姓入力値判定
 				} else if (i % 4 == 1) {
 					if (userList.get(i).length() >= 1 && userList.get(i).length() > 10
 							|| userList.get(i).isEmpty()) {
@@ -145,7 +146,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 					} else {
 						user.setLastName(userList.get(i));
 					}
-				//名入力値判定
+					//名入力値判定
 				} else if (i % 4 == 2) {
 					if (userList.get(i).length() >= 1 && userList.get(i).length() > 10
 							|| userList.get(i).isEmpty()) {
@@ -153,7 +154,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 					} else {
 						user.setFirstName(userList.get(i));
 					}
-				//権限入力値判定
+					//権限入力値判定
 				} else if (i % 4 == 3) {
 					if (userList.get(i).length() != 2
 							&& (userList.get(i).contains("0") || userList.get(i).contains("1"))) {
@@ -183,7 +184,6 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 	 */
 	public List<User> userSarch(UserForm userForm, String[] userArray) {
 		List<User> sarchList = new ArrayList<User>();
-		List<User> sortList = new ArrayList<User>();
 		List<User> sarchUsername = null;
 		List<User> sarchLastName = null;
 		List<User> sarchFirstName = null;
@@ -192,18 +192,19 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 		Integer sarchStatusBoolean = userForm.getSarchStatusBoolean();
 		List<User> removeList = new ArrayList<User>();
 
-		//デフォルトはusername順
-		if (userForm.getSortLastName() == 2) {
-			//ふりがな振ってから
-		} else if (userForm.getSortFirstName() == 3) {
-			//ふりがな振ってから
-		} else if (userForm.getSortAuthority() == 4) {
-			sortList = usrRepo.findAllByOrderByAuthority();
-		} else if (userForm.getSortStatus() == 5) {
-			sortList = usrRepo.findAllByOrderByStatusDesc();
-		} else {
-			sortList = usrRepo.findAllByOrderByUsername();
-		}
+		/*
+				//デフォルトはusername順
+				if (userForm.getSortLastName() == 2) {
+					//ふりがな振ってから
+				} else if (userForm.getSortFirstName() == 3) {
+					//ふりがな振ってから
+				} else if (userForm.getSortAuthority() == 4) {
+					sortList = usrRepo.findAllByOrderByAuthority();
+				} else if (userForm.getSortStatus() == 5) {
+					sortList = usrRepo.findAllByOrderByStatusDesc();
+				} else {
+					sortList = usrRepo.findAllByOrderByUsername();
+				}*/
 
 		/*OR条件であいまい検索*/
 		for (int i = 0; i < userArray.length; i++) {
@@ -212,51 +213,67 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 			sarchFirstName = usrRepo.findByFirstNameLike("%" + userArray[i] + "%");
 			/*sarchAuthority = usrRepo.findByAuthorityLike("%" + userArray[i] + "%");*/
 
-			for (int n = 0; n < sortList.size(); n++) {
-				for (int k = 0; k < sarchUsername.size(); k++) {
-					if (sarchUsername.get(k) == sortList.get(n)) {
-						sarchList.addAll(sarchUsername);
-					}
-				}
-				for (int j = 0; j < sarchLastName.size(); j++) {
-					if (sarchLastName.get(j) == sortList.get(n)) {
-						sarchList.addAll(sarchLastName);
-					}
-				}
-				for (int m = 0; m < sarchFirstName.size(); m++) {
-					if (sarchFirstName.get(m) == sortList.get(n)) {
-						sarchList.addAll(sarchFirstName);
+			sarchList.addAll(sarchUsername);
+			sarchList.addAll(sarchLastName);
+			sarchList.addAll(sarchFirstName);
+
+			/*重複データ削除*/
+			for (int n = 0; n < sarchList.size() - 1; n++) {
+				for (int k = sarchList.size() - 1; k > n; k--) {
+					if (sarchList.get(n).getId().equals(sarchList.get(k).getId())) {
+						sarchList.remove(k);
 					}
 				}
 			}
-			/*sarchList.addAll(sarchAuthority);*/
-		}
+
 
 		/*権限チェックボックスに選択値があったとき*/
+		/*両方にチェック*/
 		if (sarchAuthorityAdmin == 1 && sarchAuthorityUser == 1) {
 			//何もしない
+
+		/*管理者にチェックで一般ユーザーを表示リストからを除く*/
 		} else if (sarchAuthorityAdmin == 1) {
 			removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
 			sarchList.removeAll(removeList);
+
+		/*一般にチェックで管理者ユーザーを表示リストからを除く*/
 		} else if (sarchAuthorityUser == 1) {
 			removeList = usrRepo.findByAuthority(Authority.ROLE_ADMIN);
 			sarchList.removeAll(removeList);
 		}
 
-		/*有効/無効ステータスにチェックが入ったとき*/
+
+		/*無効ステータスを除くにチェックが入ったとき表示リストから無効ユーザーを除く*/
 		if (sarchStatusBoolean == 1) {
 			removeList = usrRepo.findByStatus(0);
 			sarchList.removeAll(removeList);
 		}
 
-		/*重複データ削除*/
-		for (int n = 0; n < sarchList.size() - 1; n++) {
-			for (int k = sarchList.size() - 1; k > n; k--) {
-				if (sarchList.get(n).getId().equals(sarchList.get(k).getId())) {
-					sarchList.remove(k);
-				}
-			}
+
+		//ソート
+		//並び替えのルール
+		//デフォルトはUsername順
+		//権限ボタンクリックで 優先順位1：authority  優先順位2：username
+		//権限ボタンクリックで 優先順位1：status  優先順位2：username
+		if (userForm.getSortLastName() == 2) {
+			//ふりがな振ってから
+		} else if (userForm.getSortFirstName() == 3) {
+			//ふりがな振ってから
+		} else if (userForm.getSortAuthority() == 4) {
+			Comparator<User> authorityComparator = Comparator.comparing(User::getAuthority, Comparator.reverseOrder())
+					.thenComparing(User::getUsername);
+			sarchList.sort(authorityComparator);
+		} else if (userForm.getSortStatus() == 5) {
+			Comparator<User> statusComparator = Comparator.comparing(User::getStatus, Comparator.reverseOrder())
+					.thenComparing(User::getUsername);
+			sarchList.sort(statusComparator);
+		} else {
+			Comparator<User> usernameComparator = Comparator.comparing(User::getUsername);
+			sarchList.sort(usernameComparator);
 		}
+
+	}
 		return sarchList;
 	}
 

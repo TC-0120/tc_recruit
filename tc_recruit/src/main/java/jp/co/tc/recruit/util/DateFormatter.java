@@ -34,7 +34,7 @@ public class DateFormatter {
 	 */
 
 	public static Date toDate(String stringDate) {
-		if (stringDate.isEmpty() || stringDate == null) {
+		if (stringDate == null || stringDate.isEmpty()) {
 			return null;
 		} else {
 			try {
@@ -65,6 +65,4 @@ public class DateFormatter {
 		}
 	}*/
 
-	private DateFormatter() {
-	}
 }
