@@ -64,7 +64,7 @@ public class DashBoardController {
 		List<Candidate> candidateAll = cddSvc.findAll();
 		Integer aptFlgCount = 0;
 		for (Integer cddId = 1; cddId <= candidateAll.size(); cddId++) {
-			if (cddSvc.findById(cddId).getAptitudeFlag() == null || cddSvc.findById(cddId).getAptitudeFlag() == 0) {
+			if (cddSvc.findById(cddId).getAptitudeFlag() == 0) {
 				aptFlgCount++;
 			}
 		}

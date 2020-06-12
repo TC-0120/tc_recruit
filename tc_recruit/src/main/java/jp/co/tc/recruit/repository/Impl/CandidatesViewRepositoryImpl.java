@@ -1,5 +1,6 @@
 package jp.co.tc.recruit.repository.Impl;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -188,28 +189,48 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 
 		try {
 
-			//日付のフォーマットを指定
+			//日付のフォーマットを指定（時刻を切り捨てる）
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 			//fromが入力されている場合
 			if (!from.isEmpty()) {
-				//htmlから受け取った　yyyy-MM-dd'T'HH:mm　形式からTを抜いてDate型に変換
 				Date fromDate = sdf.parse(from.replace("T", " "));
+				Timestamp fromTimestamp = new Timestamp(fromDate.getTime());
 				query.setParameter("from", fromDate);
 			}
 
 			//toが入力されている場合
 			if (!to.isEmpty()) {
-				//htmlから受け取った　yyyy-MM-dd'T'HH:mm　形式からTを抜いてDate型に変換
+				//日付を取得
+				/*Calendar cal = Calendar.getInstance();
+				//入力値をDate型に変換、代入
+				cal.setTime(sdf.parse(to.replace("T", " ")));
+				//日付を一日足す（足さないと入力日が含まれない）
+				cal.add(Calendar.DAY_OF_MONTH, 1);*/
 				Date toDate = sdf.parse(to.replace("T", " "));
+				Timestamp toTimestamp = new Timestamp(toDate.getTime());
 				query.setParameter("to", toDate);
 			}
 
-			/*
+			/*//日付を取得
+			Calendar cal = Calendar.getInstance();
+			String toT = to.replace("T", " ");
+			//入力値をDate型に変換、代入
+			cal.setTime(sdf.parse(toT));
+			//日付を一日足す（足さないと入力日が含まれない）
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			System.out.println(cal.getTime());
+			String toStr = sdf.format(cal.getTime()).replace("T", " ");
+			query.setParameter("to", to_char(slcDate, 'yyyy-MM-dd HH24:mm') = sdf.format(cal.getTime()).replace("T", " "));*/
+
+			/*//日付のフォーマットを指定（時刻を切り捨てる）
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+			//fromが入力されている場合
 			if (!from.isEmpty()) {
+				String matchPatternFrom = ;
 				Date fromDate = sdf.parse(from.replace("T", " "));
 				query.setParameter("from", fromDate);
-				System.out.println("fromDate" + fromDate);
 			}
 
 			//toが入力されている場合
@@ -217,11 +238,11 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 				//日付を取得
 				Calendar cal = Calendar.getInstance();
 				//入力値をDate型に変換、代入
-				cal.setTime(sdf.parse(to.replace("T", " ")));
+				cal.setTime(sdf.parse(to));
 				//日付を一日足す（足さないと入力日が含まれない）
 				cal.add(Calendar.DAY_OF_MONTH, 1);
+				String matchPatternFrom = to.replace("T", " ");
 				query.setParameter("to", cal.getTime());
-				System.out.println("cal.getTime()    " + cal.getTime());
 			}*/
 
 		} catch (ParseException e) {
