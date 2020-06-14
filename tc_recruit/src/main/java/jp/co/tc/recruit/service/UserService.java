@@ -109,7 +109,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 	 * 社員マスタのcsv取込
 	 *
 	 */
-	public List<String> userCsvImport(List<String> userList) {
+	public List<String> importUserCsvFile(List<String> userList) {
 		List<User> importUser = new ArrayList<User>();
 		List<String> message = new ArrayList<String>();
 		boolean usernameExist = false;
@@ -165,17 +165,20 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 						} else {
 							user.setAuthority(Authority.ROLE_ADMIN);
 						}
+
 					}
 				}
+				importUser.add(user);
 			}
-			importUser.add(user);
-		}
-		if (message.isEmpty()) {
-			usrRepo.saveAll(importUser);
-		} else {
-			//DB登録しない
+			//バリデーションエラーなければ登録
+			if (message.isEmpty()) {
+				usrRepo.saveAll(importUser);
+			} else {
+				//DB登録しない
+			}
 		}
 		return message;
+
 	}
 
 	/**
@@ -192,26 +195,11 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 		Integer sarchStatusBoolean = userForm.getSarchStatusBoolean();
 		List<User> removeList = new ArrayList<User>();
 
-		/*
-				//デフォルトはusername順
-				if (userForm.getSortLastName() == 2) {
-					//ふりがな振ってから
-				} else if (userForm.getSortFirstName() == 3) {
-					//ふりがな振ってから
-				} else if (userForm.getSortAuthority() == 4) {
-					sortList = usrRepo.findAllByOrderByAuthority();
-				} else if (userForm.getSortStatus() == 5) {
-					sortList = usrRepo.findAllByOrderByStatusDesc();
-				} else {
-					sortList = usrRepo.findAllByOrderByUsername();
-				}*/
-
 		/*OR条件であいまい検索*/
 		for (int i = 0; i < userArray.length; i++) {
 			sarchUsername = usrRepo.findByUsernameLike("%" + userArray[i] + "%");
 			sarchLastName = usrRepo.findByLastNameLike("%" + userArray[i] + "%");
 			sarchFirstName = usrRepo.findByFirstNameLike("%" + userArray[i] + "%");
-			/*sarchAuthority = usrRepo.findByAuthorityLike("%" + userArray[i] + "%");*/
 
 			sarchList.addAll(sarchUsername);
 			sarchList.addAll(sarchLastName);
@@ -226,54 +214,52 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 				}
 			}
 
+			/*権限チェックボックスに選択値があったとき*/
+			/*両方にチェック*/
+			if (sarchAuthorityAdmin == 1 && sarchAuthorityUser == 1) {
+				//何もしない
 
-		/*権限チェックボックスに選択値があったとき*/
-		/*両方にチェック*/
-		if (sarchAuthorityAdmin == 1 && sarchAuthorityUser == 1) {
-			//何もしない
+				/*管理者にチェックで一般ユーザーを表示リストからを除く*/
+			} else if (sarchAuthorityAdmin == 1) {
+				removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
+				sarchList.removeAll(removeList);
 
-		/*管理者にチェックで一般ユーザーを表示リストからを除く*/
-		} else if (sarchAuthorityAdmin == 1) {
-			removeList = usrRepo.findByAuthority(Authority.ROLE_USER);
-			sarchList.removeAll(removeList);
+				/*一般にチェックで管理者ユーザーを表示リストからを除く*/
+			} else if (sarchAuthorityUser == 1) {
+				removeList = usrRepo.findByAuthority(Authority.ROLE_ADMIN);
+				sarchList.removeAll(removeList);
+			}
 
-		/*一般にチェックで管理者ユーザーを表示リストからを除く*/
-		} else if (sarchAuthorityUser == 1) {
-			removeList = usrRepo.findByAuthority(Authority.ROLE_ADMIN);
-			sarchList.removeAll(removeList);
+			/*無効ステータスを除くにチェックが入ったとき表示リストから無効ユーザーを除く*/
+			if (sarchStatusBoolean == 1) {
+				removeList = usrRepo.findByStatus(0);
+				sarchList.removeAll(removeList);
+			}
+
+			//ソート
+			//並び替えのルール
+			//デフォルトはUsername順
+			//権限ボタンクリックで 優先順位1：authority  優先順位2：username
+			//権限ボタンクリックで 優先順位1：status  優先順位2：username
+			if (userForm.getSortLastName() == 2) {
+				//ふりがな振ってから
+			} else if (userForm.getSortFirstName() == 3) {
+				//ふりがな振ってから
+			} else if (userForm.getSortAuthority() == 4) {
+				Comparator<User> authorityComparator = Comparator
+						.comparing(User::getAuthority, Comparator.reverseOrder())
+						.thenComparing(User::getUsername);
+				sarchList.sort(authorityComparator);
+			} else if (userForm.getSortStatus() == 5) {
+				Comparator<User> statusComparator = Comparator.comparing(User::getStatus, Comparator.reverseOrder())
+						.thenComparing(User::getUsername);
+				sarchList.sort(statusComparator);
+			} else {
+				Comparator<User> usernameComparator = Comparator.comparing(User::getUsername);
+				sarchList.sort(usernameComparator);
+			}
+
 		}
-
-
-		/*無効ステータスを除くにチェックが入ったとき表示リストから無効ユーザーを除く*/
-		if (sarchStatusBoolean == 1) {
-			removeList = usrRepo.findByStatus(0);
-			sarchList.removeAll(removeList);
-		}
-
-
-		//ソート
-		//並び替えのルール
-		//デフォルトはUsername順
-		//権限ボタンクリックで 優先順位1：authority  優先順位2：username
-		//権限ボタンクリックで 優先順位1：status  優先順位2：username
-		if (userForm.getSortLastName() == 2) {
-			//ふりがな振ってから
-		} else if (userForm.getSortFirstName() == 3) {
-			//ふりがな振ってから
-		} else if (userForm.getSortAuthority() == 4) {
-			Comparator<User> authorityComparator = Comparator.comparing(User::getAuthority, Comparator.reverseOrder())
-					.thenComparing(User::getUsername);
-			sarchList.sort(authorityComparator);
-		} else if (userForm.getSortStatus() == 5) {
-			Comparator<User> statusComparator = Comparator.comparing(User::getStatus, Comparator.reverseOrder())
-					.thenComparing(User::getUsername);
-			sarchList.sort(statusComparator);
-		} else {
-			Comparator<User> usernameComparator = Comparator.comparing(User::getUsername);
-			sarchList.sort(usernameComparator);
-		}
-
-	}
 		return sarchList;
 	}
 
@@ -294,8 +280,50 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 	 * 一件ずつ新規登録
 	 *
 	 */
-	public void usrRegist(User user) {
-		usrRepo.save(user);
+	public List<String> registUser(User user) {
+		List<String> message = new ArrayList<String>();
+		//バリデーション
+		Pattern usernamePattern = Pattern.compile("^TC(-\\d{4})$");
+		boolean usernameExist = usrRepo.existsByUsername(user.getUsername());
+		if (usernameExist == true) {
+			message.add("同一のユーザー名が存在します。");
+		}
+		//usernameの入力チェック
+		if (usernamePattern.matcher(user.getUsername()).matches() == false) {
+			message.add("ユーザー名はTC-0000形式で入力してください");
+		} else {
+			user.setUsername(user.getUsername());
+			user.setStatus(1);
+		}
+		//姓入力値判定
+		if (user.getLastName().length() >= 1 && user.getLastName().length() > 10
+				|| user.getLastName().isEmpty()) {
+			message.add("姓は1文字以上10文字以下で入力してください");
+		} else {
+			user.setLastName(user.getLastName());
+		}
+		//名入力値判定
+		if (user.getFirstName().length() >= 1 && user.getFirstName().length() > 10
+				|| user.getFirstName().isEmpty()) {
+			message.add("名は1文字以上10文字以下で入力してください");
+		} else {
+			user.setFirstName(user.getFirstName());
+		}
+		//権限入力値判定
+		if (user.getAuthority().equals(null)) {
+			message.add("権限を選択してください");
+		} else {
+			user.setAuthority(user.getAuthority());
+		}
+
+		//バリデーションエラーなければ登録
+		if (message.isEmpty()) {
+			usrRepo.save(user);
+		} else {
+			//DB登録しない
+		}
+	return message;
+
 	}
 
 }

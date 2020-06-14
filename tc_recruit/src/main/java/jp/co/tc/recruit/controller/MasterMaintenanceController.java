@@ -62,7 +62,8 @@ public class MasterMaintenanceController {
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@GetMapping("user")
-	public String userUpdateInput(@ModelAttribute("User") UserForm userForm, Model model) {
+	public String userUpdateInput(@ModelAttribute("User") UserForm userForm,
+			@ModelAttribute("RegistUser") User user, Model model) {
 		List<User> usrList = new ArrayList<User>();
 		usrList = usrSvc.findAllByOrderByUsername();
 		model.addAttribute("usrList", usrList);
@@ -148,7 +149,7 @@ public class MasterMaintenanceController {
 			//読み込んだデータを改行で区切ってList化
 			String[] userArray = user.toString().split("[\\n,]", 0);
 			List<String> userList = Arrays.asList(userArray);
-			message = usrSvc.userCsvImport(userList);
+			message = usrSvc.importUserCsvFile(userList);
 
 			filereader.close();
 
@@ -160,6 +161,35 @@ public class MasterMaintenanceController {
 
 		if (!(message.isEmpty())) {
 			model.addAttribute("message", message);
+		}
+
+		//検索フォームとフォームが異なるのでクリアな検索条件で値をセット
+		List<User> usrList = usrSvc.findAllByOrderByUsername();
+		userForm.setSarchWord(null);
+		userForm.setSarchAuthorityAdmin(0);
+		userForm.setSarchAuthorityUser(0);
+		userForm.setSarchStatusBoolean(0);
+		model.addAttribute("userForm", userForm);
+		model.addAttribute("usrList", usrList);
+
+		return "master_maintenance/user";
+	}
+
+	/**
+	 * 社員登録
+	 *
+	 * @param User
+	 * @return 社員マスタメンテナンス画面
+	 */
+	@PostMapping("user/regist")
+	@Transactional(readOnly = false)
+	public String registUser(@ModelAttribute("RegistUser") User user,
+			@ModelAttribute("User") UserForm userForm,
+			/*BindingResult error*/ Model model) {
+		List<String> messageForRegistUser = usrSvc.registUser(user);
+
+		if (!(messageForRegistUser.isEmpty())) {
+			model.addAttribute("messageForRegistUser", messageForRegistUser);
 		}
 
 		//検索フォームとフォームが異なるのでクリアな検索条件で値をセット
