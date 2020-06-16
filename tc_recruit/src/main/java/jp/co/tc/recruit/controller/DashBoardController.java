@@ -60,7 +60,7 @@ public class DashBoardController {
 			}
 			ttlSlcAllCount += ttlSlc.getCount();
 		}
-		/*適性検査未受検者はcandedateテーブルのappitude_flg(=0)から集計*/
+		/*適性検査未受検者はcandidateテーブルのappitude_flg(=0)から集計*/
 		List<Candidate> candidateAll = cddSvc.findAll();
 		Integer aptFlgCount = 0;
 		for (Integer cddId = 1; cddId <= candidateAll.size(); cddId++) {

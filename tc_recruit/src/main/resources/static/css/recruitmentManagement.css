@@ -1,14 +1,14 @@
-	table {
+	.candidateTable {
 		 text-align: center;
  		 border-collapse: collapse;
 	}
-	th, td {
+	.candidateTable th, td {
   		border: solid 2px black;
   	}
-	thead, tbody {
+	.candidateTable thead, tbody {
   		display: block;
 	}
-	tbody {
+	.candidateTable tbody {
  		height: 280px;
 	}
 	.scrollbar {

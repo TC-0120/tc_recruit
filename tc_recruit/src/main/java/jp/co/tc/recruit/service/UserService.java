@@ -238,7 +238,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 
 			//ソート
 			//並び替えのルール
-			//デフォルトはUsername順
+			//初期値はUsername順
 			//権限ボタンクリックで 優先順位1：authority  優先順位2：username
 			//権限ボタンクリックで 優先順位1：status  優先順位2：username
 			if (userForm.getSortLastName() == 2) {
@@ -246,12 +246,15 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 			} else if (userForm.getSortFirstName() == 3) {
 				//ふりがな振ってから
 			} else if (userForm.getSortAuthority() == 4) {
-				Comparator<User> authorityComparator = Comparator
+				Comparator<User> authorityComparator =
+						Comparator
 						.comparing(User::getAuthority, Comparator.reverseOrder())
 						.thenComparing(User::getUsername);
 				sarchList.sort(authorityComparator);
 			} else if (userForm.getSortStatus() == 5) {
-				Comparator<User> statusComparator = Comparator.comparing(User::getStatus, Comparator.reverseOrder())
+				Comparator<User> statusComparator =
+						Comparator
+						.comparing(User::getStatus, Comparator.reverseOrder())
 						.thenComparing(User::getUsername);
 				sarchList.sort(statusComparator);
 			} else {

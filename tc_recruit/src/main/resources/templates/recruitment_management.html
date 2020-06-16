@@ -8,6 +8,13 @@
 .alert-danger {
 	color: red;
 }
+.selectionStatus, .selectionStatusDetail {
+	display: inline-block;
+}
+.selectionStatusTable td, .selectionStatusDetailTable td{
+	border: 0px none;
+}
+
 </style>
 <script type="text/javascript" th:src="@{/js/recruitmentManagement.js}" th:inline="javascript"></script>
 <script type="text/javascript" th:inline="javascript">
@@ -18,7 +25,7 @@
 	 * ロード時、選考ステータス詳細検索のドロップダウンの初期設定
 	 *
 	 */
-	function setFirstSlcStatusDtl() {
+	 function setFirstSlcStatusDtl() {
 		//選考ステータス詳細の情報を取得
 		[# th:each="slcStatusDtl: ${slcStatusDtlList}"]
 			var slcStatusDtl = {id:/*[[${slcStatusDtl.slcStatusDtlId}]]*/, name:/*[[${slcStatusDtl.slcStatusDtlName}]]*/,
@@ -45,7 +52,7 @@
 	 * 選考ステータス詳細検索のドロップダウンを設定
 	 *
 	 */
-	function setSlcStatusDtl() {
+	 function setSlcStatusDtl() {
 		//選考ステータス検索の選択値
 		var selectedSlcStatus = document.getElementById("slcStatus").value;
 		//選考ステータス詳細検索のドロップダウン
@@ -88,10 +95,10 @@
 		}
 
 		//選考ステータス詳細検索のドロップダウンを初期化
-		slcStatusDtl.textContent = null;
+		 slcStatusDtl.textContent = null;
 
 		//選考ステータス詳細検索のドロップダウンに値を設定
-		for (var i = 0; i < slcStatusDtlList.length; i++) {
+		 for (var i = 0; i < slcStatusDtlList.length; i++) {
 			var op = document.createElement("option");
 			op.value = slcStatusDtlList[i].id;
 			op.text = slcStatusDtlList[i].name;
@@ -120,15 +127,31 @@
 	<form name="conditionsForm" th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
 		<div>
 			<label>選考ステータス</label>
-			<select id="slcStatus" th:field="*{slcStatusId}" onchange="setSlcStatusDtl()">
-				<option value="0">一覧</option>
-				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
-			</select>
+			<label>
+				<input type="checkbox" name="slcStatusAllChecked">すべて選択
+			</label>
+			<table class="selectionStatusTable">
+			<tr>
+				<td th:each="slcStatus: ${slcStatusList}">
+					<input type="checkbox" name="slcStatusId" th:value="${slcStatus.slcStatusId}">
+					<div class="selectionStatus" th:text="${slcStatus.slcStatusName}"></div>
+				</td>
+			</tr>
+			</table>
 		</div>
 		<div>
 			<label>選考ステータス詳細</label>
-			<select id="slcStatusDtl" th:field="*{slcStatusDtlId}">
-			</select>
+			<label>
+				<input type="checkbox" name="slcStatusDtlAllChecked">すべて選択
+			</label>
+			<table class="selectionStatusDetailTable">
+			<tr>
+				<td th:each="slcStatusDtl: ${slcStatusDtlList}">
+					<input type="checkbox" name="slcStatusDtlId" th:value="${slcStatusDtl.slcStatusDtlId}">
+					<div class="selectionStatusDetail" th:text="${slcStatusDtl.slcStatusDtlName}"></div>
+				</td>
+			</tr>
+			</table>
 		</div>
 		<input type="hidden" th:field="*{order}">
 		<input type="hidden" th:field="*{direction}">
@@ -158,7 +181,7 @@
 		<button id="candidateButton" type="button" disabled onclick="submitAndOpenUpdateWindow('/update')">候補者情報変更</button>
 		<button id="selectionButton" type="button" disabled onclick="submitAndOpenUpdateWindow('/selection')">選考情報変更</button>
 		<button id="multipleButton" type="button" disabled onclick="submitAndOpenUpdateWindow('/multiple')">一括管理</button>
-	<table>
+	<table class="candidateTable">
 		<thead>
 		<tr>
 			<th class="table_checkbox">
