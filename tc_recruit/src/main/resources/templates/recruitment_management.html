@@ -8,12 +8,6 @@
 .alert-danger {
 	color: red;
 }
-.selectionStatus, .selectionStatusDetail {
-	display: inline-block;
-}
-.selectionStatusTable td, .selectionStatusDetailTable td{
-	border: 0px none;
-}
 
 </style>
 <script type="text/javascript" th:src="@{/js/recruitmentManagement.js}" th:inline="javascript"></script>
@@ -127,31 +121,15 @@
 	<form name="conditionsForm" th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
 		<div>
 			<label>選考ステータス</label>
-			<label>
-				<input type="checkbox" name="slcStatusAllChecked">すべて選択
-			</label>
-			<table class="selectionStatusTable">
-			<tr>
-				<td th:each="slcStatus: ${slcStatusList}">
-					<input type="checkbox" name="slcStatusId" th:value="${slcStatus.slcStatusId}">
-					<div class="selectionStatus" th:text="${slcStatus.slcStatusName}"></div>
-				</td>
-			</tr>
-			</table>
+			<select id="slcStatus" th:field="*{slcStatusId}" onchange="setSlcStatusDtl()">
+				<option value="0">一覧</option>
+				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
+			</select>
 		</div>
 		<div>
 			<label>選考ステータス詳細</label>
-			<label>
-				<input type="checkbox" name="slcStatusDtlAllChecked">すべて選択
-			</label>
-			<table class="selectionStatusDetailTable">
-			<tr>
-				<td th:each="slcStatusDtl: ${slcStatusDtlList}">
-					<input type="checkbox" name="slcStatusDtlId" th:value="${slcStatusDtl.slcStatusDtlId}">
-					<div class="selectionStatusDetail" th:text="${slcStatusDtl.slcStatusDtlName}"></div>
-				</td>
-			</tr>
-			</table>
+			<select id="slcStatusDtl" th:field="*{slcStatusDtlId}">
+			</select>
 		</div>
 		<input type="hidden" th:field="*{order}">
 		<input type="hidden" th:field="*{direction}">

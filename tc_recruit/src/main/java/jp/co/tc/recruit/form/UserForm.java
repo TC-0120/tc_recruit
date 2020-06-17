@@ -63,4 +63,5 @@ public class UserForm {
 		sortFirstName = null;
 		sortLastName = null;
 	}
+
 }

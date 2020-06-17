@@ -34,9 +34,9 @@ public class PasswordController {
 			usrSvc.passwordRegist(password, username);
 		} else {
 			model.addAttribute("message", message);
-			return "password_setting";
+			return "/password_setting";
 		}
 
-		return "redirect:/login";
+		return "/login";
 	}
 }

@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,17 +40,14 @@ public class User implements UserDetails {
 	private Integer id;
 
 	@Column(nullable = false, unique = true)
-	/*@NotNull(message="社員番号は入力必須です")*/
+	@NotNull
 	private String username;
 
 	@Column(name = "first_name", nullable = false, unique = true)
-	/*@NotNull(message="名は入力必須です")
-	@Size(min = 1, max = 10, message="姓は1文字以上10文字以下で入力してください")*/
 	private String firstName;
 
 	@Column(name = "last_name", nullable = false, unique = true)
-	/*@NotNull(message="姓は入力必須です")
-	@Size(min = 1, max = 10, message="姓は1文字以上10文字以下で入力してください")*/
+	@Size(min = 1, max = 10)
 	private String lastName;
 
 	@Column(nullable = false)
@@ -56,8 +55,9 @@ public class User implements UserDetails {
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	/**/
 	private Authority authority;
+
+	/*	private Integer authorityId;*/
 
 	@Column(nullable = false)
 	private Integer status;
