@@ -37,6 +37,6 @@ public class PasswordController {
 			return "/password_setting";
 		}
 
-		return "/login";
+		return "redirect:/login";
 	}
 }
