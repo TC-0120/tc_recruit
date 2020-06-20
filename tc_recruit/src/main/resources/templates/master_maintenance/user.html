@@ -134,14 +134,20 @@
 		</form>
 		<br>
 		<br> <label>新規登録</label>
+		<table>
+			<tr th:each="messageForRegistUser : ${messageForRegistUser}" th:object="${messageForRegistUser}">
+				<td th:text="${messageForRegistUser}"></td>
+			</tr>
+		</table>
 		<form name="RegistUser" th:object="${RegistUser}"
-			th:action="@{/maintenance/user/regist}">
-			社員番号<input type="text" name="username"><br> 姓<input
-				type="text" name="lastName"><br> 名<input type="text"
-				name="firstName"><br> 権限<input type="radio"
-				name="authority" value="0">管理者 <input type="radio"
-				name="authority" value="1">一般<br>
-			<button type="submit">登録</button>
+			th:action="@{/maintenance/user/regist}" method="post">
+			社員番号<input type="text" name="username"><br>
+			姓<input type="text" name="lastName"><br>
+			名<input type="text" name="firstName"><br>
+			権限<input type="radio" name="authority" value="ROLE_ADMIN">管理者
+				<input type="radio" name="authority" value="ROLE_USER">一般<br>
+				<button type="submit">登録</button>
+		</form>
 	</div>
 </body>
 </html>

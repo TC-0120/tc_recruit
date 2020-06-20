@@ -175,6 +175,35 @@ public class MasterMaintenanceController {
 	}
 
 	/**
+	 * 社員登録
+	 *
+	 * @param User
+	 * @return 社員マスタメンテナンス画面
+	 */
+	@PostMapping("user/regist")
+	@Transactional(readOnly = false)
+	public String registUser(@ModelAttribute("RegistUser") User user,
+			@ModelAttribute("User") UserForm userForm,
+			/*BindingResult error*/ Model model) {
+		List<String> messageForRegistUser = usrSvc.registUser(user);
+
+		if (!(messageForRegistUser.isEmpty())) {
+			model.addAttribute("messageForRegistUser", messageForRegistUser);
+		}
+
+		//検索フォームとフォームが異なるのでクリアな検索条件で値をセット
+		List<User> usrList = usrSvc.findAllByOrderByUsername();
+		userForm.setSarchWord(null);
+		userForm.setSarchAuthorityAdmin(0);
+		userForm.setSarchAuthorityUser(0);
+		userForm.setSarchStatusBoolean(0);
+		model.addAttribute("userForm", userForm);
+		model.addAttribute("usrList", usrList);
+
+		return "master_maintenance/user";
+	}
+
+	/**
 	 * 社員マスタのソート
 	 *
 	 * @param userForm

@@ -53,7 +53,7 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String password;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private Authority authority;
 
