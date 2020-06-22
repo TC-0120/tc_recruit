@@ -53,18 +53,16 @@
 				<tr>
 					<td>
 						<button name="sortUsername" type="button" value="0"
-							onclick="sort(1);submitAction('/sarch')">ユーザ―名</button> <input
+							onclick="sort(1);submitAction('/sarch')">社員番号</button> <input
 						type="hidden" name="sortUsername" value="0">
 					</td>
 					<td>
-						<button name="sortLastName" type="button" value="0"
-							onclick="sort(2);submitAction('/sarch')">姓</button> <input
-						type="hidden" name="sortLastName" value="0">
+						<label>姓</label>
+						<input type="hidden" name="sortLastName" value="0">
 					</td>
 					<td>
-						<button name="sortFirstName" type="button" value="0"
-							onclick="sort(3);submitAction('/sarch')">名</button> <input
-						type="hidden" name="sortFirstName" value="0">
+						<label>名</label>
+						<input type="hidden" name="sortFirstName" value="0">
 					</td>
 					<td>
 						<button name="sortAuthority" type="button" value="0"
@@ -130,7 +128,7 @@
 			enctype="multipart/form-data">
 
 			<input type="file" name="userlist.csv" /><br />
-			<button type="submit">upload</button>
+			<button type="submit">取込</button>
 		</form>
 		<br>
 		<br> <label>新規登録</label>

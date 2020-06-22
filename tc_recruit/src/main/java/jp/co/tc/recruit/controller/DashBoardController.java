@@ -88,7 +88,7 @@ public class DashBoardController {
 		/*選考中候補者データ*/
 		List<TotalCheckView> ttlChkListAll = ttlChkSvc.findAll();
 		/*要対応(ALL)の候補者全数*/
-		for (int sort = ttlChkListAll.get(1).getSort(); sort < ttlChkListAll.get(ttlChkListAll.size() - 1)
+		for (int sort = ttlChkListAll.get(1).getSort(); sort <= ttlChkListAll.get(ttlChkListAll.size() - 1)
 				.getSort(); sort++) {
 			ttlChk = ttlChkSvc.findBySort(sort);
 			if (ttlChk.getSelectionStatusId() != 9) {
