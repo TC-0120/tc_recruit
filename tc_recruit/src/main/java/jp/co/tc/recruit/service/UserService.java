@@ -129,7 +129,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 					String usernameByCsvfile = userList.get(i);
 					usernameExist = usrRepo.existsByUsername(usernameByCsvfile);
 					if (usernameExist == true) {
-						message.add((k + 1) + "行目　同一のユーザー名が存在します。");
+						message.add((k + 1) + "行目　同一のユーザー名が存在します");
 					}
 					//usernameの入力チェック
 					if (usernamePattern.matcher(userList.get(i)).matches() == false) {
@@ -140,7 +140,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 					}
 					//姓入力値判定
 				} else if (i % 4 == 1) {
-					if (userList.get(i).length() >= 1 && userList.get(i).length() > 10
+					if (userList.get(i).length() >= 1 && userList.get(i).length() >= 20
 							|| userList.get(i).isEmpty()) {
 						message.add((k + 1) + "行目　姓は1文字以上10文字以下で入力してください");
 					} else {
@@ -148,7 +148,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 					}
 					//名入力値判定
 				} else if (i % 4 == 2) {
-					if (userList.get(i).length() >= 1 && userList.get(i).length() > 10
+					if (userList.get(i).length() >= 1 && userList.get(i).length() >= 20
 							|| userList.get(i).isEmpty()) {
 						message.add((k + 1) + "行目　名は1文字以上10文字以下で入力してください");
 					} else {
@@ -157,7 +157,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 					//権限入力値判定
 				} else if (i % 4 == 3) {
 					if (userList.get(i).length() != 2
-							&& (userList.get(i).contains("0") || userList.get(i).contains("1"))) {
+							|| (userList.get(i).contains("0") || userList.get(i).contains("1"))) {
 						message.add((k + 1) + "行目　権限は管理者「0」,一般「1」を入力してください");
 					} else {
 						if ((userList.get(i)).contains("1")) {
@@ -166,6 +166,25 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 							user.setAuthority(Authority.ROLE_ADMIN);
 						}
 					}
+
+					/*改行コード消したい*/
+					/*String authorityStr = userList.get(i).replace("\r", "");
+					if (authorityStr != null) {
+						int authorityInt = Integer.parseInt(authorityStr);
+
+						if (authorityInt != 0 || authorityInt != 1) {
+							message.add((k + 1) + "行目　権限は管理者「0」,一般「1」を入力してください");
+						} else {
+							if (authorityInt == 1) {
+								user.setAuthority(Authority.ROLE_USER);
+							} else {
+								user.setAuthority(Authority.ROLE_ADMIN);
+							}
+						}
+					} else {
+						message.add((k + 1) + "行目　権限は管理者「0」,一般「1」を入力してください");
+					}*/
+
 				}
 			}
 			importUser.add(user);
@@ -246,7 +265,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 			//並び替えのルール
 			//初期値はUsername順
 			//権限ボタンクリックで 優先順位1：authority  優先順位2：username
-			//権限ボタンクリックで 優先順位1：status  優先順位2：username
+			//有効/無効ボタンクリックで 優先順位1：status  優先順位2：username
 			if (userForm.getSortLastName() == 2) {
 				//ふりがな振ってから
 			} else if (userForm.getSortFirstName() == 3) {
@@ -322,7 +341,7 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 		Pattern usernamePattern = Pattern.compile("^TC(-\\d{4})$");
 		boolean usernameExist = usrRepo.existsByUsername(user.getUsername());
 		if (usernameExist == true) {
-			message.add("同一のユーザー名が存在します。");
+			message.add("同一のユーザー名が存在します");
 		}
 		//usernameの入力チェック
 		if (usernamePattern.matcher(user.getUsername()).matches() == false) {
@@ -332,20 +351,20 @@ public class UserService implements UserDetailsService/*, Comparator<User>*/ {
 			user.setStatus(1);
 		}
 		//姓入力値判定
-		if (user.getLastName().length() >= 1 && user.getLastName().length() > 10
+		if (user.getLastName().length() >= 1 && user.getLastName().length() >= 20
 				|| user.getLastName().isEmpty()) {
 			message.add("姓は1文字以上10文字以下で入力してください");
 		} else {
 			user.setLastName(user.getLastName());
 		}
 		//名入力値判定
-		if (user.getFirstName().length() >= 1 && user.getFirstName().length() > 10
+		if (user.getFirstName().length() >= 1 && user.getFirstName().length() >= 20
 				|| user.getFirstName().isEmpty()) {
 			message.add("名は1文字以上10文字以下で入力してください");
 		} else {
 			user.setFirstName(user.getFirstName());
 		}
-		
+
 		//権限入力値判定
 		try {
 			if (user.getAuthority().equals(null)) {
