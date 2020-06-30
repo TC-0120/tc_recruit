@@ -24,6 +24,11 @@ import jp.co.tc.recruit.service.MessageStatusService;
 import jp.co.tc.recruit.service.TotalCheckService;
 import jp.co.tc.recruit.service.TotalSelectionService;
 
+/**
+ * ダッシュボード機能のコントローラー
+ *
+ * @author TC-0117
+ */
 @Controller
 public class DashBoardController {
 
@@ -38,29 +43,29 @@ public class DashBoardController {
 	@Autowired
 	CandidateService cddSvc;
 
+	/**
+	 * ダッシュボードの表示
+	 *
+	 * @param model
+	 * @return ダッシュボード画面
+	 */
 	@GetMapping("/dashboard")
 	public String getDashBoard(Model model) {
-		/*選考中候補者集計*/
-		Integer sttMsgId;
+		/* 選考中候補者集計 */
 		Integer ttlSlcAllCount = 0;
 		TotalSelectionView ttlSlc;
 		List<TotalSelectionView> ttlSlcList = new ArrayList<TotalSelectionView>();
 
-		/*選考中候補者データ(ALL)*/
+		/* 選考中候補者データ(ALL) */
 		TotalSelectionView ttlSlcAll = ttlSlcSvc.findByStatusMessageId(1);
-		/*ALL以外の選考中候補者データ全て*/
-		/*選考中(ALL)の候補者全数*/
-		List<TotalSelectionView> ttlSlcAllList = ttlSlcSvc.findAll();
-		for (sttMsgId = ttlSlcAllList.get(1).getStatusMessageId();
-				sttMsgId <= ttlSlcAllList.get(ttlSlcAllList.size() - 1).getStatusMessageId();
-				sttMsgId++) {
-			ttlSlc = ttlSlcSvc.findBySort(sttMsgId);
-			if (ttlSlc.getSelectionStatusId() != 9) {
-				ttlSlcList.add(ttlSlc);
-			}
+		/* ALL以外の選考中候補者データ全て */
+		/* 選考中(ALL)の候補者全数 */
+		for (int sort = 2; sort <= 9; sort++) {
+			ttlSlc = ttlSlcSvc.findBySort(sort);
+			ttlSlcList.add(ttlSlc);
 			ttlSlcAllCount += ttlSlc.getCount();
 		}
-		/*適性検査未受検者はcandidateテーブルのappitude_flg(=0)から集計*/
+		/* 適性検査未受検者はcandidateテーブルのappitude_flg(=0)から集計 */
 		List<Candidate> candidateAll = cddSvc.findAll();
 		Integer aptFlgCount = 0;
 		for (Integer cddId = 1; cddId <= candidateAll.size(); cddId++) {
@@ -69,27 +74,28 @@ public class DashBoardController {
 			}
 		}
 
-		/*選考中候補者データ(ALL)*/
+		/* 選考中候補者データ(ALL) */
 		model.addAttribute("ttlSlcAll", ttlSlcAll);
-		/*選考中候補者データ*/
+		/* 選考中候補者データ */
 		model.addAttribute("ttlSlcList", ttlSlcList);
-		/*選考中(ALL)の候補者全数*/
+		/* 選考中(ALL)の候補者全数 */
 		model.addAttribute("ttlSlcAllCount", ttlSlcAllCount);
-		/*適性検査完了者集計値*/
+		/* 適性検査完了者集計値 */
 		model.addAttribute("aptFlgCount", aptFlgCount);
 
 
-		/*要対応事項集計*/
+
+		/* 要対応事項集計 */
 		Integer ttlChkAllCount = 0;
 		TotalCheckView ttlChk;
-		List<TotalCheckView> ttlChkList = new ArrayList<TotalCheckView>();;
-		/*要対応のデータ(All)*/
+		List<TotalCheckView> ttlChkList = new ArrayList<TotalCheckView>();
+		;
+		/* 要対応のデータ(All) */
 		TotalCheckView ttlChkAll = ttlChkSvc.findByStatusMessageId(10);
-		/*選考中候補者データ*/
+		/* 選考中候補者データ */
 		List<TotalCheckView> ttlChkListAll = ttlChkSvc.findAll();
-		/*要対応(ALL)の候補者全数*/
-		for (int sort = ttlChkListAll.get(1).getSort(); sort <= ttlChkListAll.get(ttlChkListAll.size() - 1)
-				.getSort(); sort++) {
+		/* 要対応(ALL)の候補者全数 */
+		for (int sort = 11; sort <= 26; sort++) {
 			ttlChk = ttlChkSvc.findBySort(sort);
 			if (ttlChk.getSelectionStatusId() != 9) {
 				ttlChkList.add(ttlChk);
@@ -107,23 +113,23 @@ public class DashBoardController {
 			}
 		}
 
-		/*要対応のデータ(All)*/
+		/* 要対応のデータ(All) */
 		model.addAttribute("ttlChkAll", ttlChkAll);
-		/*選考中候補者データ*/
+		/* 選考中候補者データ */
 		model.addAttribute("ttlChkList", ttlChkList);
-		/*要対応(ALL)の全数*/
+		/* 要対応(ALL)の全数 */
 		model.addAttribute("ttlChkAllCount", ttlChkAllCount);
-		/*選考ステータス詳細が選考中,承諾待ち,確定(詳細ID=2||6||8)の場合
-		 * 今日の日付を追加送信するためtodayを格納*/
+		/*
+		 * 選考ステータス詳細が選考中,承諾待ち,確定(詳細ID=2||6||8)の場合 今日の日付を追加送信するためtodayを格納
+		 */
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String today = dateFormat.format(date);
 		String todayT = today.replace(" ", "T");
 		model.addAttribute("today", todayT);
 
-
-
-		/*タスク別の集計*/
+		/* タスク別の集計 */
+		Integer sttMsgId;
 		Integer ttlScheduleCount = 0;
 		Integer ttlAssessmentCount = 0;
 		Integer ttlUnreportCount = 0;
@@ -132,8 +138,9 @@ public class DashBoardController {
 		for (sttMsgId = ttlChkListAll.get(1).getSort(); sttMsgId < ttlChkListAll.get(ttlChkListAll.size() - 1)
 				.getSort(); sttMsgId++) {
 			ttlTskChk = ttlChkSvc.findByStatusMessageId(sttMsgId);
-			/*メッセージステータスが日程調整,合否判定,合格未通知
-			 * (total_check_viewの管理下で、詳細ID=1||2||3)の場合、それぞれ集計*/
+			/*
+			 * メッセージステータスが日程調整,合否判定,合格未通知 (total_check_viewの管理下で、詳細ID=1||2||3)の場合、それぞれ集計
+			 */
 			if (ttlTskChk.getSelectionStatusDetailId() == 1) {
 				ttlScheduleCount += ttlTskChk.getTotalCount();
 			} else if (ttlTskChk.getSelectionStatusDetailId() == 2) {
@@ -142,30 +149,31 @@ public class DashBoardController {
 				ttlUnreportCount += ttlTskChk.getTotalCount();
 			}
 		}
-		/*タスク別集計のステータス名称*/
+		/* タスク別集計のステータス名称 */
 		String[] statusByTskType = { "日程調整", "合否判定", "合格未通知" };
 		model.addAttribute("statusByTskType", statusByTskType);
-		/*タスク別の集計値*/
+		/* タスク別の集計値 */
 		Integer[] ttlCountByTskType = { ttlScheduleCount, ttlAssessmentCount, ttlUnreportCount };
 		model.addAttribute("ttlCountByTskType", ttlCountByTskType);
 
-		/*今日明日のタスク*/
+		/* 今日明日のタスク */
 		boolean result = true;
 		List<LatestPlanView> ltsPlnList = new ArrayList<LatestPlanView>();
 		ltsPlnList = ltsPlnSvc.findAll();
 		if (CollectionUtils.isEmpty(ltsPlnList)) {
 			result = false;
 		}
-		/*今日明日のタスクリスト*/
+		/* 今日明日のタスクリスト */
 		model.addAttribute("ltsPlnList", ltsPlnList);
-		/*今日明日のタスクリストEmptyか否か*/
+		/* 今日明日のタスクリストEmptyか否か */
 		model.addAttribute("result", result);
-		/*今日明日の面接予定者一覧ボタン押下で
-		 * fromに当日0:00 toに明日23:59を送信する*/
+		/*
+		 * 今日明日の面接予定者一覧ボタン押下で fromに当日0:00 toに明日23:59を送信する
+		 */
 		Date todayMidnight = new Date();
 		DateFormat todayMidnightDateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00");
 		String todayMidnightStr = todayMidnightDateFormat.format(todayMidnight);
-		//候補者一覧htmlのtype=date-localに合わせてタイムゾーンを挿入
+		// 候補者一覧.htmlのtype=date-localに合わせてタイムゾーンを挿入
 		String todayMidnightStrT = todayMidnightStr.replace(" ", "T");
 		model.addAttribute("todayMidnight", todayMidnightStrT);
 
@@ -173,17 +181,10 @@ public class DashBoardController {
 		cal.setTime(date);
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		String tomorrow = new SimpleDateFormat("yyyy-MM-dd 23:59", Locale.US).format(cal.getTime());
-		//候補者一覧htmlのtype=date-localに合わせてタイムゾーンを挿入
+		// 候補者一覧htmlのtype=date-localに合わせてタイムゾーンを挿入
 		String tomorrowT = tomorrow.replace(" ", "T");
 		model.addAttribute("tomorrow", tomorrowT);
 
 		return "dashboard";
 	}
-
-	/*@PostMapping("/dashboard")
-	public String postLogin(Model model) {
-
-	    return "redirect:/";
-	}*/
-
 }

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.co.tc.recruit.entity.MessageStatus;
-import jp.co.tc.recruit.entity.SelectionStatus;
-import jp.co.tc.recruit.entity.SelectionStatusDetail;
 import jp.co.tc.recruit.form.MessageStatusForm;
 import jp.co.tc.recruit.repository.MessageStatusRepository;
 import jp.co.tc.recruit.service.MessageStatusService;
@@ -22,7 +20,9 @@ import jp.co.tc.recruit.service.SelectionStatusService;
 import jp.co.tc.recruit.service.UserService;
 
 /**
- * マスタメンテナンスのコントローラー
+ * 画面設定機能のコントローラー
+ *
+ * @author TC-0117
  */
 @Controller
 @RequestMapping("/setting")
@@ -43,7 +43,7 @@ public class SettingController {
 	 * メンテナンス可能項目の表示
 	 *
 	 * @param model
-	 * @return マスタメンテナンス一覧
+	 * @return 画面設定メニュー
 	 */
 	@GetMapping()
 	public String getMaintenance(Model model) {
@@ -53,26 +53,17 @@ public class SettingController {
 	/**
 	 * ダッシュボードのマスタ情報の検索、表示
 	 *
+	 *　@param msgSttForm
 	 * @param model
-	 * @return メッセージステータスメンテナンス画面
+	 * @return ダッシュボード画面設定画面
 	 */
 	@GetMapping("message_status")
-	public String msgSttUpdateInput(
-			@ModelAttribute("MessageStatus") MessageStatusForm msgSttForm,
-			Model model) {
-		List<SelectionStatus> slcStt;
-		List<SelectionStatusDetail> slcSttDtl;
+	public String getDashboardMaintenance(@ModelAttribute("MessageStatus") MessageStatusForm msgSttForm, Model model) {
 		List<MessageStatus> msgSttList;
+		/* ダッシュボードでの表示名、選考ステータス、選考ステータス詳細情報をソート番号昇順に取得 */
 		msgSttList = msgSttSvc.findAllByOrderBySort();
-		slcStt = slcSttSvc.findAll();
-		slcSttDtl = slcSttDtlSvc.findAll();
-
-		/*ダッシュボードでの表示名取得*/
+		/* ダッシュボードでの表示名、選考ステータス、選考ステータス詳細情報をmodelに格納 */
 		model.addAttribute("msgSttList", msgSttList);
-		/*プルダウン：ステータス*/
-		model.addAttribute("slcStt", slcStt);
-		/*プルダウン：詳細ステータス*/
-		model.addAttribute("slcSttDtl", slcSttDtl);
 		return "setting/message_status";
 	}
 
@@ -80,13 +71,14 @@ public class SettingController {
 	 * ステータスメッセージの一括更新
 	 *
 	 * @param msgSttForm
+	 * @param model
 	 * @return ダッシュボード
 	 */
 	@PostMapping("message_status/update")
 	@Transactional(readOnly = false)
-	public String msgSttUpdateComplete(
-			@ModelAttribute("MessageStatus") MessageStatusForm msgSttForm, Model model) {
-		msgSttSvc.messageStatusUpdate(msgSttForm);
+	public String updateMessageStatus(@ModelAttribute("MessageStatus") MessageStatusForm msgSttForm, Model model) {
+		// 一括更新メソッドに受け取った値を渡す
+		msgSttSvc.updateMessageStatus(msgSttForm);
 		return "redirect:/dashboard";
 	}
 
@@ -95,12 +87,12 @@ public class SettingController {
 	 *
 	 * @param msgSttForm
 	 * @return ダッシュボード
-	 */
-	@PostMapping("message_status/input")
-	@Transactional(readOnly = false)
-	public String msgSttInput(
-			@ModelAttribute("MessageStatus") MessageStatus msgStt, Model model) {
-		msgSttSvc.messageStatusInput(msgStt);
-		return "redirect:/dashboard";
-	}
+	 *//*
+		 * @PostMapping("message_status/input")
+		 *
+		 * @Transactional(readOnly = false) public String msgSttInput(
+		 *
+		 * @ModelAttribute("MessageStatus") MessageStatus msgStt, Model model) {
+		 * msgSttSvc.messageStatusInput(msgStt); return "redirect:/dashboard"; }
+		 */
 }

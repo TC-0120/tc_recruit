@@ -25,6 +25,11 @@ import org.springframework.security.web.csrf.MissingCsrfTokenException;
 
 import jp.co.tc.recruit.Bean.SessionExpiredDetectingLoginUrlAuthenticationEntryPoint;
 
+/**
+ * セキュリティ設定クラス
+ *
+ * @author TC-0117
+ */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {

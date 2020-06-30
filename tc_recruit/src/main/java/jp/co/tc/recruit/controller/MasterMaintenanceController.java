@@ -28,7 +28,9 @@ import jp.co.tc.recruit.service.SelectionStatusService;
 import jp.co.tc.recruit.service.UserService;
 
 /**
- * マスタメンテナンスのコントローラー
+ * マスタメンテナンス機能のコントローラー
+ *
+ * @author TC-0117
  */
 @Controller
 @RequestMapping("/maintenance")
@@ -59,10 +61,13 @@ public class MasterMaintenanceController {
 	/**
 	 * 社員マスタの検索、表示
 	 *
+	 * @param userForm
+	 * @param model
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@GetMapping("user")
 	public String userUpdateInput(@ModelAttribute("User") UserForm userForm, Model model) {
+		//全件取得、社員番号順
 		List<User> usrList = new ArrayList<User>();
 		usrList = usrSvc.findAllByOrderByUsername();
 		model.addAttribute("usrList", usrList);
@@ -73,17 +78,18 @@ public class MasterMaintenanceController {
 	 * 社員の検索
 	 *
 	 * @param userForm
+	 * @param model
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@PostMapping("user/sarch")
 	@Transactional(readOnly = true)
 	public String userSarch(
 			@ModelAttribute("User") UserForm userForm, Model model) {
-		/*検索値の配列変換と該当Userの検索*/
+		/*検索窓に入力された検索ワードのみ、String配列に変換する*/
 		List<User> usrList = new ArrayList<User>();
 		String[] userArray = Arrays.toString(userForm.getSarchWord())
 				.replace("[", "").replace("]", "").split("( |　)+", 0);
-		/*各チェックボックスにチェックなしで検索された場合*/
+		/*検索条件の各チェックボックスにチェックなしで検索された場合、チェックボックスoff状態(0)に設定する*/
 		if (userForm.getSarchAuthorityAdmin() == null) {
 			userForm.setSarchAuthorityAdmin(0);
 		}
@@ -93,9 +99,14 @@ public class MasterMaintenanceController {
 		if (userForm.getSarchStatusBoolean() == null) {
 			userForm.setSarchStatusBoolean(0);
 		}
-		usrList = usrSvc.userSarch(userForm, userArray);
 
-		/*検索値を所持してuser.htmlへ*/
+		/* 社員検索メソッドに検索条件を渡す */
+		/*　userArray　=　検索窓に入力された条件*/
+		/* userForm = その他条件 */
+		usrList = usrSvc.sarchUser(userForm, userArray);
+
+		/*　検索窓に入力された検索値を所持してuser.htmlへ(その他の検索データはuserFormに格納されている)*/
+		/* 検索ワードごとに半角スペースを空けて表示 */
 		String userArrayStr = String.join(" ", userArray);
 
 		/*検索結果*/
@@ -109,20 +120,25 @@ public class MasterMaintenanceController {
 	 * 社員マスタの一括更新
 	 *
 	 * @param userForm
+	 * @param model
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@PostMapping("user/update")
 	@Transactional(readOnly = false)
 	public String userUpdate(
 			@ModelAttribute("User") UserForm userForm, Model model) {
-		usrSvc.userMultipleUpdate(userForm);
+		//一括変更メソッドに受け取った社員情報を渡す
+		usrSvc.multipleUpdateUser(userForm);
 		return "redirect:/maintenance/user";
 	}
 
 	/**
 	 * 社員マスタのcsv取込
 	 *
-	 * @param msgSttForm
+	 * @param userFormCsv
+	 * @param userForm
+	 * @param multipartFile
+	 * @param model
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@PostMapping("user/upload")
@@ -133,7 +149,9 @@ public class MasterMaintenanceController {
 		List<String> message = new ArrayList<String>();
 
 		try {
+			//Cドライブ直下の取得ファイルの名称を取得する
 			File file = new File("C:\\" + multipartFile.getOriginalFilename());
+			//取得したファイル名のファイルデータの読み込みを行う
 			FileReader filereader = new FileReader(file);
 			int n;
 			String str = null;
@@ -148,7 +166,9 @@ public class MasterMaintenanceController {
 			//読み込んだデータを改行で区切ってList化
 			String[] userArray = user.toString().split("[\\n,]", 0);
 			List<String> userList = Arrays.asList(userArray);
-			message = usrSvc.userCsvImport(userList);
+
+			//csv取込メソッドにファイルデータを渡し、エラーメッセージを取得する
+			message = usrSvc.importUserCsv(userList);
 
 			filereader.close();
 
@@ -158,11 +178,12 @@ public class MasterMaintenanceController {
 			message.add("取込に失敗しました");
 		}
 
+		//エラーメッセージがあればモデルに格納
 		if (!(message.isEmpty())) {
 			model.addAttribute("message", message);
 		}
 
-		//検索フォームとフォームが異なるのでクリアな検索条件で値をセット
+		//検索フォームとフォームが異なるので検索条件を初期化(検索条件なし)
 		List<User> usrList = usrSvc.findAllByOrderByUsername();
 		userForm.setSarchWord(null);
 		userForm.setSarchAuthorityAdmin(0);
@@ -177,21 +198,25 @@ public class MasterMaintenanceController {
 	/**
 	 * 社員登録
 	 *
-	 * @param User
+	 * @param user
+	 * @param userForm
+	 * @param model
 	 * @return 社員マスタメンテナンス画面
 	 */
 	@PostMapping("user/regist")
 	@Transactional(readOnly = false)
 	public String registUser(@ModelAttribute("RegistUser") User user,
 			@ModelAttribute("User") UserForm userForm,
-			/*BindingResult error*/ Model model) {
+			Model model) {
+		//社員登録メソッドに入力された内容を渡し、エラーメッセージを取得する
 		List<String> messageForRegistUser = usrSvc.registUser(user);
 
+		//エラーメッセージがあればモデルに格納
 		if (!(messageForRegistUser.isEmpty())) {
 			model.addAttribute("messageForRegistUser", messageForRegistUser);
 		}
 
-		//検索フォームとフォームが異なるのでクリアな検索条件で値をセット
+		//検索フォームとフォームが異なるので検索条件を初期化(検索条件なし)
 		List<User> usrList = usrSvc.findAllByOrderByUsername();
 		userForm.setSarchWord(null);
 		userForm.setSarchAuthorityAdmin(0);
