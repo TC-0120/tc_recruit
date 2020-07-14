@@ -104,14 +104,15 @@
 	</header>
 	<h2>候補者情報登録画面</h2>
 
+	<!--   2020/07/14 鶴  114,118,127行 最大文字数制限を追加 -->
 	<form th:action="@{/recruit/candidates}" th:method="post" onsubmit="return confirmRegisterCandidate()">
 		<div>
 			<label>候補者</label>
-			<input type="text" name="candidateName" required/>
+			<input type="text" name="candidateName" maxlength="20" required/>
 		</div>
 		<div>
 			<label>候補者(ふりがな)</label>
-			<input type="text" name="candidateFurigana" required/>
+			<input type="text" name="candidateFurigana" maxlength="20" required/>
 		</div>
 		<div>
 			<label>性別</label>
@@ -120,7 +121,7 @@
 		</div>
 		<div>
 			<label>学歴</label>
-			<input type="text" name="eduBack"/>
+			<input type="text" name="eduBack" maxlength="20" />
 		</div>
 		<div>
 			<label>選考ルート</label>

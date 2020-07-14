@@ -47,7 +47,16 @@
 			<button type="button" onclick="submitAction('/sarch')">検索</button>
 			<br>
 
-			<button type="button" onclick="submitAction('/update')">一括変更</button>
+<!--
+	/*
+	 * 7/13 課題59 修正
+	 * 湯澤
+
+  			<div th:if="${#lists.isEmpty(usrList)}" >
+	 		<button type="button" onclick="submitAction('/update')">一括変更できない</button>
+	 		</div>
+-->
+			<button th:if="!${#lists.isEmpty(usrList)}" type="button" onclick="submitAction('/update')">一括変更</button>
 
 			<table border=1>
 				<tr>

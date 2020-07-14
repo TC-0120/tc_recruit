@@ -45,6 +45,8 @@ public class DashBoardController {
 
 	/**
 	 * ダッシュボードの表示
+	 *07/14 編集 野田
+	 *--物理削除を行っているため、検索結果がnullの場合の処理を追加
 	 *
 	 * @param model
 	 * @return ダッシュボード画面
@@ -69,6 +71,10 @@ public class DashBoardController {
 		List<Candidate> candidateAll = cddSvc.findAll();
 		Integer aptFlgCount = 0;
 		for (Integer cddId = 1; cddId <= candidateAll.size(); cddId++) {
+			//nullの場合は処理を行わない--07/14
+			if(cddSvc.findById(cddId) == null) {
+				continue;
+			}
 			if (cddSvc.findById(cddId).getAptitudeFlag() == 0) {
 				aptFlgCount++;
 			}

@@ -29,20 +29,19 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 		<div class="ttlSlc">
 			<div class="inline">
-				<form th:action="@{/recruit/candidates}" th:method="get"
-					th:object="${conditionsForm}">
-					<input type="hidden" th:name="slcStatusId" th:value="${0}" /> <input
-						type="hidden" th:name="slcStatusDtlId" th:value="${0}" />
-					<button class="slc_btn" type="submit" name="aaa" value="aaa">
-						<div class="tex" th:text="${ttlSlcAll.statusMessage}"></div>
-						<div class="text" th:text="${ttlSlcAllCount}"></div>
-						<img th:src="${ttlSlcAll.icon}">
-					</button>
+				<form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
+					<input type="hidden" th:name="slcStatusId" th:value="${0}" />
+					<input type="hidden" th:name="slcStatusDtlId" th:value="${0}" />
+						<button class="slc_btn" type="submit" name="aaa" value="aaa">
+							<div class="tex" th:text="${ttlSlcAll.statusMessage}"></div>
+							<div class="text" th:text="${ttlSlcAllCount}"></div>
+							<img th:src="${ttlSlcAll.icon}">
+						</button>
 				</form>
 			</div>
+			<!-- 選考中項目表示 -->
 			<div class="inline">
-				<div class="count" th:each="ttlSlc: ${ttlSlcList}"
-					th:object="${ttlSlc}">
+				<div class="count" th:each="ttlSlc: ${ttlSlcList}" th:object="${ttlSlc}">
 					<form th:action="@{/recruit/candidates}" th:method="get"
 						th:object="${conditionsForm}">
 						<input type="hidden" th:name="slcStatusId"
@@ -64,13 +63,13 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 
 
-
+		<!--  -->
 		<div class="ttlChk">
 			<div class="chk_all_btn">
 				<form th:action="@{/recruit/candidates}" th:method="get"
 					th:object="${conditionsForm}">
-					<input type="hidden" th:name="slcStatusId" th:value="${0}" /> <input
-						type="hidden" th:name="slcStatusDtlId" th:value="${-1}" />
+					<input type="hidden" th:name="slcStatusId" th:value="${0}" />
+					<input type="hidden" th:name="slcStatusDtlId" th:value="${-1}" />
 					<button class="chk_btn" type="submit" name="aaa" value="aaa">
 						<div class="text" th:text="${ttlChkAll.statusMessage}"></div>
 						<div th:text="${ttlChkAllCount}"></div>
@@ -78,14 +77,13 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 				</form>
 			</div>
 
+			<!-- 要対応項目表示 -->
 			<div class="chk_btn_right">
-				<div class="count" th:each="ttlChk: ${ttlChkList}"
-					th:object="${ttlChk}">
-					<form th:action="@{/recruit/candidates}" th:method="get"
-						th:object="${conditionsForm}">
+				<div class="count" th:each="ttlChk: ${ttlChkList}" th:object="${ttlChk}">
+					<form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
 						<input type="hidden" th:name="slcStatusId"
-							th:value="${ttlChk.selectionStatusId}" /> <input type="hidden"
-							th:name="slcStatusDtlId"
+							th:value="${ttlChk.selectionStatusId}" />
+						<input type="hidden" th:name="slcStatusDtlId"
 							th:value="${ttlChk.selectionStatusDetailId}" />
 						<div
 							th:if="${ttlChk.selectionStatusDetailId == 2
@@ -115,7 +113,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 				</div>
 
 
-
+				<!-- 日程調整項目表示 -->
 				<div class="tskType">
 					<div class="count">
 						<form th:action="@{/recruit/candidates}" th:method="get"
@@ -128,6 +126,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 							</button>
 						</form>
 					</div>
+					<!-- 合否判定項目表示 -->
 					<div class="count">
 						<form th:action="@{/recruit/candidates}" th:method="get"
 							th:object="${conditionsForm}">
@@ -139,6 +138,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 							</button>
 						</form>
 					</div>
+					<!-- 合格未通知項目表示 -->
 					<div class="count">
 						<form th:action="@{/recruit/candidates}" th:method="get"
 							th:object="${conditionsForm}">
@@ -153,6 +153,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 			</div>
 		</div>
 
+		<!-- 面接予定項目表示 -->
 		<div class="ltsPln">
 			<form th:action="@{/recruit/candidates}" th:method="get"
 				th:object="${conditionsForm}">

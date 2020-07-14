@@ -125,7 +125,7 @@
 		<img th:src="@{/images/TCLogo.png}">
 	</header>
 	<h2>選考情報変更画面</h2>
-	<form th:action="@{/recruit/candidates/selection}" th:method="post" th:object="${candidate}" onsubmit="return confirmSlcDate()()">
+	<form th:action="@{/recruit/candidates/selection}" th:method="post" th:object="${candidate}" onsubmit="return confirmSlcDate()">
 		<div>
 			<label>ID</label>
 			<div th:text="*{candidateId}">/</div>
