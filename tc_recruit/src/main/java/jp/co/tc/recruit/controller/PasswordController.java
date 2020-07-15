@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.co.tc.recruit.form.UserForm;
+import jp.co.tc.recruit.repository.UserRepository;
 import jp.co.tc.recruit.service.UserService;
 
 /**
@@ -23,6 +24,9 @@ public class PasswordController {
 	@Autowired
 	UserService usrSvc;
 
+	@Autowired
+	UserRepository usrRepos;
+
 	@GetMapping()
 	public String getPasswordSet(Model model) {
 		return "/password_setting";
@@ -33,6 +37,8 @@ public class PasswordController {
 	 *
 	 * @param model
 	 * @return ログイン画面
+	 *
+	 * 7/15 課題71　修正　湯澤
 	 */
 	@PostMapping("regist")
 	public String PasswordRegist(@ModelAttribute("passwordRegist") UserForm userForm, Model model) {
@@ -42,19 +48,28 @@ public class PasswordController {
 		String passwordConfirm = userForm.getPassword().get(1);
 		String username = userForm.getUsername().get(0);
 		String message = "入力内容が異なります";
+		String message2 = "入力されたユーザー名が存在しません。";
 
 		//パスワードとパスワード(確認用)の値が一致した場合
 		if(password.equals(passwordConfirm)) {
-			//入力された社員番号の社員データにパスワードを登録
-			usrSvc.registPassword(password, username);
+
+			if(usrRepos.findByUsernameLike(username).isEmpty()) {
+				model.addAttribute("message", message2);
+				return "password_setting";
+			} else {
+				//入力された社員番号の社員データにパスワードを登録
+				usrSvc.registPassword(password, username);
+			}
+
 
 		//パスワードとパスワード(確認用)の値が不一致だった場合
 		} else {
 			/* エラーメッセージを所持して、パスワード設定画面へ戻る */
 			model.addAttribute("message", message);
-			return "/password_setting";
+			return "password_setting";
 		}
 
 		return "redirect:/login";
 	}
+
 }
