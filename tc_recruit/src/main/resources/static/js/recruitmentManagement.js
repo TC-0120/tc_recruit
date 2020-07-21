@@ -36,6 +36,17 @@
 		canFreeSearch()
 	}
 
+	/**
+	 * 一括管理画面ロード時、いくつかの関数を実行
+	 *7/20 湯澤
+	 */
+	function loadUpdateInput() {
+		//選考ステータス詳細検索の初期設定
+		setFirstSlcStatusDtl();
+		//条件に応じてスクロールバーを除去
+		removeScrollbar();
+	}
+
 
 	/**
 	 * 各変更ボタンの活性・非活性の切り替え
