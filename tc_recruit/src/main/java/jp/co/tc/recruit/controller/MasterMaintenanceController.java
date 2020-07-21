@@ -55,7 +55,7 @@ public class MasterMaintenanceController {
 	 */
 	@GetMapping()
 	public String getMaintenance(Model model) {
-		return "/master_maintenance";
+		return "master_maintenance";
 	}
 
 	/**

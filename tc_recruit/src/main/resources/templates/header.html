@@ -6,6 +6,7 @@
   ユーザー名：<span sec:authentication="principal.lastName"></span><span sec:authentication="principal.firstName"></span>&nbsp;&nbsp;
   権限：<span sec:authorize="hasAuthority('ROLE_ADMIN')">管理者</span>
   		<span sec:authorize="hasAuthority('ROLE_USER')">一般</span>&nbsp;&nbsp;
+  <a th:href="@{/user_information}">ユーザー情報確認</a>  <!-- 課題96 パスワード設定画面リンク移動　7/15 湯澤 -->
   <a th:href="@{/logout}">ログアウト</a>
 </header>
 </head>

@@ -58,7 +58,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		if (ssId == SlcStatusConstant.ALL && ssdId == SlcStatusDtlConstant.ALL && from.isEmpty() && to.isEmpty()
 				&& fsId == ConditionsForm.SEARCH_NO_SELECT) {
 			//並び替え
-			queryStr += " WHERE slcStatusDtlId NOT IN(4,5,9)" + sort(cf.getOrder(), cf.getDirection());
+			queryStr += " WHERE slcStatusDtlId NOT IN(4,5,9) " + sort(cf.getOrder(), cf.getDirection());
 
 			return em.createQuery(queryStr).getResultList();
 		}
@@ -74,8 +74,8 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			}
 			firstFlag = false;
 
-			//SQL文を追加
-			queryStr += " slcStatusId = :ssId AND slcStatusDtlId NOT IN(4,5,9)";
+			//SQL文を追加AND slcStatusDtlId NOT IN(4,5,9)
+			queryStr += " slcStatusId = :ssId ";
 		}
 
 		//選択したステータス詳細が一覧でない場合

@@ -2,6 +2,8 @@ package jp.co.tc.recruit.form;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import jp.co.tc.recruit.entity.User.Authority;
@@ -21,6 +23,7 @@ public class UserForm {
 
         private List<String> lastName;
 
+        @NotBlank
         private List<String> password;
 
         private List<Authority> authority;
