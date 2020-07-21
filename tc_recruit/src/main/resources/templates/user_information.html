@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	th:fragment="header_fragment">
+<head>
+<meta charset="UTF-8" />
+<title>ユーザー情報確認</title>
+</head>
+<header>
+	<img th:src="@{/images/TCLogo.png}">
+</header>
+
+<body>
+
+	<h2>ユーザー情報確認画面</h2>
+
+	<div>
+		<label>社員番号：</label>
+		<span sec:authentication="principal.username"></span>
+	</div>
+
+	<div>
+		<label>ユーザー名：</label> <span sec:authentication="principal.lastName"></span>
+		<span sec:authentication="principal.firstName"></span>
+	</div>
+	<div>
+		<label>権限：</label> <span sec:authorize="hasAuthority('ROLE_ADMIN')">管理者</span>
+		<span sec:authorize="hasAuthority('ROLE_USER')">一般</span>&nbsp;&nbsp;
+	</div>
+
+	<a th:href="@{/password}">パスワード設定</a>
+
+</body>
+</html>
+
+<!--
+user.htmlのデータがどこから来ているのか(セッションでID保持する？)
+//update_input.html
+//Formクラスおそらく作る。
+//Candidate手本
+//header手本
+
+
+ -->
