@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Login page</title>
+<style type="text/css">
+	table {
+		 text-align: center;
+ 		 border-collapse: collapse;
+	}
+	th, td {
+  		border: solid 2px black;
+  	}
+	thead, tbody {
+  		display: block;
+	}
+	tbody {
+  		overflow-x: hidden;
+  		overflow-y: scroll;
+ 		height: 100px;
+	}
+
+	.table_radio {
+		width: 25px;
+	}
+	.candidate_id {
+		width: 25px;
+	}
+	.candidate_name {
+		width: 140px;
+	}
+	.gender {
+		width: 40px;
+	}
+	.edu_back {
+		width: 200px;
+	}
+	.agent {
+		width: 80px;
+	}
+	.referrer {
+		width: 80px;
+	}
+	.slc_status_title {
+		width: 164px;
+	}
+	.slc_status {
+		width: 80px;
+	}
+	.slc_status_dtl {
+		width: 80px;
+	}
+	.slc_date {
+		width: 160px;
+	}
+</style>
+<script type="text/javascript" th:src="@{/js/recruitmentManagement.js}" th:inline="javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+	//紹介元（全件）
+	var referrerAll = [];
+	/**
+	 * ロード時、紹介元のドロップダウンの初期設定
+	 *
+ 	 */
+	function setFirstReferrer() {
+		//紹介元の情報を取得
+		[# th:each="referrer: ${referrerList}"]
+			var referrer = {id:/*[[${referrer.referrerId}]]*/, name:/*[[${referrer.referrerName}]]*/,
+				fee:/*[[${referrer.referrerFee}]]*/, agentId:/*[[${referrer.agent.agentId}]]*/};
+
+			referrerAll.push(referrer);
+		[/]
+
+	}
+
+	/**
+	 * 紹介元のドロップダウンを設定
+	 *
+	 */
+	function setReferrer() {
+		//紹介元の選択値
+		var selectedAgentId = document.getElementById("agentId").value;
+		//紹介元のドロップダウン
+		var referrer = document.getElementById("referrer");
+		//ドロップダウンの設定値
+		var referrerList = [];
+
+		//採用エージェントに紐づく紹介元をドロップダウンの設定値に追加
+		if (selectedAgentId == 0) {
+			var referrerDefault = {id:0, name:"", fee:0, agentId:0};
+			referrerList.push(referrerDefault);
+		} else {
+			for (var i = 0; i < referrerAll.length; i++) {
+				if (referrerAll[i].agentId == selectedAgentId) {
+					referrerList.push(referrerAll[i]);
+				}
+			}
+		}
+
+		//紹介元のドロップダウンを初期化
+		referrer.textContent = null;
+
+		//紹介元のドロップダウンに値を設定
+		for (var i = 0; i < referrerList.length; i++) {
+			var op = document.createElement("option");
+			op.value = referrerList[i].id;
+			op.text = referrerList[i].name;
+			referrer.appendChild(op);
+		}
+	}
+
+	/*
+
+	7/17 修正　湯澤
+
+	*/
+
+	//選考ステータス詳細（全件）
+	var slcStatusDtlAll = [];
+
+	/**
+	 * ロード時、選考ステータス詳細検索のドロップダウンの初期設定
+	 */
+	 function setFirstSlcStatusDtl() {
+		//選考ステータス詳細の情報を取得
+		[# th:each="slcStatusDtl: ${slcStatusDtlList}"]
+			var slcStatusDtl = {id:/*[[${slcStatusDtl.slcStatusDtlId}]]*/, name:/*[[${slcStatusDtl.slcStatusDtlName}]]*/,
+				flag:/*[[${slcStatusDtl.slcStatusFlag}]]*/};
+
+			slcStatusDtlAll.push(slcStatusDtl);
+		[/]
+
+		//選考ステータス詳細検索のドロップダウンを設定
+		setSlcStatusDtl() ;
+
+		//選考ステータス詳細検索のドロップダウン
+		var slcStatusDtl = document.getElementById("slcStatusDtl");
+		//ドロップダウンを保持された検索条件と同じ値を選択
+		for (var i = 0; i < slcStatusDtl.length; i++) {
+			if (slcStatusDtl[i].value == /*[[${multipleUpdateForm.slcStatusDtlId}]]*/) {
+				slcStatusDtl[i].selected = true;
+			}
+		}
+	}
+
+	/**
+	 * 選考ステータス詳細検索のドロップダウンを設定
+	 *
+	 */
+	 function setSlcStatusDtl() {
+		//選考ステータス検索の選択値
+		var selectedSlcStatus = document.getElementById("slcStatus").value;
+		//選考ステータス詳細検索のドロップダウン
+		var slcStatusDtl = document.getElementById("slcStatusDtl");
+		//ドロップダウンの設定値（共通項目設定済）
+		var slcStatusDtlList = [{id:0, name:"一覧"},{id:-1, name:"要対応"}];	//7/16 修正　湯澤
+
+
+		if (selectedSlcStatus == 0) {
+		//選考ステータス検索の選択値が「一覧」の場合、全ての選考ステータス詳細を追加
+			for (var i = 0; i < slcStatusDtlAll.length; i++) {
+				slcStatusDtlList.push(slcStatusDtlAll[i]);
+			}
+		} else if (selectedSlcStatus >=2 && selectedSlcStatus <= 5) {
+			//選考ステータス検索の選択値が「書類選考」～「最終面接」の場合
+			for (var i = 0; i < slcStatusDtlAll.length; i++) {
+				if (slcStatusDtlAll[i].flag >= 1 && slcStatusDtlAll[i].flag <= 3) {
+					slcStatusDtlList.push(slcStatusDtlAll[i]);
+				}
+			}
+		} else if (selectedSlcStatus == 6) {
+			//選考ステータス検索の選択値が「内定」の場合
+			for (var i = 0; i < slcStatusDtlAll.length; i++) {
+				if (slcStatusDtlAll[i].flag == 4) {
+					slcStatusDtlList.push(slcStatusDtlAll[i]);
+				}
+			}
+			for (var i = 0; i < slcStatusDtlAll.length; i++) {
+				if (slcStatusDtlAll[i].flag == 2) {
+					slcStatusDtlList.push(slcStatusDtlAll[i]);
+				}
+			}
+		} else if (selectedSlcStatus == 7) {
+			//選考ステータス検索の選択値が「入社手続き」の場合
+			for (var i = 0; i < slcStatusDtlAll.length; i++) {
+				if (slcStatusDtlAll[i].flag == 3 || slcStatusDtlAll[i].flag == 5) {
+					slcStatusDtlList.push(slcStatusDtlAll[i]);
+				}
+			}
+
+		}
+
+		//選考ステータス詳細検索のドロップダウンを初期化
+		 slcStatusDtl.textContent = null;
+
+		//選考ステータス詳細検索のドロップダウンに値を設定
+		 for (var i = 0; i < slcStatusDtlList.length; i++) {
+			var op = document.createElement("option");
+			op.value = slcStatusDtlList[i].id;
+			op.text = slcStatusDtlList[i].name;
+			slcStatusDtl.appendChild(op);
+		}
+	}
+
+	/**
+	 * スクロールバーの除去
+	 *
+	*/
+
+	function removeScrollbar() {
+		//表示される候補者が10人以下の場合、スクロールバーを除去
+		[# th:if="${#lists.size(candidates)} <= 10"]
+			document.getElementById("candidates_tbody").classList.remove("scrollbar");
+		[/]
+	}
+
+
+</script>
+</head>
+<body onload="setFirstReferrer(); window.opener.location.reload();loadUpdateInput()">
+	<header>
+		<img th:src="@{/images/TCLogo.png}">
+	</header>
+
+	<h2>一括管理画面 </h2>
+
+	<table>
+		<thead>
+		<tr>
+			<th class="candidate_id">ID</th>
+			<th class="candidate_name">氏名</th>
+			<th class="gender">性別</th>
+			<th class="edu_back">学歴</th>
+			<th class="agent">採用Agent</th>
+			<th class="referrer">紹介元</th>
+			<th class="slc_status_title" colspan="2">選考ステータス</th>
+			<th class="slc_date">選考日程</th>
+		</tr>
+		</thead>
+		<tbody id="candidates_tbody" class="scrollbar">
+		<tr th:each="candidate: ${candidates}" th:object="${candidate}">
+			<td class="candidate_id" th:text="*{candidateId}"></td>
+			<td class="candidate_name" th:text="*{candidateName}" ></td>
+			<td class="gender" th:text="*{gender == 1} ? 男性 : 女性"></td>
+			<td class="edu_back" th:text="*{eduBack}"></td>
+			<td class="agent" th:text="*{agentName}"></td>
+			<td class="referrer" th:text="*{referrerName}"></td>
+			<td class="slc_status" th:text="*{slcStatusName}"></td>
+			<td class="slc_status_dtl" th:text="*{slcStatusDtlName}"></td>
+			<td class="slc_date"><div th:if="*{slcStatusDtlId == 2}" th:text="*{slcDate}"></div></td>
+		</tr>
+		</tbody>
+	</table>
+
+	<form th:action="@{/recruit/candidates/multiple}" th:method="post" th:object="${multipleUpdateForm}">
+		<div>
+			<label>性別:</label>
+			<input type="radio" name="gender" value="1" th:field="*{gender}"/>男性
+			<input type="radio" name="gender" value="2" th:field="*{gender}"/>女性
+		</div>
+		<div>
+			<label>学歴:</label>
+			<input type="text" th:field="*{eduBack}" maxlength="20" />  <!-- 7/20 入力制限　湯澤 -->
+		</div>
+		<div>
+			<label>選考ステータス:</label>
+			<select name="slcStatusId" id="slcStatus" th:field="*{slcStatusId}" onchange="setSlcStatusDtl()">
+				<option value="0">一覧</option>
+				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
+			</select>
+			</div>
+		<div>
+			<label>選考ステータス詳細:</label>
+			<select name="slcStatusDtlId" id="slcStatusDtl" th:field="*{slcStatusDtlId}">
+			<!--
+				<option value="0"></option>
+				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
+			-->
+			</select>
+		</div>
+
+		<div>
+			<label>採用エージェント:</label>
+			<select id="agentId" name="agentId" onchange="setReferrer()">
+				<option value="0"></option>
+				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
+			</select>
+		</div>
+		<div>
+			<label>紹介元:</label>
+			<select id="referrer" name="referrerId">
+				<option value="0"></option>
+				<!--  <option th:each="referrer: ${referrerList}" th:value="${referrer.referrerId}" th:text="${referrer.referrerName}"> -->
+			</select>
+		</div>
+		<div>
+			<label>選考日程</label>
+			<input type="datetime-local" name="*{slcDateString}" />
+		</div>
+		<input th:each="candidate: ${candidates}" type="hidden" name="candidateId" th:value="${candidate.candidateId}">
+		<input type="submit" value="更新"/>
+	</form>
+	<form th:action="@{/recruit/candidates/multiple/delete}" th:method="post">
+		<input th:each="candidate: ${candidates}" type="hidden" name="candidateId" th:value="${candidate.candidateId}">
+		<input type="submit" value="削除"/>
+	</form>
+</body>
+</html>

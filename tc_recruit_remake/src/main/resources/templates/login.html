@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<link th:href="@{/css/login.css}" rel="stylesheet"></link>
+<link th:href="@{/css/error.css}" rel="stylesheet"></link>
+<title>Login</title>
+</head>
+
+<body>
+	<header>
+		<img th:src="@{/images/TCLogo.png}">
+		<p>Recruit System</p>
+	</header>
+	<div class="contents">
+		<form th:action="@{/login}" method="post">
+			<div th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']} != null"
+				class="danger_box">
+				<p th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"
+					class="ertxt"></p>
+			</div>
+			<div th:if="${param.timeout}" id="information"
+				class="alert alert-info alert-dismissible">
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="閉じる">
+					×<span aria-hidden="true"></span>
+				</button>
+				タイムアウトしました。
+			</div>
+
+			<div class="txt">
+
+				<!-- 課題96 ログイン　ユーザー名入力制限　7/15 湯澤 -->
+				<form method="get" action="user_information">
+
+					<!-- 課題94 ログイン　ユーザー名入力制限　7/15 湯澤 -->
+					<input type="text" name="username" placeholder="ID"
+						pattern="(TC-)[0-9]{4}" /> <br /> <input type="password"
+						name="password" placeholder="password" /> <br />
+			</div>
+
+			<div class="btn">
+				<input type="submit" value="Login" />
+			</div>
+			</form>
+		</form>
+
+	</div>
+	<!-- 課題96 パスワード設定画面リンク削除　7/15 湯澤 -->
+</body>
+</html>

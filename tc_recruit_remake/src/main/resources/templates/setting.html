@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>MasterMaintenance</title>
+</head>
+<body>
+	<div th:replace="header :: header_fragment" class="header"></div>
+	<h2>画面設定</h2>
+	<label>ダッシュボード画面</label>
+	<table>
+		<tr>
+			<td>ステータス名</td>
+			<td>
+				<form th:action="@{/setting/message_status}" th:method="get">
+					<button type="submit" name="aaa" value="aaa">変更</button>
+				</form>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<label>候補者一覧画面</label>
+	<table>
+		<tr>
+			<td>表示項目</td>
+			<td>
+				<form th:action="@{/setting/message_status}" th:method="get">
+					<button type="submit" name="aaa" value="aaa" disabled>変更</button>
+				</form>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>
