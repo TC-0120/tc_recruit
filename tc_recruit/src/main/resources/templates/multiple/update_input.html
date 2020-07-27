@@ -14,8 +14,7 @@
 	thead, tbody {
   		display: block;
 	}
-	tbody {
-  		overflow-x: hidden;
+	.scrollbar {
   		overflow-y: scroll;
  		height: 100px;
 	}
@@ -36,13 +35,10 @@
 		width: 200px;
 	}
 	.agent {
-		width: 80px;
+		width: 120px;		/* 7/21 エージェントの枠幅拡張　湯澤 */
 	}
 	.referrer {
 		width: 80px;
-	}
-	.slc_status_title {
-		width: 164px;
 	}
 	.slc_status {
 		width: 80px;
@@ -153,7 +149,7 @@
 		//選考ステータス詳細検索のドロップダウン
 		var slcStatusDtl = document.getElementById("slcStatusDtl");
 		//ドロップダウンの設定値（共通項目設定済）
-		var slcStatusDtlList = [{id:0, name:"一覧"},{id:-1, name:"要対応"}];	//7/16 修正　湯澤
+		var slcStatusDtlList = [{id:0, name:"---"},{id:-1, name:"要対応"}];		//7/21 name部分修正　湯澤
 
 
 		if (selectedSlcStatus == 0) {
@@ -204,7 +200,6 @@
 
 	/**
 	 * スクロールバーの除去
-	 *
 	*/
 
 	function removeScrollbar() {
@@ -217,7 +212,7 @@
 
 </script>
 </head>
-<body onload="setFirstReferrer(); window.opener.location.reload();loadUpdateInput()">
+<body onload="setFirstReferrer(); window.opener.location.reload(); loadUpdateInput()">
 	<header>
 		<img th:src="@{/images/TCLogo.png}">
 	</header>
@@ -231,9 +226,10 @@
 			<th class="candidate_name">氏名</th>
 			<th class="gender">性別</th>
 			<th class="edu_back">学歴</th>
-			<th class="agent">採用Agent</th>
+			<th class="agent">エージェント</th>
 			<th class="referrer">紹介元</th>
-			<th class="slc_status_title" colspan="2">選考ステータス</th>
+			<th class="slc_status">ステータス</th>		<!-- 7/21　枠追加　湯澤 -->
+			<th class="slc_status_dtl">詳細</th>
 			<th class="slc_date">選考日程</th>
 		</tr>
 		</thead>
@@ -252,7 +248,7 @@
 		</tbody>
 	</table>
 
-	<form th:action="@{/recruit/candidates/multiple}" th:method="post" th:object="${multipleUpdateForm}">
+	<form th:action="@{/recruit/candidates/multiple}" th:method="post" th:object="${multipleUpdateForm}" style="margin-top: 1%;">
 		<div>
 			<label>性別:</label>
 			<input type="radio" name="gender" value="1" th:field="*{gender}"/>男性
@@ -265,16 +261,16 @@
 		<div>
 			<label>選考ステータス:</label>
 			<select name="slcStatusId" id="slcStatus" th:field="*{slcStatusId}" onchange="setSlcStatusDtl()">
-				<option value="0">一覧</option>
+				<option value="0">---</option>
 				<option th:each="slcStatus: ${slcStatusList}" th:value="${slcStatus.slcStatusId}" th:text="${slcStatus.slcStatusName}">
 			</select>
 			</div>
 		<div>
 			<label>選考ステータス詳細:</label>
 			<select name="slcStatusDtlId" id="slcStatusDtl" th:field="*{slcStatusDtlId}">
-			<!--
-				<option value="0"></option>
-				<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
+
+				<option value="0">---</option>
+			<!--	<option th:each="slcStatusDtl: ${slcStatusDtlList}" th:value="${slcStatusDtl.slcStatusDtlId}" th:text="${slcStatusDtl.slcStatusDtlName}">
 			-->
 			</select>
 		</div>
@@ -282,14 +278,14 @@
 		<div>
 			<label>採用エージェント:</label>
 			<select id="agentId" name="agentId" onchange="setReferrer()">
-				<option value="0"></option>
+				<option value="0">---</option>
 				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
 			</select>
 		</div>
 		<div>
 			<label>紹介元:</label>
 			<select id="referrer" name="referrerId">
-				<option value="0"></option>
+				<option value="0">---</option>
 				<!--  <option th:each="referrer: ${referrerList}" th:value="${referrer.referrerId}" th:text="${referrer.referrerName}"> -->
 			</select>
 		</div>

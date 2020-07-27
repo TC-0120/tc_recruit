@@ -29,7 +29,7 @@ public class PasswordController {
 
 	@GetMapping()
 	public String getPasswordSet(Model model) {
-		return "/password_setting";
+		return "password_setting";
 	}
 
 	/**

@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <meta charset="utf-8">
-<header xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="header_fragment">
-  <a th:href="@{/dashboard}"><img th:src="@{/images/TCLogo.png}" width="70px" height="50px"></a>
-  ユーザー名：<span sec:authentication="principal.lastName"></span><span sec:authentication="principal.firstName"></span>&nbsp;&nbsp;
-  権限：<span sec:authorize="hasAuthority('ROLE_ADMIN')">管理者</span>
-  		<span sec:authorize="hasAuthority('ROLE_USER')">一般</span>&nbsp;&nbsp;
-  <a th:href="@{/user_information}">ユーザー情報確認</a>  <!-- 課題96 パスワード設定画面リンク移動　7/15 湯澤 -->
-  <a th:href="@{/logout}">ログアウト</a>
+<header xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	th:fragment="header_fragment">
+	<a th:href="@{/dashboard}"><img th:src="@{/images/TCLogo.png}"
+		width="70px" height="50px"></a> ユーザー名：<span
+		sec:authentication="principal.lastName"></span><span
+		sec:authentication="principal.firstName"></span>&nbsp;&nbsp; 権限：<span
+		sec:authorize="hasAuthority('ROLE_ADMIN')">管理者</span> <span
+		sec:authorize="hasAuthority('ROLE_USER')">一般</span>&nbsp;&nbsp;
+	<!-- 課題96 パスワード設定画面リンク移動　7/15 湯澤 -->
+	<a th:href="@{/user_information}" style="margin-left: 0.5%;">ユーザー情報確認</a>
+	<a th:href="@{/logout}" style="margin-left: 1%;">ログアウト</a>
 </header>
 </head>
 </html>

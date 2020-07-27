@@ -7,12 +7,12 @@
 <title>ユーザー情報確認</title>
 </head>
 <header>
-	<img th:src="@{/images/TCLogo.png}">
+	<a th:href="@{/dashboard}"><img th:src="@{/images/TCLogo.png}" width="70px" height="50px"></a>
 </header>
 
 <body>
 
-	<h2>ユーザー情報確認画面</h2>
+	<h3>ユーザー情報確認画面</h3>		<!-- 7/22 タイトルのサイズ変更 -->
 
 	<div>
 		<label>社員番号：</label>
@@ -32,13 +32,3 @@
 
 </body>
 </html>
-
-<!--
-user.htmlのデータがどこから来ているのか(セッションでID保持する？)
-//update_input.html
-//Formクラスおそらく作る。
-//Candidate手本
-//header手本
-
-
- -->

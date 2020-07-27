@@ -31,19 +31,20 @@
 			<div class="txt">
 
 				<!-- 課題96 ログイン　ユーザー名入力制限　7/15 湯澤 -->
-				<form method="get" action="user_information">
 
-					<!-- 課題94 ログイン　ユーザー名入力制限　7/15 湯澤 -->
-					<input type="text" name="username" placeholder="ID"
-						pattern="(TC-)[0-9]{4}" /> <br /> <input type="password"
-						name="password" placeholder="password" /> <br />
+
+				<!-- 課題94 ログイン　ユーザー名入力制限　7/15 湯澤 -->
+				<input type="text" name="username" placeholder="TC-〇〇〇〇"
+					pattern="(TC-)[0-9]{4}" maxlength="7" /> <br /> <input
+					type="password" name="password" placeholder="password"
+					maxlength="20" /> <br />
 			</div>
 
 			<div class="btn">
 				<input type="submit" value="Login" />
 			</div>
-			</form>
 		</form>
+
 
 	</div>
 	<!-- 課題96 パスワード設定画面リンク削除　7/15 湯澤 -->
