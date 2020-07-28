@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	<head>
+	<meta charset="UTF-8" />
+	<title>Insert title here</title>
+	<script type="text/javascript" th:src="@{/js/recruitmentManagement.js}" th:inline="javascript"></script>
+	<Script type="text/javascript" th:inline="javascript">
+		//エージェント(全件)
+		var agentAll = [];
+		/**
+		*単価を選択エージェントに応じて設定
+		*/
+		function showAgentFee(obj){
+			//エージェント情報を取得
+			[# th:each="agent:${agents}"]
+				var agent = {id:/*[[${agent.agentId}]]*/,name:/*[[${agent.agentName}]]*/,
+					fee:/*[[${agent.referrerFee}]]*/}
+
+				agentAll.push(agent);
+			[/]
+
+			//単価を設定
+			showFee(obj);
+		}
+
+		function showFee(obj){
+			//単価(親ノードの兄弟ノードの兄弟ノードの子ノードの兄弟ノード)
+			var fee = obj.parentNode.nextSibling.nextSibling.firstChild.nextSibling;
+
+			for(var i = 0; i < agentAll.length; i++){
+				//confirm(fee[j].textContent);
+				//変更されたIDと等しいエージェントIDの単価を設定
+				if(agentAll[i].id == obj.value){//selectedAgentId
+					fee.textContent = agentAll[i].fee + '万円';//agentAll[i].fee + '万円';
+					//兄弟ノードのValue値に単価を設定
+					fee.nextSibling.nextSibling.value = agentAll[i].fee;
+					return;
+				}
+			}
+
+			function dayElements(obj){
+				// 曜日を表す文字列の配列を作っておく
+				var WeekChars = [ "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日" ];
+				// 日付オブジェクトから曜日を得る
+				var dayObj = new date(obj.value);
+				var wDay = dayObj.getDay();
+				obj.value = WeekChars[wDay];
+				alert(WeekChars[wDay]);
+			}
+		}
+	</Script>
+	</head>
+	<body>
+		<div th:replace="header :: header_fragment" class="header"></div>
+		<form th:action="@{/mainpage}" method="post">
+			<table border="5">
+				<tr>
+					<th>
+						<input class="candidate_id_button" type="submit" onclick="sort(1)" value="エントリー元"/>
+						<span class="sort"></span>
+					</th>
+					<th>単価</th>
+					<th>
+						<input class="candidate_id_button" type="submit" value="選考状況"/>
+					</th>
+					<th>氏名</th>
+					<th>性別</th>
+					<th>最終学歴</th>
+					<th>学校備考</th>
+					<th>書類選考</th>
+					<th>結果</th>
+					<th>適性検査</th>
+					<th>適性検査成績</th>
+					<th>1次面接</th>
+					<th>結果</th>
+					<th>2次面接</th>
+					<th>結果</th>
+					<th>最終面接</th>
+					<th>結果</th>
+					<th>期限</th>
+					<th>結果</th>
+				</tr>
+				<tr th:each="candidate, st:${candidates}" th:object="${candidate}">
+					<td>
+						<input type="hidden" th:value="*{candidateId}" name="candidateId"/>
+						<input type="hidden" th:value="*{agent.agentName}" th:name="${'agent[' + st.index + '].agentName'}"/>
+						<input type="hidden" th:value="*{deleteFlag}" name="deleteFlag"/>
+						<input type="hidden" th:value="*{selectionStage.selectionStageId}"
+						th:name="${'selectionStage[' + st.index + '].selectionStageId'}"/>
+						<input type="hidden" th:value="*{insertDate}" name="insertDate"/>
+						<select id="agentId" th:name="${'agent[' + st.index + '].agentId'}" onchange="showAgentFee(this)">
+							<option th:each="agents:${agents}" th:text="${agents.agentName}" th:value="${agents.agentId}"
+							th:selected="${candidate.agent.agentId == agents.agentId}" >
+							</option>
+						</select>
+						<!--  <span th:text="*{agent.referrerFee} + '万円'" name="referrerFee"></span>-->
+					</td>
+					<td>
+						<span th:text="*{agent.referrerFee} + '万円'" name="referrerFee"></span>
+						<input type="hidden" th:value="*{agent.referrerFee}" th:name="${'agent[' + st.index + '].referrerFee'}"/>
+					</td>
+					<td >
+						<select th:name="${'slcStatus[' + st.index + '].slcStatusId'}">
+							<option th:each="status:${slcStatusList}" th:text="${status.slcStatusName}" th:value="${status.slcStatusId}"
+							th:selected="${status.slcStatusId == candidate.slcStatus.slcStatusId}">
+							</option>
+						</select>
+					</td>
+					<td>
+						<input type="text" th:value="*{candidateName}" th:name="candidateName" />
+					</td>
+					<td>
+						<select name="gender">
+							<option th:value="1" th:text="男性" th:selected="*{gender == 1}">
+							</option>
+							<option th:value="2" th:text="女性" th:selected="*{gender == 2}">
+							</option>
+						</select>
+					</td>
+					<td>
+						<input type="text" th:value="*{eduBack}" th:name="eduBack"/>
+					</td>
+					<td>
+						<input type="text" th:value="*{remarks}" th:name="remarks"/>
+					</td>
+					<td>
+						<input id="date" type="date" th:value="*{selectionStage.documentSelection}"
+						th:name="${'selectionStage[' + st.index + '].documentSelection'}" onclick="dayElements(this);"/>
+					</td>
+					<td>
+						<select th:name="${'selectionStage[' + st.index + '].documentSelectionResult'}">
+							<option th:each="slcResult:${slcResults}" th:text="${slcResult.selectionResult}" th:value="${slcResult.selectionResultId}"
+							th:selected="${slcResult.selectionResultId == candidate.selectionStage.documentSelectionResult}">
+							</option>
+						</select>
+					</td>
+					<td>
+						<select name="aptitudeFlag">
+							<option th:value="1" th:text="案内済み" th:selected="*{aptitudeFlag == 1}">
+							</option>
+							<option th:value="0" th:text="''" th:selected="*{aptitudeFlag == 0}">
+							</option>
+						</select>
+					</td>
+					<td>
+						<input type="number" th:value="*{aptitudeScore}" th:name="aptitudeScore" min="0"/>
+					</td>
+					<td>
+						<input id="date" type="date" th:value="*{selectionStage.primaryInterview}"
+						th:name="${'selectionStage[' + st.index + '].primaryInterview'}"/>
+					</td>
+					<td>
+						<select th:name="${'selectionStage[' + st.index + '].primaryInterviewResult'}">
+							<option th:each="slcResult:${slcResults}" th:text="${slcResult.selectionResult}" th:value="${slcResult.selectionResultId}"
+							th:selected="${slcResult.selectionResultId == candidate.selectionStage.primaryInterviewResult}">
+							</option>
+						</select>
+					</td>
+					<td>
+						<input id="date" type="date" th:value="*{selectionStage.secondInterview}"
+						th:name="${'selectionStage[' + st.index + '].secondInterview'}"/>
+					</td>
+					<td>
+						<select th:name="${'selectionStage[' + st.index + '].secondInterviewResult'}">
+							<option th:each="slcResult:${slcResults}" th:text="${slcResult.selectionResult}" th:value="${slcResult.selectionResultId}"
+							th:selected="${slcResult.selectionResultId == candidate.selectionStage.secondInterviewResult}">
+							</option>
+						</select>
+					</td>
+					<td>
+						<input id="date" type="date" th:value="*{selectionStage.finalInterview}"
+						th:name="${'selectionStage[' + st.index + '].finalInterview'}"/>
+					</td>
+					<td>
+						<select th:name="${'selectionStage[' + st.index + '].finalInterviewResult'}">
+							<option th:each="slcResult:${slcResults}" th:text="${slcResult.selectionResult}" th:value="${slcResult.selectionResultId}"
+							th:selected="${slcResult.selectionResultId == candidate.selectionStage.finalInterviewResult}">
+							</option>
+						</select>
+					</td>
+					<td>
+						<input id="date" type="date" th:value=*{selectionStage.unofficialOffer}
+						th:name="${'selectionStage[' + st.index + '].unofficialOffer'}"/>
+					</td>
+					<td>
+						<select th:name="${'selectionStage[' + st.index + '].unofficialOfferResult'}">
+							<option th:each="slcResult:${slcResults}" th:text="${slcResult.selectionResult}" th:value="${slcResult.selectionResultId}"
+							th:selected="${slcResult.selectionResultId == candidate.selectionStage.unofficialOfferResult}">
+							</option>
+						</select>
+					</td>
+					<!--削除フラグ
+					<td th:text="*{deleteFlag == 1} ? 削除済み : 未削除"></td>
+					-->
+				</tr>
+			</table>
+
+			<input type="submit" value="更新"/>
+		</form>
+		<form th:action="@{/mainpage/register}" method="get">
+			<input type="submit" value="新規項目追加"/>
+		</form>
+	</body>
+</html>
