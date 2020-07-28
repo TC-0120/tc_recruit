@@ -1,15 +1,44 @@
 package jp.co.tc.recruit.form;
 
 import java.io.Serializable;
+import java.util.List;
 
-import jp.co.tc.recruit.entity.Agent;
-import jp.co.tc.recruit.entity.Referrer;
-import jp.co.tc.recruit.entity.SelectionStatus;
-import jp.co.tc.recruit.entity.SelectionStatusDetail;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CandidateForm implements Serializable{
 
-	private Integer candidateId;
+	private List<Integer> candidateId;
+
+	private List<String> candidateName;
+
+	private List<String> candidateFurigana;
+
+	private List<Integer> gender;
+
+	private List<String> eduBack;
+
+	private List<SelectionStatusForm> slcStatus;
+
+	private List<SelectionStageForm> selectionStage;
+
+	private List<AgentForm> agent;
+
+	private List<String> remarks;
+
+	private List<Integer> aptitudeFlag;
+
+	private List<Integer> deleteFlag;
+
+	private List<Integer> aptitudeScore;
+
+	private List<String> insertDate;
+
+//	private
+//
+//	public static int SELECTION_STATUS_SORT;
 
 	public CandidateForm() {
 		this.candidateId = null;
@@ -18,129 +47,107 @@ public class CandidateForm implements Serializable{
 		this.gender = null;
 		this.eduBack = null;
 		this.slcStatus = null;
-		this.slcStatusDtl = null;
+		this.selectionStage = null;
 		this.agent = null;
-		this.referrer = null;
 		this.remarks = null;
 		this.aptitudeFlag = null;
+		this.deleteFlag = null;
 		this.aptitudeScore = null;
 	}
 
-	private String candidateName;
-
-	private String candidateFurigana;
-
-	private Integer gender;
-
-	private String eduBack;
-
-	private SelectionStatus slcStatus;
-
-	private SelectionStatusDetail slcStatusDtl;
-
-	private Agent agent;
-
-	private Referrer referrer;
-
-	private String remarks;
-
-	private Integer aptitudeFlag;
-
-	private Integer aptitudeScore;
-
-	public Integer getCandidateId() {
+	public List<Integer> getCandidateId() {
 		return candidateId;
 	}
 
-	public void setCandidateId(Integer candidateId) {
+	public void setCandidateId(List<Integer> candidateId) {
 		this.candidateId = candidateId;
 	}
 
-	public String getCandidateName() {
+	public List<String> getCandidateName() {
 		return candidateName;
 	}
 
-	public void setCandidateName(String candidateName) {
+	public void setCandidateName(List<String> candidateName) {
 		this.candidateName = candidateName;
 	}
 
-	public String getCandidateFurigana() {
+	public List<String> getCandidateFurigana() {
 		return candidateFurigana;
 	}
 
-	public void setCandidateFurigana(String candidateFurigana) {
+	public void setCandidateFurigana(List<String> candidateFurigana) {
 		this.candidateFurigana = candidateFurigana;
 	}
 
-	public Integer getGender() {
+	public List<Integer> getGender() {
 		return gender;
 	}
 
-	public void setGender(Integer gender) {
+	public void setGender(List<Integer> gender) {
 		this.gender = gender;
 	}
 
-	public String getEduBack() {
+	public List<String> getEduBack() {
 		return eduBack;
 	}
 
-	public void setEduBack(String eduBack) {
+	public void setEduBack(List<String> eduBack) {
 		this.eduBack = eduBack;
 	}
 
-	public SelectionStatus getSlcStatus() {
+	public List<SelectionStatusForm> getSlcStatus() {
 		return slcStatus;
 	}
 
-	public void setSlcStatus(SelectionStatus slcStatus) {
+	public void setSlcStatus(List<SelectionStatusForm> slcStatus) {
 		this.slcStatus = slcStatus;
 	}
 
-	public SelectionStatusDetail getSlcStatusDtl() {
-		return slcStatusDtl;
+	public List<SelectionStageForm> getSelectionStage() {
+		return selectionStage;
 	}
 
-	public void setSlcStatusDtl(SelectionStatusDetail slcStatusDtl) {
-		this.slcStatusDtl = slcStatusDtl;
+	public void setSelectionStage(List<SelectionStageForm> selectionStage) {
+		this.selectionStage = selectionStage;
 	}
 
-	public Agent getAgent() {
+	public List<AgentForm> getAgent() {
 		return agent;
 	}
 
-	public void setAgent(Agent agent) {
+	public void setAgent(List<AgentForm> agent) {
 		this.agent = agent;
 	}
 
-	public Referrer getReferrer() {
-		return referrer;
-	}
-
-	public void setReferrer(Referrer referrer) {
-		this.referrer = referrer;
-	}
-
-	public String getRemarks() {
+	public List<String> getRemarks() {
 		return remarks;
 	}
 
-	public void setRemarks(String remarks) {
+	public void setRemarks(List<String> remarks) {
 		this.remarks = remarks;
 	}
 
-	public Integer getAptitudeFlag() {
+	public List<Integer> getAptitudeFlag() {
 		return aptitudeFlag;
 	}
 
-	public void setAptitudeFlag(Integer aptitudeFlag) {
+	public void setAptitudeFlag(List<Integer> aptitudeFlag) {
 		this.aptitudeFlag = aptitudeFlag;
 	}
 
-	public Integer getAptitudeScore() {
+	public List<Integer> getDeleteFlag() {
+		return deleteFlag;
+	}
+
+	public void setDeleteFlag(List<Integer> deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	public List<Integer> getAptitudeScore() {
 		return aptitudeScore;
 	}
 
-	public void setAptitudeScore(Integer aptitudeScore) {
+	public void setAptitudeScore(List<Integer> aptitudeScore) {
 		this.aptitudeScore = aptitudeScore;
 	}
 

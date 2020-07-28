@@ -15,6 +15,6 @@ import jp.co.tc.recruit.entity.Candidate;
 public interface CandidateRepository extends JpaRepository<Candidate, Integer> {
 
 	public Candidate findByCandidateId(Integer id);
-	public List<Candidate> findAll();
+	public List<Candidate> findByOrderByCandidateId();
 
 }

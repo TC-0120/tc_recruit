@@ -1,7 +1,9 @@
 package jp.co.tc.recruit.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,8 +29,8 @@ public class Candidate implements Serializable {
 
 	@Id
 	@Column(name="candidate_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "candidate_sequence")
-	@SequenceGenerator(name = "candidate_sequence", sequenceName = "candidate_sequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "candidate_gen")
+	@SequenceGenerator(name = "candidate_gen", sequenceName = "candidate_sequence", allocationSize = 1)
 	private Integer candidateId;
 
 	@Column(name="candidate_name")
@@ -43,21 +45,21 @@ public class Candidate implements Serializable {
 	@Column(name="educational_background")
 	private String eduBack;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="selection_status_id")
 	private SelectionStatus slcStatus;
 
-	@ManyToOne
-	@JoinColumn(name="selection_status_detail_id")
-	private SelectionStatusDetail slcStatusDtl;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "selection_stage_id" )
+	private SelectionStage selectionStage;
 
 	@ManyToOne
 	@JoinColumn(name="agent_id")
 	private Agent agent;
 
-	@ManyToOne
-	@JoinColumn(name="referrer_id")
-	private Referrer referrer;
+//	@ManyToOne
+//	@JoinColumn(name="referrer_id")
+//	private Referrer referrer;
 
 	@Column(name="remarks")
 	private String remarks;
@@ -65,7 +67,13 @@ public class Candidate implements Serializable {
 	@Column(name="aptitude_flag")
 	private Integer aptitudeFlag;
 
+	@Column(name="delete_flag")
+	private Integer deleteFlag;
+
 	@Column(name="aptitude_score")
 	private Integer aptitudeScore;
+
+	@Column(name="insert_date")
+	private Date insertDate;
 
 }

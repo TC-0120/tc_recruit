@@ -1,6 +1,5 @@
 package jp.co.tc.recruit.service;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +10,15 @@ import jp.co.tc.recruit.repository.SelectionStatusRepository;
 
 /**
  * 選考ステータスのサービスクラス
- *
- * @author TC-0115
+ * @author TC-0120
  *
  */
 @Service
 public class SelectionStatusService {
-
 	@Autowired
-	SelectionStatusRepository slcStatusRepo;
+	SelectionStatusRepository selectionStatusRepository;
 
-
-	public List<SelectionStatus> findAll() {
-		return slcStatusRepo.findAllByOrderBySlcStatusId();
+	public List<SelectionStatus> findAll(){
+		return selectionStatusRepository.findAllByOrderBySlcStatusId();
 	}
-
-
 }

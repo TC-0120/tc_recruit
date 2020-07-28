@@ -60,6 +60,9 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private Integer status;
 
+	@Column(nullable = false)
+	private Integer deleteFlag;
+
 	@Override
 	//エンティティを権限リストに追加
 	public Collection<? extends GrantedAuthority> getAuthorities() {

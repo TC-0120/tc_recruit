@@ -8,7 +8,7 @@ public class LoginController {
 
 	@RequestMapping(value = "/")
 	public String index() {
-		return "redirect:/dashboard";
+		return "redirect:/mainpage";
 	}
 
 	@RequestMapping(value = "/login")
@@ -16,8 +16,8 @@ public class LoginController {
 		return "login";
 	}
 
-	@RequestMapping("/dashboard")
+	@RequestMapping("/mainpage")
 	public String top() {
-		return "/dashboard";
+		return "mainpage";
 	}
 }

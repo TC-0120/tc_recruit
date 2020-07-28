@@ -38,8 +38,8 @@ public class DateFormatter {
 			return null;
 		} else {
 			try {
-				//yyyy-MM-ddとHH:mmの間にTが挟まれて、画面からの入力値が送られてくる
-				return new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(stringDate.replace("T", " "));
+				//yyyy-MM-ddとHH:mmの間にTが挟まれて、画面からの入力値が送られてくる.parse(stringDate.replace("T", " ")
+				return new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
 				return null;
