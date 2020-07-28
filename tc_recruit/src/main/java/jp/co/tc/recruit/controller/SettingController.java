@@ -47,7 +47,7 @@ public class SettingController {
 	 */
 	@GetMapping()
 	public String getMaintenance(Model model) {
-		return "/setting";
+		return "setting";
 	}
 
 	/**
