@@ -1,4 +1,4 @@
-package jp.co.tc.recruit.entity;
+package jp.co.tc.recruit.entity.view;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
