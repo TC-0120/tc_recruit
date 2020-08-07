@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -53,7 +57,11 @@ public class DashBoardController {
 	 */
 	@GetMapping("/dashboard")
 	public String getDashBoard(Model model) {
-		/* 選考中候補者集計 */
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+   	 	WebAuthenticationDetails details = (WebAuthenticationDetails) auth.getDetails();
+   	 	UserDetails principal = (UserDetails) auth.getPrincipal();
+		System.out.println("セキュリティ情報" + principal.getPassword());
+   	 	/* 選考中候補者集計 */
 		Integer ttlSlcAllCount = 0;
 		TotalSelectionView ttlSlc;
 		List<TotalSelectionView> ttlSlcList = new ArrayList<TotalSelectionView>();
