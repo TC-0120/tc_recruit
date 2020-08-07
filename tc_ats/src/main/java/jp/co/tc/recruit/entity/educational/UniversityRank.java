@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import jp.co.tc.recruit.entity.AbstractEntity;
+import jp.co.tc.recruit.entity.Candidate;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,6 +47,9 @@ public class UniversityRank extends AbstractEntity implements Serializable{
 
 	@OneToMany(mappedBy="universityRank", cascade=CascadeType.ALL)
 	private List<University> university;
+
+	@OneToMany(mappedBy="universityRank", cascade=CascadeType.ALL)
+	private List<Candidate> candidate;
 
 	/**
 	 * 登録前処理

@@ -9,9 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import jp.co.tc.recruit.entity.educational.EducationalBackground;
+import jp.co.tc.recruit.entity.educational.UniversityRank;
 import jp.co.tc.recruit.entity.selection.SelectionStatus;
 import jp.co.tc.recruit.entity.selection.SelectionStatusDetail;
 import lombok.Data;
@@ -25,7 +28,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="XXTC_CANDIDATE")
-public class Candidate implements Serializable {
+public class Candidate extends AbstractEntity implements Serializable  {
 
 	@Id
 	@Column(name="candidate_id")
@@ -45,8 +48,16 @@ public class Candidate implements Serializable {
 	@Column(name="educational_background")
 	private String eduBack;
 
-	@Column(name="university_rank_id")
-	private String universityRankId;
+	@ManyToOne
+	@JoinColumn(name = "university_rank_id")
+	private UniversityRank universityRank;
+
+	@ManyToOne
+	@JoinColumn(name="educational_background_id")
+	private EducationalBackground educationalBackground;
+
+	@Column(name="candidate_email_address")
+	private String candidateEmailAddress;
 
 	@ManyToOne
 	@JoinColumn(name="selection_status_id")
@@ -60,17 +71,33 @@ public class Candidate implements Serializable {
 	@JoinColumn(name="agent_id")
 	private Agent agent;
 
+//	@ManyToOne
+//	@JoinColumn(name="referrer_id")
+//	private Referrer referrer;
+
 	@ManyToOne
-	@JoinColumn(name="referrer_id")
-	private Referrer referrer;
+	@JoinColumn(name="aptitude_id")
+	private Aptitude aptitude;
+
+	@Column(name="aptitude_score")
+	private Integer aptitudeScore;
+
+	@Column(name="statistics_info_id")
+	private Integer statisticsInfoId;
 
 	@Column(name="remarks")
 	private String remarks;
 
-	@Column(name="aptitude_flag")
-	private Integer aptitudeFlag;
+	@Column(name = "delete_flag")
+	private Integer deleteFlag;
 
-	@Column(name="aptitude_score")
-	private Integer aptitudeScore;
+	/**
+	 * 登録前処理
+	 */
+	@PrePersist
+	public void prePersistflag() {
+		//削除フラグを指定
+		deleteFlag = 0;
+	}
 
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jp.co.tc.recruit.entity.MessageStatus;
+import jp.co.tc.recruit.entity.Dashboard;
 import jp.co.tc.recruit.form.MessageStatusForm;
 import jp.co.tc.recruit.repository.MessageStatusRepository;
 import jp.co.tc.recruit.service.MessageStatusService;
@@ -59,7 +59,7 @@ public class SettingController {
 	 */
 	@GetMapping("message_status")
 	public String getDashboardMaintenance(@ModelAttribute("MessageStatus") MessageStatusForm msgSttForm, Model model) {
-		List<MessageStatus> msgSttList;
+		List<Dashboard> msgSttList;
 		/* ダッシュボードでの表示名、選考ステータス、選考ステータス詳細情報をソート番号昇順に取得 */
 		msgSttList = msgSttSvc.findAllByOrderBySort();
 		/* ダッシュボードでの表示名、選考ステータス、選考ステータス詳細情報をmodelに格納 */

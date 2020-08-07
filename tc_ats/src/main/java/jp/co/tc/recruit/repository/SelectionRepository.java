@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import jp.co.tc.recruit.entity.Selection;
-import jp.co.tc.recruit.entity.Selection.SelectionPK;
+import jp.co.tc.recruit.entity.selection.Selection;
+import jp.co.tc.recruit.entity.selection.Selection.SelectionPK;
 
 /**
  * 選考情報のリポジトリ

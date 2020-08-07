@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import jp.co.tc.recruit.constant.SlcStatusConstant;
 import jp.co.tc.recruit.constant.SlcStatusDtlConstant;
-import jp.co.tc.recruit.entity.CandidatesView;
+import jp.co.tc.recruit.entity.view.CandidatesView;
 import jp.co.tc.recruit.form.ConditionsForm;
 import jp.co.tc.recruit.repository.CandidatesViewRepository;
 import jp.co.tc.recruit.repository.CandidatesViewRepositoryCustom;

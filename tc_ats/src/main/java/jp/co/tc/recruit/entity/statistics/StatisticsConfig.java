@@ -1,12 +1,15 @@
 package jp.co.tc.recruit.entity.statistics;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -37,6 +40,9 @@ public class StatisticsConfig extends AbstractEntity implements Serializable {
 
 	@Column(name = "delete_flag")
 	private Integer deleteFlag;
+
+	@OneToMany(mappedBy="statisticsConfig", cascade=CascadeType.ALL)
+	private List<Statistics> statistics;
 
 	/**
 	 * 登録前処理

@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import jp.co.tc.recruit.entity.AbstractEntity;
 import jp.co.tc.recruit.entity.Candidate;
+import jp.co.tc.recruit.entity.Dashboard;
 import lombok.Data;
 
 /**
@@ -49,6 +50,9 @@ public class SelectionStatus extends AbstractEntity implements Serializable{
 
 	@OneToMany(mappedBy="slcStatus", cascade=CascadeType.ALL)
 	private List<SelectionReferrer> selectionReferrer;
+
+	@OneToMany(mappedBy="slcStatus", cascade=CascadeType.ALL)
+	private List<Dashboard> dashboard;
 
 	/**
 	 * 登録前処理

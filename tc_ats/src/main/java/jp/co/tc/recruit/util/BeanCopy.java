@@ -9,14 +9,14 @@ public class BeanCopy {
 
 		Candidate candidate = new Candidate();
 		candidate.setAgent(candidateForm.getAgent());
-		candidate.setAptitudeFlag(candidateForm.getAptitudeFlag());
+		//candidate.setAptitudeFlag(candidateForm.getAptitudeFlag());
 		candidate.setAptitudeScore(candidateForm.getAptitudeScore());
 		candidate.setCandidateFurigana(candidateForm.getCandidateFurigana());
 		candidate.setCandidateId(candidateForm.getCandidateId());
 		candidate.setCandidateName(candidateForm.getCandidateName());
 		candidate.setEduBack(candidateForm.getEduBack());
 		candidate.setGender(candidateForm.getGender());
-		candidate.setReferrer(candidateForm.getReferrer());
+		//candidate.setReferrer(candidateForm.getReferrer());
 		candidate.setRemarks(candidateForm.getRemarks());
 		candidate.setSlcStatus(candidateForm.getSlcStatus());
 		candidate.setSlcStatusDtl(candidateForm.getSlcStatusDtl());

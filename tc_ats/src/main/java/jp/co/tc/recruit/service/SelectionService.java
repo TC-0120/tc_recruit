@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jp.co.tc.recruit.entity.Candidate;
-import jp.co.tc.recruit.entity.Selection;
-import jp.co.tc.recruit.entity.Selection.SelectionPK;
+import jp.co.tc.recruit.entity.selection.Selection;
+import jp.co.tc.recruit.entity.selection.Selection.SelectionPK;
 import jp.co.tc.recruit.repository.CandidateRepository;
 import jp.co.tc.recruit.repository.SelectionRepository;
 import jp.co.tc.recruit.util.DateFormatter;

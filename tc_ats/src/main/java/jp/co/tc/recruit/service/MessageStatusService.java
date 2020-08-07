@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jp.co.tc.recruit.entity.MessageStatus;
+import jp.co.tc.recruit.entity.Dashboard;
 import jp.co.tc.recruit.form.MessageStatusForm;
 import jp.co.tc.recruit.repository.MessageStatusRepository;
 
@@ -14,13 +14,13 @@ public class MessageStatusService {
 
 	@Autowired
 	MessageStatusRepository msgSttRepo;
-	MessageStatus msgStt = new MessageStatus();
+	Dashboard msgStt = new Dashboard();
 
-	public MessageStatus findByStatusMessageId(Integer statusMessageId) {
+	public Dashboard findByStatusMessageId(Integer statusMessageId) {
 		return msgSttRepo.findByStatusMessageId(statusMessageId);
 	}
 
-	public List<MessageStatus> findAllByOrderBySort() {
+	public List<Dashboard> findAllByOrderBySort() {
 		return msgSttRepo.findAllByOrderBySort();
 	}
 
@@ -40,7 +40,7 @@ public class MessageStatusService {
 			String sttMsgByForm = (msgSttFormList.getStatusMessage().get(i)).toString();
 
 			// DB情報とフォーム情報が異なる場合、DB情報書き換え実行
-			MessageStatus msgStt = msgSttRepo.findByStatusMessageId(i + 1);
+			Dashboard msgStt = msgSttRepo.findByStatusMessageId(i + 1);
 			if (sttMsgByForm != sttMsgByDB) {
 				msgStt.setStatusMessage(sttMsgByForm);
 				msgSttRepo.save(msgStt);

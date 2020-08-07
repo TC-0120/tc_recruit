@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import jp.co.tc.recruit.entity.SelectionStatus;
+import jp.co.tc.recruit.entity.selection.SelectionStatus;
 
 /**
  * 選考ステータスのリポジトリ

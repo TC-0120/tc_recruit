@@ -2,7 +2,7 @@ package jp.co.tc.recruit.repository;
 
 import java.util.List;
 
-import jp.co.tc.recruit.entity.CandidatesView;
+import jp.co.tc.recruit.entity.view.CandidatesView;
 import jp.co.tc.recruit.form.ConditionsForm;
 
 /**

@@ -9,19 +9,15 @@ import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import jp.co.tc.recruit.entity.Candidate;
-import jp.co.tc.recruit.entity.LatestPlanView;
-import jp.co.tc.recruit.entity.TotalCheckView;
-import jp.co.tc.recruit.entity.TotalSelectionView;
+import jp.co.tc.recruit.entity.view.LatestPlanView;
+import jp.co.tc.recruit.entity.view.TotalCheckView;
+import jp.co.tc.recruit.entity.view.TotalSelectionView;
 import jp.co.tc.recruit.service.CandidateService;
 import jp.co.tc.recruit.service.LatestPlanService;
 import jp.co.tc.recruit.service.MessageStatusService;
@@ -57,10 +53,6 @@ public class DashBoardController {
 	 */
 	@GetMapping("/dashboard")
 	public String getDashBoard(Model model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-   	 	WebAuthenticationDetails details = (WebAuthenticationDetails) auth.getDetails();
-   	 	UserDetails principal = (UserDetails) auth.getPrincipal();
-		System.out.println("セキュリティ情報" + principal.getPassword());
    	 	/* 選考中候補者集計 */
 		Integer ttlSlcAllCount = 0;
 		TotalSelectionView ttlSlc;
@@ -83,9 +75,9 @@ public class DashBoardController {
 			if(cddSvc.findById(cddId) == null) {
 				continue;
 			}
-			if (cddSvc.findById(cddId).getAptitudeFlag() == 0) {
-				aptFlgCount++;
-			}
+			//			if (cddSvc.findById(cddId).getAptitudeFlag() == 0) {
+			//				aptFlgCount++;
+			//			}
 		}
 
 		/* 選考中候補者データ(ALL) */

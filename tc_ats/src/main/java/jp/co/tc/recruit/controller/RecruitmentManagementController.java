@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.co.tc.recruit.entity.Candidate;
-import jp.co.tc.recruit.entity.Selection;
-import jp.co.tc.recruit.entity.Selection.SelectionPK;
+import jp.co.tc.recruit.entity.selection.Selection;
+import jp.co.tc.recruit.entity.selection.Selection.SelectionPK;
 import jp.co.tc.recruit.form.CandidateForm;
 import jp.co.tc.recruit.form.ConditionsForm;
 import jp.co.tc.recruit.form.MultipleUpdateForm;

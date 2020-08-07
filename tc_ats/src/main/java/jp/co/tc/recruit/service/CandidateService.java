@@ -203,9 +203,9 @@ public class CandidateService {
 				candidate.setAgent(agentRepo.findByAgentId(muForm.getAgentId()));
 			}
 
-			if (muForm.getReferrerId() != 0) {
-				candidate.setReferrer(referrerRepo.findByReferrerId(muForm.getReferrerId()));
-			}
+			//			if (muForm.getReferrerId() != 0) {
+			//				candidate.setReferrer(referrerRepo.findByReferrerId(muForm.getReferrerId()));
+			//			}
 
 			cList.add(candidate);
 		}

@@ -2,7 +2,6 @@ package jp.co.tc.recruit.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,7 +11,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -48,9 +46,6 @@ public class User extends AbstractEntity implements UserDetails {
 	@NotNull
 	private String username;
 
-	@Column(name = "email_address")
-	private String emailAddress;
-
 	@Column(name = "first_name", nullable = false, unique = true)
 	private String firstName;
 
@@ -69,20 +64,7 @@ public class User extends AbstractEntity implements UserDetails {
 	@Column(nullable = false)
 	private Integer status;
 
-	@Column(name = "login_date")
-	private Date loginDate;
 
-	@Column(name = "delete_flag")
-	private Integer deleteFlag;
-
-	/**
-	 * 登録前処理
-	 */
-	@PrePersist
-	public void prePersistflag() {
-		//削除フラグを指定
-		deleteFlag = 0;
-	}
 
 	@Override
 	//エンティティを権限リストに追加

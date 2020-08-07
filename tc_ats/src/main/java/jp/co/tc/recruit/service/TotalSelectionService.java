@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jp.co.tc.recruit.entity.TotalSelectionView;
+import jp.co.tc.recruit.entity.view.TotalSelectionView;
 import jp.co.tc.recruit.repository.TotalSelectionRepository;
 
 @Service

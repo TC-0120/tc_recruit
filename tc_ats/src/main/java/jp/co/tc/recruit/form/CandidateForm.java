@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 import jp.co.tc.recruit.entity.Agent;
 import jp.co.tc.recruit.entity.Referrer;
-import jp.co.tc.recruit.entity.SelectionStatus;
-import jp.co.tc.recruit.entity.SelectionStatusDetail;
+import jp.co.tc.recruit.entity.selection.SelectionStatus;
+import jp.co.tc.recruit.entity.selection.SelectionStatusDetail;
 
 public class CandidateForm implements Serializable{
 
