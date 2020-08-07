@@ -4,10 +4,15 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	<head>
 	<meta charset="UTF-8" />
 	<title>Insert title here</title>
-	<script type="text/javascript" th:src="@{/js/recruitmentManagement.js}" th:inline="javascript"></script>
+
 	<Script type="text/javascript" th:inline="javascript">
 		//エージェント(全件)
 		var agentAll = [];
+
+		//ソート種別を判別するためのカウント変数
+		//var sortCount = document.getElementsByName('sortNumber');
+		//選考状況(全件)
+		var slcStatuslist = [];
 		/**
 		*単価を選択エージェントに応じて設定
 		*/
@@ -38,48 +43,140 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 					return;
 				}
 			}
+		}
+		function dayElements(obj){
+			// 曜日を表す文字列の配列を作っておく
+			var WeekChars = [ "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日" ];
+			// 日付オブジェクトから曜日を得る
+			var dayObj = new date(obj.value);
+			var wDay = dayObj.getDay();
+			obj.value = WeekChars[wDay];
+			alert(WeekChars[wDay]);
+		}
 
-			function dayElements(obj){
-				// 曜日を表す文字列の配列を作っておく
-				var WeekChars = [ "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日" ];
-				// 日付オブジェクトから曜日を得る
-				var dayObj = new date(obj.value);
-				var wDay = dayObj.getDay();
-				obj.value = WeekChars[wDay];
-				alert(WeekChars[wDay]);
+		/**
+		*ソート判定のために必要な選考情報を変数に準備
+		*/
+		function setSortValue(){
+			//alert('ソート条件準備中');
+			//選考情報を取得
+			[# th:each="slcStatus:${slcStatusList}"]
+				var slcStatus = {id:/*[[${slcStatus.slcStatusId}]]*/,name:/*[[${slcStatus.slcStatusName}]]*/}
+				slcStatuslist.push(slcStatus);
+			[/]
+		}
+
+		function setSortNumber(sortTypeNumber){
+			//alert('setSortNumberまで実行済み');
+			//ソート種別
+			var sortType = document.getElementById('sortType');
+			var sortCheck = document.getElementById('sortCheck');
+			sortCheck.value = 1;
+			switch(sortTypeNumber){
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				sortSlcStatus(2);
+				sortType.value = 2;
+				break;
+			default:
+			}
+
+		}
+		function sortSlcStatus(sortTypeNumber){
+			//alert('sortTypeNumberまで実行済み');
+			//ソート番号
+			var sortNumber = document.getElementsByName('sortNumber');
+			//alert('ソート番号は' + sortNumber[sortTypeNumber].value);
+			//alert(slcStatuslist[1].id)
+			for(var i = 0; i <= slcStatuslist.length; i++){
+				if(sortNumber[sortTypeNumber].value == ""){
+					sortNumber[sortTypeNumber].value = 1;
+					//alert('変更後のソート番号は' + sortNumber[sortTypeNumber].value);
+					break;
+				}else if(sortNumber[sortTypeNumber].value == slcStatuslist.length){
+					sortNumber[sortTypeNumber].value = 0;
+					//alert('変更後のソート番号は' + sortNumber[sortTypeNumber].value);
+					break;
+				}else if(sortNumber[sortTypeNumber].value == i){
+					sortNumber[sortTypeNumber].value = parseInt(sortNumber[sortTypeNumber].value) + 1;
+					//alert('変更後のソート番号は' + sortNumber[sortTypeNumber].value);
+					break;
+				}
 			}
 		}
+
 	</Script>
 	</head>
-	<body>
+	<body onload="setSortValue();">
 		<div th:replace="header :: header_fragment" class="header"></div>
-		<form th:action="@{/mainpage}" method="post">
+		<form th:action="@{/mainpage}" method="post" >
+			<input type="hidden" th:value="${sortType}" name="sortType" id="sortType"/>
+			<input type="hidden" value="0" name="sortCheck" id="sortCheck"/>
 			<table border="5">
 				<tr>
 					<th>
 						<input class="candidate_id_button" type="submit" onclick="sort(1)" value="エントリー元"/>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
 						<span class="sort"></span>
 					</th>
-					<th>単価</th>
 					<th>
-						<input class="candidate_id_button" type="submit" value="選考状況"/>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					単価</th>
+					<th>
+						<input class="candidate_id_button" name="2" type="submit" value="選考状況" onclick="setSortNumber(2);"/>
+						<input type="hidden" th:value="${sortNumber2}" name="sortNumber" id="sortNumber"/>
 					</th>
-					<th>氏名</th>
-					<th>性別</th>
-					<th>最終学歴</th>
-					<th>学校備考</th>
-					<th>書類選考</th>
-					<th>結果</th>
-					<th>適性検査</th>
-					<th>適性検査成績</th>
-					<th>1次面接</th>
-					<th>結果</th>
-					<th>2次面接</th>
-					<th>結果</th>
-					<th>最終面接</th>
-					<th>結果</th>
-					<th>期限</th>
-					<th>結果</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					氏名</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					性別</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					最終学歴</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					学校備考</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					書類選考</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					結果</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					適性検査</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					適性検査成績</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					1次面接</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					結果</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					2次面接</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					結果</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					最終面接</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					結果</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					期限</th>
+					<th>
+						<input type="hidden" value="0" name="sortNumber" id="sortNumber"/>
+					結果</th>
 				</tr>
 				<tr th:each="candidate, st:${candidates}" th:object="${candidate}">
 					<td>

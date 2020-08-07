@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css?family=Varela+Round');
+/* .header {
+	padding-left: 20px
+} */
+
+#main {
+	width: 94%;
+	float: right;
+	/* margin-top: 2em; */
+	height: 100%;
+}
+
+#side_menu {
+	width: 5%;
+	float: left;
+}
+
+.main_checked {
+	width: 84%;
+	float: right;
+	margin-top: 2em;
+	height: 100%;
+}
+
+.side_menu_checked {
+	width: 15%;
+	float: left;
+}
+
+.left {
+	float: left;
+}
+
+.count {
+	display: inline-block;
+}
+
+.chk_btn {
+	color: #808080;
+	border: none;
+	position: relative;
+	height: 60px;
+	padding: 0 2em;
+	margin: 0.2em;
+	cursor: pointer;
+	transition: 800ms ease all;
+	outline: none;
+	border-bottom: solid 1px #A2CFDE;
+	background: #fff;
+	color: #808080;
+}
+
+.chk_btn:hover {
+	border-bottom: solid 1px #fff;
+}
+
+.chk_btn:before, .chk_btn:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background-color: #A2CFDE;
+	transition: 400ms ease all;
+}
+
+.chk_btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+
+.chk_btn:hover:before, .chk_btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
+
+.ttlSlc {
+	margin-top: 20px;
+}
+
+.slc_btn {
+	color: #808080;
+	border: none;
+	position: relative;
+	height: 100px;
+	padding: 0 2em;
+	cursor: pointer;
+	transition: 800ms ease all;
+	outline: none;
+	border-bottom: solid 1px #D9CF59;
+	background: #fff;
+}
+
+.slc_btn:hover {
+	border-bottom: solid 1px #fff;
+}
+
+.slc_btn:before, .slc_btn:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background-color: #D9CF59;
+	transition: 400ms ease all;
+}
+
+.slc_btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+
+.slc_btn:hover:before, .slc_btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
+
+
+.ttl_chk_btn {
+	background: #E8E6ED;
+	background: rgba(232, 230, 237, 0.5);
+	color: #808080;
+	border: none;
+	position: relative;
+	height: 60px;
+	padding: 0 2em;
+	margin: 0.2em;
+	cursor: pointer;
+	transition: 800ms ease all;
+	outline: none;
+	border-bottom: solid 1px #507faf;
+	background: #fff;
+	color: #808080;
+}
+
+.ttl_chk_btn:before, .ttl_chk_btn:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background: #507faf;
+	transition: 400ms ease all;
+}
+
+.ttl_chk_btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+
+.ttl_chk_btn:hover:before, .ttl_chk_btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
+
+button {
+	color: white;
+	border: none; /* 枠線を消す */
+	outline: none; /* クリックしたときに表示される枠線を消す */
+	background: transparent; /* 背景の灰色を消す */
+}
+
+.btn {
+	line-height: 25px;
+	height: 25px;
+	text-align: center;
+	width: 200px;
+	cursor: pointer;
+}
+
+.box-3 {
+	background-color: #b6b79d;
+	width: 98%;
+}
+
+.btn-three {
+	color: #FFF;
+	transition: all 0.5s;
+	position: relative;
+}
+
+.btn-three:hover {
+	background-color: rgba(255, 255, 255, .3);
+}
+
+p {
+	color: #808080;
+}
+
+img {
+	width: 40px;
+	height: 40px;
+}
+
+.inline {
+	display: inline-block;
+}
+
+.chk_all_btn {
+	float: left;
+	width: 10%;
+}
+
+.chk_btn_right {
+	float: left;
+	width: 90%;
+}
+
+.tskType, .ltsPln {
+	clear: left;
+}
+
+table {
+border-collapse: collapse;
+width: 400px;
+font-size: 12px;
+margin: 20px;
+text-align: left;
+}
+table th    {
+color: #808080;
+padding-left: 10px;
+border-bottom: 3px solid #d4d5c3
+}
+table td    {
+padding: 10px;
+color: #808080;
+border-bottom: 1px solid rgba(212,212,212,0.5);
+}
+
+.ttlChk, .ltsPln {
+	padding-top: 20px;
+}
+
+.text {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.tex {
+	padding-top: 5px;
+}

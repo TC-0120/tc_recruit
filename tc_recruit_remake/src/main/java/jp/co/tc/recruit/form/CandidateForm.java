@@ -36,9 +36,11 @@ public class CandidateForm implements Serializable{
 
 	private List<String> insertDate;
 
-//	private
-//
-//	public static int SELECTION_STATUS_SORT;
+	private List<Integer> sortNumber;
+
+	private Integer sortType;
+
+	private Integer sortCheck;
 
 	public CandidateForm() {
 		this.candidateId = null;

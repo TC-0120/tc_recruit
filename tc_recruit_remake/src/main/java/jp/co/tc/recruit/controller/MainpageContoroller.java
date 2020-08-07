@@ -2,12 +2,15 @@ package jp.co.tc.recruit.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.co.tc.recruit.entity.Candidate;
 import jp.co.tc.recruit.form.CandidateForm;
@@ -29,6 +32,8 @@ public class MainpageContoroller {
 	SelectionStatusService selectionStatusSvc;
 	@Autowired
 	SelectionResultService selectionResultSvc;
+	@Autowired
+	HttpSession httpSession;
 
 	/**
 	 * メインページを表示するためのコントローラー
@@ -36,14 +41,24 @@ public class MainpageContoroller {
 	 * @param model
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@GetMapping
-	public String mainPageSet(Model model) {
+	public String getMainPage(Model model, RedirectAttributes redirectAttributes) {
 		List<Candidate> candidates = cddSvc.findAll();
-		//		for(Agent v:agents) {
-		//			System.out.println(v.getAgentId());
-		//			System.out.println(v.getAgentName());
-		//			System.out.println(v.getReferrerFee());
-		//		}
+		if (model.containsAttribute("candidateForm")) {
+			CandidateForm candidateForm = (CandidateForm) model.getAttribute("candidateForm");
+			//ソート条件がある場合はその値を各ソートナンバーのvalue値に設定
+			model.addAttribute("sortNumber" + candidateForm.getSortType(),
+					candidateForm.getSortNumber().get(candidateForm.getSortType()));
+			//更新後もソート条件を維持するためにスコープに格納
+			model.addAttribute("sortType", candidateForm.getSortType());
+			candidates = cddSvc.sortCandidate(candidateForm.getSortNumber(), candidateForm.getSortType());
+		}
+		if (model.containsAttribute("candidateForm")) {
+			System.out.println("リダイレクト確認：" + ((CandidateForm) model.getAttribute("candidateForm")).getSortType());
+		}
+
+		//候補者情報をスコープに格納
 		model.addAttribute("candidates", candidates);
 
 		//画面表示用のデータをスコープに格納
@@ -61,10 +76,15 @@ public class MainpageContoroller {
 	 * @return
 	 */
 	@PostMapping
-	public String mainPageUpdate(Model model, CandidateForm candidateForm) {
+	public String mainPageUpdate(Model model, CandidateForm candidateForm, RedirectAttributes redirectAttributes) {
+		//ソート番号をフラッシュスコープに格納
+		redirectAttributes.addFlashAttribute("candidateForm", candidateForm);
+		//System.out.println(candidateForm.getCandidateId());
 		//入力情報とステータス情報をもとにエンティティに値を格納
-		List<Candidate> candidates = BeanCopy.copyFormToEntity(candidateForm, selectionStatusSvc.findAll());
-		cddSvc.update(candidates);
+		if (candidateForm.getCandidateId() != null && candidateForm.getSortCheck() == 0) {
+			//System.out.println(candidateForm.getEduBack().get(0));
+			cddSvc.update(BeanCopy.copyFormToEntity(candidateForm, selectionStatusSvc.findAll()));
+		}
 		return "redirect:/mainpage";
 	}
 

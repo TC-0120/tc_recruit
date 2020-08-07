@@ -23,6 +23,7 @@ public class BeanCopy {
 	public static List<Candidate> copyFormToEntity(CandidateForm candidateForm,
 			List<SelectionStatus> selectionStatus2) {
 		List<Candidate> candidates = new ArrayList<>();
+
 		for (int i = 0; i < candidateForm.getCandidateId().size(); i++) {
 			Candidate candidate = new Candidate();
 			Agent agent = new Agent();
@@ -87,9 +88,13 @@ public class BeanCopy {
 			candidate.setSlcStatus(selectionStatus);
 			candidate.setSelectionStage(selectionStage);
 			candidate.setAgent(agent);
-			candidate.setRemarks(candidateForm.getRemarks().get(i));
+			if(!candidateForm.getRemarks().isEmpty()) {
+				candidate.setRemarks(candidateForm.getRemarks().get(i));
+			}
 			candidate.setAptitudeFlag(candidateForm.getAptitudeFlag().get(i));
-			candidate.setAptitudeScore(candidateForm.getAptitudeScore().get(i));
+			if(!candidateForm.getAptitudeScore().isEmpty()) {
+				candidate.setAptitudeScore(candidateForm.getAptitudeScore().get(i));
+			}
 			candidate.setDeleteFlag(candidateForm.getDeleteFlag().get(i));
 			candidate.setInsertDate(DateFormatter.toDate(candidateForm.getInsertDate().get(i)));
 

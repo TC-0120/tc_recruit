@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	th:fragment="header_fragment">
+<head>
+<meta charset="UTF-8" />
+<title>ユーザー情報確認</title>
+</head>
+<header>
+	<a th:href="@{/dashboard}"><img th:src="@{/images/TCLogo.png}" width="70px" height="50px"></a>
+</header>
+
+<body>
+
+	<h3>ユーザー情報確認画面</h3>		<!-- 7/22 タイトルのサイズ変更 -->
+
+	<div>
+		<label>社員番号：</label>
+		<span sec:authentication="principal.username"></span>
+	</div>
+
+	<div>
+		<label>ユーザー名：</label> <span sec:authentication="principal.lastName"></span>
+		<span sec:authentication="principal.firstName"></span>
+	</div>
+	<div>
+		<label>権限：</label> <span sec:authorize="hasAuthority('ROLE_ADMIN')">管理者</span>
+		<span sec:authorize="hasAuthority('ROLE_USER')">一般</span>&nbsp;&nbsp;
+	</div>
+
+	<a th:href="@{/password}">パスワード設定</a>
+
+</body>
+</html>

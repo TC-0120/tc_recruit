@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Login page</title>
+<style>
+.alert-danger {
+	color: red;
+}
+</style>
+<script type="text/javascript" th:inline="javascript">
+	//紹介元（全件）
+	var referrerAll = [];
+
+	/**
+ 	 * ロード時、紹介元のドロップダウンの初期設定
+ 	 *
+     */
+	function setFirstReferrer() {
+		//紹介元の情報を取得
+		[# th:each="referrer: ${referrerList}"]
+			var referrer = {id:/*[[${referrer.referrerId}]]*/, name:/*[[${referrer.referrerName}]]*/,
+				fee:/*[[${referrer.referrerFee}]]*/, agentId:/*[[${referrer.agent.agentId}]]*/};
+
+			referrerAll.push(referrer);
+		[/]
+
+		//紹介元のドロップダウンを設定
+		setReferrer();
+
+		//紹介元のドロップダウン
+		var referrer = document.getElementById("referrer");
+		//ドロップダウンを保持された検索条件と同じ値を選択
+		for (var i = 0; i < referrer.length; i++) {
+			if (referrer[i].value == /*[[${candidate.referrer.referrerId}]]*/) {
+				referrer[i].selected = true;
+			}
+		}
+	}
+
+	/**
+	 * 紹介元のドロップダウンを設定
+	 *
+	 */
+	function setReferrer() {
+		//紹介元の選択値
+		var selectedAgentId = document.getElementById("agentId").value;
+		//紹介元のドロップダウン
+		var referrer = document.getElementById("referrer");
+		//ドロップダウンの設定値
+		var referrerList = [];
+
+		//採用エージェントに紐づく紹介元をドロップダウンの設定値に追加
+		for (var i = 0; i < referrerAll.length; i++) {
+			if (referrerAll[i].agentId == selectedAgentId) {
+				referrerList.push(referrerAll[i]);
+			}
+		}
+
+		//紹介元のドロップダウンを初期化
+		referrer.textContent = null;
+
+		//紹介元のドロップダウンに値を設定
+		for (var i = 0; i < referrerList.length; i++) {
+			var op = document.createElement("option");
+			op.value = referrerList[i].id;
+			op.text = referrerList[i].name;
+			referrer.appendChild(op);
+		}
+
+		//紹介料を表示
+		showReferrerFee();
+	}
+
+	/**
+	 * 紹介料を表示
+	 *
+	 */
+	function showReferrerFee() {
+		//紹介料
+		var referrerFee = document.getElementById("referrerFee");
+		//選択された紹介元ID
+		var selectedReferrerId = document.getElementById("referrer").value;
+
+		//取得している紹介元（全件）の紹介元IDと選択された紹介元IDが一致する紹介料を表示
+		for (var i = 0; i < referrerAll.length; i++) {
+			if (referrerAll[i].id == selectedReferrerId) {
+				referrerFee.textContent = referrerAll[i].fee + "万円";
+				break;
+			}
+		}
+	}
+
+	/**
+	 * 更新確認
+	 *
+	 */
+	function confirmUpdateCandidate() {
+		if(window.confirm("この内容で更新しますか？")){
+			return true;
+		} else{
+			return false;
+		}
+	}
+
+	/**
+	 * 削除確認
+	 *
+	 */
+	function confirmDeleteCandidate() {
+		if(window.confirm("候補者情報を削除しますか？")){
+			return true;
+		} else{
+			return false;
+		}
+	}
+
+
+
+</script>
+
+</head>
+<body onload="setFirstReferrer(); window.opener.location.reload()">
+	<header>
+		<img th:src="@{/images/TCLogo.png}">
+	</header>
+	<h2>候補者情報変更画面</h2>
+
+	<!-- 2020/07/14 鶴 135,139,143,147,152 文字数最大制限と未入力チェックを追加  -->
+	<form th:action="@{/recruit/candidates/update}" th:method="post" th:object="${candidate}" onsubmit="return confirmUpdateCandidate()">
+		<div>
+			<label>ID:</label>
+			<span th:text="*{candidateId}" ></span>
+			<input type="hidden" th:field="*{candidateId}" maxlength="5">
+		</div>
+		<div>
+			<label>候補者:</label>
+			<input type="text" th:field="*{candidateName}" maxlength="20" required/>
+		</div>
+		<div>
+			<label>候補者(ふりがな)</label>
+			<input type="text" th:field="*{candidateFurigana}" maxlength="20" required/>
+		</div>
+		<div>
+			<label>性別:</label>
+			<input type="radio" name="gender" value="1" th:field="*{gender}" required/>男性
+			<input type="radio" name="gender" value="2" th:field="*{gender}"/>女性
+		</div>
+		<div>
+			<label>学歴:</label>
+			<input type="text" th:field="*{eduBack}" maxlength="20" />
+		</div>
+
+		<div th:if="*{slcStatus.slcStatusId != 1}">
+			<div>
+				<label>選考ステータス:</label>
+				<span th:text="*{slcStatus.slcStatusName}"></span>
+				<input type="hidden" th:field="*{slcStatus.slcStatusId}">
+			</div>
+			<div>
+				<label>選考ステータス詳細:</label>
+				<span th:text="*{slcStatusDtl.slcStatusDtlName}"></span>
+				<input type="hidden" th:field="*{slcStatusDtl.slcStatusDtlId}">
+			</div>
+		</div>
+		<div th:if="*{slcStatus.slcStatusId == 1}">
+			<label>選考ステータス:</label>
+			<select th:field="*{slcStatus.slcStatusId}">
+				<option th:value="1">説明会
+				<option th:value="2">書類選考
+			</select>
+			<input type="hidden" th:field="*{slcStatusDtl.slcStatusDtlId}">
+		</div>
+
+		<div>
+			<label>採用エージェント:</label>
+			<select id="agentId" th:field="*{agent.agentId}" onchange="setReferrer()">
+				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
+			</select>
+		</div>
+		<div>
+			<label>紹介元</label>
+			<select id="referrer" th:field="*{referrer.referrerId}" onchange="showReferrerFee()"></select>
+		</div>
+		<div>
+			<label>紹介料</label>
+			<span id="referrerFee"/></span>
+		</div>
+		<input type="hidden"  th:field="*{aptitudeFlag}">
+		<input type="submit" value="更新"/>
+	</form>
+	<form th:action="@{/recruit/candidates/{id}/delete(id=*{candidateId})}" th:object="${candidate}" onsubmit="return confirmDeleteCandidate()">
+		<input type="submit" value="削除"/>
+	</form>
+
+	<br>
+
+
+</body>
+</html>

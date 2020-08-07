@@ -3,9 +3,12 @@ package jp.co.tc.recruit.service;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jp.co.tc.recruit.constant.SortNumberConstant;
 import jp.co.tc.recruit.entity.Agent;
 import jp.co.tc.recruit.entity.Candidate;
 import jp.co.tc.recruit.entity.SelectionStage;
@@ -34,8 +37,10 @@ public class CandidateService {
 	//SelectionStatusDetailRepository slcStatusDtlRepo;
 	@Autowired
 	AgentRepository agentRepo;
-	//@Autowired
-	//ReferrerRepository referrerRepo;
+	@Autowired
+	HttpSession httpSession;
+	@Autowired
+	SelectionStatusService slcStatusService;
 
 	public Candidate findById(Integer id) {
 		return candidateRepo.findByCandidateId(id);
@@ -44,7 +49,9 @@ public class CandidateService {
 		return candidateRepo.findByOrderByCandidateId();
 	}
 
-
+	/**
+	 * 候補者情報の入力フォームの作成
+	 */
 	public void register() {
 		Candidate candidate = new Candidate();
 		Agent agent = new Agent();
@@ -72,6 +79,29 @@ public class CandidateService {
 		for(Candidate v:candidates) {
 			candidateRepo.save(v);
 		}
+	}
+
+	/**
+	 * ソート条件をもとに検索を行う
+	 * @param sortNumber
+	 * @param sortType
+	 * @return
+	 */
+	public List<Candidate> sortCandidate(List<Integer> sortNumber, Integer sortType) {
+		switch(sortType) {
+		case SortNumberConstant.SELECTION_STATUS_SORT:
+			return sortBySelectionStatus(sortNumber);
+		}
+		return candidateRepo.findByOrderByCandidateId();
+	}
+	public List<Candidate> sortBySelectionStatus(List<Integer> sortNumber){
+		List<SelectionStatus> selectionStatus = slcStatusService.findAll();
+			for(SelectionStatus v : selectionStatus) {
+				if(v.getSlcStatusId() == sortNumber.get(SortNumberConstant.SELECTION_STATUS_SORT)) {
+					return candidateRepo.findBySelectionStatusOrderByCandidateId(v.getSlcStatusId());
+				}
+			}
+		return candidateRepo.findByOrderByCandidateId();
 	}
 //	public void register(Candidate candidate, String slcDate) {
 //		Integer slcStatusDtlId = null;
