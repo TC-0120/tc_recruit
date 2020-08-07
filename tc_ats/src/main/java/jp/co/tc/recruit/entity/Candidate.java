@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import jp.co.tc.recruit.entity.selection.SelectionStatus;
+import jp.co.tc.recruit.entity.selection.SelectionStatusDetail;
 import lombok.Data;
 
 /**
@@ -28,7 +30,7 @@ public class Candidate implements Serializable {
 	@Id
 	@Column(name="candidate_id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "candidate_sequence")
-	@SequenceGenerator(name = "candidate_sequence", sequenceName = "candidate_sequence", allocationSize = 1)
+	@SequenceGenerator(name = "candidate_sequence", sequenceName = "xxtc_candidate_candidate_id_seq", allocationSize = 1)
 	private Integer candidateId;
 
 	@Column(name="candidate_name")
@@ -42,6 +44,9 @@ public class Candidate implements Serializable {
 
 	@Column(name="educational_background")
 	private String eduBack;
+
+	@Column(name="university_rank_id")
+	private String universityRankId;
 
 	@ManyToOne
 	@JoinColumn(name="selection_status_id")

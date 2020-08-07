@@ -1,4 +1,4 @@
-package jp.co.tc.recruit.entity;
+package jp.co.tc.recruit.entity.selection;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -7,9 +7,14 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import jp.co.tc.recruit.entity.AbstractEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 
 /**
@@ -18,9 +23,11 @@ import javax.persistence.TemporalType;
  * @author TC-0115
  *
  */
+@Getter
+@Setter
 @Entity
-@Table(name="XXTC_SELECTION")
-public class Selection implements Serializable {
+@Table(name="XXTC_SELECTION_DATE")
+public class Selection extends AbstractEntity implements Serializable {
 
 	@EmbeddedId
 	private SelectionPK slcPK;
@@ -28,6 +35,18 @@ public class Selection implements Serializable {
 	@Column(name="selection_date", nullable=true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date slcDate;
+
+	@Column(name = "delete_flag")
+	private Integer deleteFlag;
+
+	/**
+	 * 登録前処理
+	 */
+	@PrePersist
+	public void prePersistflag() {
+		//削除フラグを指定
+		deleteFlag = 0;
+	}
 
 	public Selection() {
 	}

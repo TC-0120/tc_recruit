@@ -2,6 +2,7 @@ package jp.co.tc.recruit.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -20,11 +22,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
+@Getter
+@Setter
 @Entity
 @Table(name = "XXTC_USER")
-public class User implements UserDetails {
+public class User extends AbstractEntity implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
@@ -35,12 +41,15 @@ public class User implements UserDetails {
 	@Id
 	@Column(nullable = false, unique = true)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
-	@SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
+	@SequenceGenerator(name = "user_sequence", sequenceName = "xxtc_user_id_seq", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false, unique = true)
 	@NotNull
 	private String username;
+
+	@Column(name = "email_address")
+	private String emailAddress;
 
 	@Column(name = "first_name", nullable = false, unique = true)
 	private String firstName;
@@ -59,6 +68,21 @@ public class User implements UserDetails {
 
 	@Column(nullable = false)
 	private Integer status;
+
+	@Column(name = "login_date")
+	private Date loginDate;
+
+	@Column(name = "delete_flag")
+	private Integer deleteFlag;
+
+	/**
+	 * 登録前処理
+	 */
+	@PrePersist
+	public void prePersistflag() {
+		//削除フラグを指定
+		deleteFlag = 0;
+	}
 
 	@Override
 	//エンティティを権限リストに追加
