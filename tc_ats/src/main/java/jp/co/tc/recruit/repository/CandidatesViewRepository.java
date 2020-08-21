@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import jp.co.tc.recruit.entity.view.CandidatesView;
+import jp.co.tc.recruit.entity.view.V_Candidates;
 
 /**
  * 候補者情報ビューのリポジトリ
@@ -15,11 +15,13 @@ import jp.co.tc.recruit.entity.view.CandidatesView;
  *
  */
 @Repository
-public interface CandidatesViewRepository extends JpaRepository<CandidatesView, Integer>, CandidatesViewRepositoryCustom {
-	public CandidatesView findByCandidateId(Integer cId);
+public interface CandidatesViewRepository extends JpaRepository<V_Candidates, Integer>, CandidatesViewRepositoryCustom{//
+	public V_Candidates findByCandidateId(Integer cId);
 
-	public List<CandidatesView> findBySlcStatusDtlIdOrSlcStatusDtlId(Integer ssdId1, Integer ssdId2);
+	public List<V_Candidates> findBySlcStatusDtlIdOrSlcStatusDtlId(Integer ssdId1, Integer ssdId2);
 
-	public List<CandidatesView> findAllBySlcDateLessThan(Date date);
+	public List<V_Candidates> findAllBySlcDateLessThan(Date date);
+
+	public List<V_Candidates> findByDeleteFlagOrderByCandidateId(Integer DeleteFlagConstant);
 }
 

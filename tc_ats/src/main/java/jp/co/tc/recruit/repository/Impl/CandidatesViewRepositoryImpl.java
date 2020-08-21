@@ -12,9 +12,10 @@ import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import jp.co.tc.recruit.constant.DeleteFlagConstant;
 import jp.co.tc.recruit.constant.SlcStatusConstant;
 import jp.co.tc.recruit.constant.SlcStatusDtlConstant;
-import jp.co.tc.recruit.entity.view.CandidatesView;
+import jp.co.tc.recruit.entity.view.V_Candidates;
 import jp.co.tc.recruit.form.ConditionsForm;
 import jp.co.tc.recruit.repository.CandidatesViewRepository;
 import jp.co.tc.recruit.repository.CandidatesViewRepositoryCustom;
@@ -40,7 +41,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 	 * @return 候補者情報
 	 */
 	@SuppressWarnings("unchecked")
-	public List<CandidatesView> findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(ConditionsForm cf) {
+	public List<V_Candidates> findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(ConditionsForm cf) {
 		Integer ssId = cf.getSlcStatusId();
 		Integer ssdId = cf.getSlcStatusDtlId();
 		String from = cf.getFrom();
@@ -52,15 +53,18 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		boolean firstFlag = true;
 
 		//SQL文
-		String queryStr = "from CandidatesView";
+		String queryStr = "from V_Candidates";
 
 		//条件が入力されていない場合、全件検索、並び替えをして結果を返す
 		if (ssId == SlcStatusConstant.ALL && ssdId == SlcStatusDtlConstant.ALL && from.isEmpty() && to.isEmpty()
 				&& fsId == ConditionsForm.SEARCH_NO_SELECT) {
 			//並び替え
-			queryStr += " WHERE slcStatusDtlId NOT IN(4,5,9) " + sort(cf.getOrder(), cf.getDirection());
+			queryStr += " WHERE slcStatusDtlId NOT IN(4,5,9) AND deleteFlag = :notdeleted " + sort(cf.getOrder(), cf.getDirection());
+			// クエリを発行
+			Query query = em.createQuery(queryStr);
+			query.setParameter("notdeleted", DeleteFlagConstant.NOT_DELETED);
 
-			return em.createQuery(queryStr).getResultList();
+			return query.getResultList();
 		}
 
 		//以下、WHERE句が存在する場合
@@ -98,6 +102,7 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		}
 
 		//自由検索が入力されている場合
+		//適性検査等必要な部分を追加する
 		if (fsId != ConditionsForm.SEARCH_NO_SELECT) {
 			//WHERE句の初めでない場合
 			if (!firstFlag) {
@@ -109,18 +114,26 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			case ConditionsForm.SEARCH_CANDIDATE_NAME:
 				queryStr += " (candidateName LIKE :keyword OR candidateFurigana LIKE :keyword)";
 				break;
+			case ConditionsForm.SEARCH_CANDIDATE_NAME_FURIGANA:
+				queryStr += " (candidateFurigana LIKE :keyword)";
+				break;
 			case ConditionsForm.SEARCH_EDU_BACK:
-				queryStr += " eduBack LIKE :keyword";
+				queryStr += " eduBack LIKE :keyword OR universityName LIKE :keyword "
+						+ "OR facultyName LIKE :keyword OR departmentName LIKE :keyword";
 				break;
 			case ConditionsForm.SEARCH_AGENT:
 				queryStr += " agentName LIKE :keyword";
 				break;
-			case ConditionsForm.SEARCH_REFERRER:
-				queryStr += " referrerName LIKE :keyword";
+			case ConditionsForm.SEARCH_APTITUDE:
+				queryStr += " aptitudeStatus LIKE :keyword";
+				break;
+			case ConditionsForm.DELETE_STATUS:
+				queryStr += " deleteFlag LIKE :keyword";
 				break;
 			default:
 				break;
 			}
+
 		}
 
 		//日程検索が入力されている場合
@@ -131,21 +144,33 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 			}
 
 			//日付が表示されるステータス詳細を条件に追加
-			queryStr += " ((slcStatusDtlId = :selectingDate OR slcStatusDtlId = :waitingAcceptanceDate OR slcStatusDtlId = :confirmedDate)";
+			//queryStr += " ((slcStatusDtlId = :selectingDate OR slcStatusDtlId = :waitingAcceptanceDate OR slcStatusDtlId = :confirmedDate)";
 
-			//fromが入力されている場合
-			if (!from.isEmpty()) {
-				queryStr += " AND slcDate >= :from";
+
+			if (!from.isEmpty() && !to.isEmpty()) {
+				//fromとtoが入力されている場合
+				queryStr += " slcDate >= :from AND slcDate < :to";//AND削除,後部に追加
+			}else if(to.isEmpty()) {
+				//fromだけ入力されている場合
+				queryStr += " slcDate >= :from";
+			}else {
+				//toだけ入力されている場合
+				queryStr += " slcDate < :to";//AND削除
 			}
 
-			//toが入力されている場合
-			if (!to.isEmpty()) {
-				queryStr += " AND slcDate < :to";
-			}
+			//			//toが入力されている場合
+			//			if (!to.isEmpty()) {
+			//				queryStr += " slcDate < :to";//AND削除
+			//			}
 
-			queryStr += ")";
+			//queryStr += ")";
 		}
-
+		//削除フラグ設定
+		queryStr += " AND deleteFlag = :notdeleted";
+		//全件表示の場合の除外要件追加
+		if(ssId == SlcStatusConstant.ALL && ssdId == SlcStatusDtlConstant.ALL) {
+			queryStr += " AND slcStatusDtlId NOT IN(4,5,9)";
+		}
 		//並び替え
 		queryStr += sort(cf.getOrder(), cf.getDirection());
 
@@ -180,11 +205,11 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		}
 
 		//日程検索が入力されている場合
-		if (!from.isEmpty() || !to.isEmpty()) {
-			query.setParameter("selectingDate", SlcStatusDtlConstant.SELECTING)
-					.setParameter("waitingAcceptanceDate", SlcStatusDtlConstant.WATING_ACCEPTANCE)
-					.setParameter("confirmedDate", SlcStatusDtlConstant.CONFIRMED);
-		}
+//		if (!from.isEmpty() || !to.isEmpty()) {
+//			query.setParameter("selectingDate", SlcStatusDtlConstant.SELECTING)
+//					.setParameter("waitingAcceptanceDate", SlcStatusDtlConstant.WATING_ACCEPTANCE)
+//					.setParameter("confirmedDate", SlcStatusDtlConstant.CONFIRMED);
+//		}
 
 		try {
 
@@ -206,6 +231,8 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		//削除フラグ設定
+		query.setParameter("notdeleted", DeleteFlagConstant.NOT_DELETED);
 
 		return query.getResultList();
 
@@ -231,26 +258,57 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		case ConditionsForm.CANDIDATE_NAME:
 			queryStr += " ORDER BY candidateFurigana";
 			break;
+		case ConditionsForm.CANDIDATE_NAME_FURIGANA:
+			queryStr += " ORDER BY candidateFurigana";
+			break;
 		case ConditionsForm.GENDER:
 			queryStr += " ORDER BY gender";
 			break;
 		case ConditionsForm.EDU_BACK:
 			queryStr += " ORDER BY eduBack";
 			break;
+		case ConditionsForm.CANDIDATE_EMAIL_ADDRESS:
+			queryStr += " ORDER BY candidateEmailAddress";
+			break;
 		case ConditionsForm.AGENT:
 			queryStr += " ORDER BY agentId";
 			break;
-		case ConditionsForm.REFERRER:
-			queryStr += " ORDER BY referrerId";
+		case ConditionsForm.AGENT_FEE:
+			queryStr += " ORDER BY agentFee";
+			break;
+		case ConditionsForm.APTITUDE:
+			queryStr += " ORDER BY aptitudeId";
+			break;
+		case ConditionsForm.APTITUDE_SCORE:
+			queryStr += " ORDER BY aptitudeScore";
 			break;
 		case ConditionsForm.SLC_STATUS:
-			queryStr += " ORDER BY slcStatusId";
+			queryStr += " ORDER BY selectionProcedure";
 			break;
 		case ConditionsForm.SLC_STATUS_DTL:
 			queryStr += " ORDER BY slcStatusDtlId";
 			break;
 		case ConditionsForm.SLC_DATE:
 			queryStr += " ORDER BY slcDate";
+			break;
+		case ConditionsForm.REMARKS:
+			queryStr += " ORDER BY remarks";
+			break;
+		case ConditionsForm.INSERT_USER:
+			queryStr += " ORDER BY insertUser";
+			break;
+		case ConditionsForm.INSERT_DATE:
+			queryStr += " ORDER BY insertDate";
+			break;
+		case ConditionsForm.UPDATE_USER:
+			queryStr += " ORDER BY updateUser";
+			break;
+		case ConditionsForm.UPDATE_DATE:
+			queryStr += " ORDER BY updateDate";
+			break;
+		case ConditionsForm.DELETE_FLAG:
+			queryStr += " ORDER BY deleteFlag";
+			break;
 		default:
 			break;
 		}
@@ -258,7 +316,18 @@ public class CandidatesViewRepositoryImpl implements CandidatesViewRepositoryCus
 		//並び替えの順番を指定
 		if (dir == ConditionsForm.DESC) {
 			//降順の場合
-			queryStr += " DESC";
+			//学歴マスタの内容を参照
+			if(order == ConditionsForm.EDU_BACK) {
+				queryStr += " DESC ,universityName DESC, facultyName DESC, departmentName DESC";
+			}else {
+				queryStr += " DESC";
+			}
+
+		}else {
+			if(order == ConditionsForm.EDU_BACK) {
+				//学歴マスタの内容を参照
+				queryStr += ", universityName DESC, facultyName DESC, departmentName";
+			}
 		}
 
 		return queryStr;

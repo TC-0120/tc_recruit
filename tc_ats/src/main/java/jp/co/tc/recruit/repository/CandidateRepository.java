@@ -14,7 +14,7 @@ import jp.co.tc.recruit.entity.Candidate;
  */
 public interface CandidateRepository extends JpaRepository<Candidate, Integer> {
 
-	public Candidate findByCandidateId(Integer id);
+	public Candidate findByCandidateIdAndDeleteFlag(Integer id,Integer deleteFlag);
 	public List<Candidate> findAll();
 
 }

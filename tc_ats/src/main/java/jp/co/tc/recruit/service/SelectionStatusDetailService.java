@@ -20,8 +20,16 @@ public class SelectionStatusDetailService {
 	@Autowired
 	SelectionStatusDetailRepository slcStatusDtlRepo;
 
+	private final int UNNECESSARY_STATUS = 0;
+
 	public List<SelectionStatusDetail> findAll() {
-		return slcStatusDtlRepo.findAllByOrderBySlcStatusDtlId();
+		List<SelectionStatusDetail> selectionStatusDtlList = slcStatusDtlRepo.findAllByOrderBySlcStatusDtlId();
+		for(int i = 0; i < selectionStatusDtlList.size() ;i++) {
+			if(selectionStatusDtlList.get(i).getSlcStatusDtlId() == UNNECESSARY_STATUS) {
+				selectionStatusDtlList.remove(i);
+			}
+		}
+		return selectionStatusDtlList;
 	}
 
 }

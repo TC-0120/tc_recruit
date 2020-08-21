@@ -15,10 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jp.co.tc.recruit.repository.UserRepository;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  *
  * @author TC-0120
@@ -26,12 +22,10 @@ import lombok.Setter;
  *共通カラムの処理をスーパークラスで行う
  */
 @MappedSuperclass
-@Getter
-@Setter
 public class AbstractEntity implements Serializable {
 
 	@Autowired
-	UserRepository userRepository;
+	//UserRepository userRepository;
 
 	/**
 	 * 登録者ID
@@ -59,16 +53,43 @@ public class AbstractEntity implements Serializable {
 	@Column(name = "update_date")
 	private Date updateDate;
 
+	public Integer getInsertUser() {
+		return insertUser;
+	}
+
+	public void setInsertUser(Integer insertUser) {
+		this.insertUser = insertUser;
+	}
+
+	public Date getInsertDate() {
+		return insertDate;
+	}
+
+	public void setInsertDate(Date insertDate) {
+		this.insertDate = insertDate;
+	}
+
+	public Integer getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(Integer updateUser) {
+		this.updateUser = updateUser;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
 	/**
 	 * 登録前処理
 	 */
 	@PrePersist
 	public void prePersist() {
-		//登録社ID・更新者IDを設定
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		UserDetails principal = (UserDetails) auth.getPrincipal();
-		insertUser = (userRepository.findByUsername(principal.getUsername())).getId();
-		updateUser = insertUser;
 		// 登録日、更新日を設定
 		Date date = new Date();
 		insertDate = date;
@@ -83,7 +104,7 @@ public class AbstractEntity implements Serializable {
     	//更新者IDを設定
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails principal = (UserDetails) auth.getPrincipal();
-		updateUser = (userRepository.findByUsername(principal.getUsername())).getId();
+		//updateUser = (userRepository.findByUsername(principal.getUsername())).getId();
         // 更新日を設定
     	updateDate = new Date();
     }

@@ -1,7 +1,5 @@
 package jp.co.tc.recruit.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,30 +16,38 @@ import jp.co.tc.recruit.entity.selection.Selection;
 import jp.co.tc.recruit.entity.selection.Selection.SelectionPK;
 import jp.co.tc.recruit.form.CandidateForm;
 import jp.co.tc.recruit.form.ConditionsForm;
-import jp.co.tc.recruit.form.MultipleUpdateForm;
+import jp.co.tc.recruit.repository.CandidateListRepository;
 import jp.co.tc.recruit.service.AgentService;
+import jp.co.tc.recruit.service.AptitudeService;
 import jp.co.tc.recruit.service.CandidateService;
 import jp.co.tc.recruit.service.CandidatesViewService;
-import jp.co.tc.recruit.service.ReferrerService;
+import jp.co.tc.recruit.service.SelectionReferrerService;
 import jp.co.tc.recruit.service.SelectionService;
 import jp.co.tc.recruit.service.SelectionStatusDetailService;
 import jp.co.tc.recruit.service.SelectionStatusService;
+import jp.co.tc.recruit.service.educational.DepartmentService;
+import jp.co.tc.recruit.service.educational.FacultyService;
+import jp.co.tc.recruit.service.educational.UniversityRankService;
+import jp.co.tc.recruit.service.educational.UniversityService;
 import jp.co.tc.recruit.util.BeanCopy;
 import jp.co.tc.recruit.util.DateFormatter;
 
 /**
  * 採用情報管理機能のコントローラー
  *
- * @author TC-0115
+ * @author TC-0120
+ *
  */
 @Controller
 @RequestMapping("/recruit/candidates")
 public class RecruitmentManagementController {
 
 	@Autowired
-	CandidateService candidateService;
+	CandidatesViewService candidatesViewService;
 	@Autowired
-	SelectionService selectionService;
+	CandidateListRepository candidateListRepository;
+	@Autowired
+	SelectionReferrerService selectionReferrerService;
 	@Autowired
 	SelectionStatusService slcStatusService;
 	@Autowired
@@ -49,9 +55,22 @@ public class RecruitmentManagementController {
 	@Autowired
 	AgentService agentService;
 	@Autowired
-	ReferrerService referrerService;
+	UniversityService universityService;
 	@Autowired
-	CandidatesViewService candidatesViewService;
+	FacultyService facultyService;
+	@Autowired
+	DepartmentService departmentService;
+	@Autowired
+	UniversityRankService universityRankService;
+	@Autowired
+	AptitudeService aptitudeService;
+	@Autowired
+	CandidateService candidateService;
+	@Autowired
+	SelectionService selectionService;
+
+	//候補者画面マスタID(固定)
+	private final int candidateListId = 1;
 
 	/**
 	 * 候補者一覧画面での候補者情報の検索、表示
@@ -61,13 +80,15 @@ public class RecruitmentManagementController {
 	 * @return 一覧画面
 	 */
 	@GetMapping
-	public String index(@ModelAttribute("conditionsForm") ConditionsForm conditionsForm, Model model) {
+	public String index(@ModelAttribute("conditionsForm") ConditionsForm conditionsForm, Model model) {//
 		//入力された検索条件から候補者情報を取得、格納
 		model.addAttribute("candidates",
 				candidatesViewService.findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(conditionsForm));
 		//検索ドロップダウン用のリスト（選考ステータス、詳細）を格納
 		model.addAttribute("slcStatusList", slcStatusService.findAll());
 		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
+		model.addAttribute("slcReferrerList", selectionReferrerService.findAll());
+		model.addAttribute("candidateList", candidateListRepository.getOne(candidateListId));
 		return "recruitment_management";
 	}
 
@@ -81,7 +102,16 @@ public class RecruitmentManagementController {
 	public String transitionToCandidateRegisterInputScreen(Model model) {
 		//入力ドロップダウン用のリスト（採用エージェント、紹介元）を格納
 		model.addAttribute("agentList", agentService.findAll());
-		model.addAttribute("referrerList", referrerService.findAll());
+		//入力ドロップダウン用のリスト(大学マスタ）を格納
+		model.addAttribute("universityList", universityService.findAll());
+		//入力ドロップダウン用のリスト（学部マスタ）を格納
+		model.addAttribute("facultyList", facultyService.findAll());
+		//入力ドロップダウン用のリスト（学科マスタ）を格納
+		model.addAttribute("departmentList", departmentService.findAll());
+		//入力ドロップダウン用のリスト（大学ランクマスタ）を格納
+		model.addAttribute("universityRankList", universityRankService.findAll());
+		//入力ドロップダウン用のリスト（適性検査）を格納
+		model.addAttribute("aptitudeList", aptitudeService.findAll());
 		return "candidate/register_input";
 	}
 
@@ -93,18 +123,11 @@ public class RecruitmentManagementController {
 	 * @param slcDate 選考日程
 	 * @return 候補者情報登録入力画面
 	 */
-
-	//	public String registerCandidate(@ModelAttribute Candidate candidate, @RequestParam("slcDate") String slcDate) {
-	//		//候補者情報を登録
-	//		candidateService.register(candidate, slcDate);
-	//		//選考情報を登録
-	//		selectionService.register(candidate.getCandidateId(), candidate.getSlcStatus().getSlcStatusId(), slcDate);
-	//		return "redirect:/recruit/candidates/register";
-	//	}
 	@PostMapping
-	public String registerCandidate(@ModelAttribute CandidateForm candidateForm, @RequestParam("slcDate") String slcDate) {
+	public String registerCandidate(@ModelAttribute CandidateForm candidateForm,
+			@RequestParam("slcDate") String slcDate) {
 		//候補者情報をエンティティにコピー
-		Candidate candidate = BeanCopy.copyFormToEntuty(candidateForm);
+		Candidate candidate = BeanCopy.copyFormToEntity(candidateForm);
 		//候補者情報を登録
 		candidateService.register(candidate, slcDate);
 		//選考情報を登録
@@ -119,38 +142,52 @@ public class RecruitmentManagementController {
 	 * @param model
 	 * @return 候補者情報変更入力画面
 	 */
-	@GetMapping("update")
-	public String transitionToCandidateUpdateInputScreen(@RequestParam("candidateId") Integer cId, Model model) {
+	@GetMapping("update/{candidateId}")
+	public String transitionToCandidateUpdateInputScreen(@PathVariable("candidateId") Integer cId, Model model) {
 		//候補者IDから候補者情報を取得、格納
 		model.addAttribute("candidate", candidateService.findById(cId));
 		//入力ドロップダウン用のリスト（採用エージェント、紹介元）を格納
 		model.addAttribute("agentList", agentService.findAll());
-		model.addAttribute("referrerList", referrerService.findAll());
+		//入力ドロップダウン用のリスト(大学マスタ）を格納
+		model.addAttribute("universityList", universityService.findAll());
+		//入力ドロップダウン用のリスト（学部マスタ）を格納
+		model.addAttribute("facultyList", facultyService.findAll());
+		//入力ドロップダウン用のリスト（学科マスタ）を格納
+		model.addAttribute("departmentList", departmentService.findAll());
+		//入力ドロップダウン用のリスト（大学ランクマスタ）を格納
+		model.addAttribute("universityRankList", universityRankService.findAll());
+		//入力ドロップダウン用のリスト（適性検査）を格納
+		model.addAttribute("aptitudeList", aptitudeService.findAll());
+		//検索ドロップダウン用のリスト（選考ステータス、詳細）を格納
+		model.addAttribute("slcStatusList", slcStatusService.findAll());
+		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
+		model.addAttribute("slcReferrerList", selectionReferrerService.findAll());
+		model.addAttribute("slcDate",
+				selectionService.updatePrepare(cId, candidateService.findById(cId).getSlcStatus().getSlcStatusId()));
+		model.addAttribute("selectionList", selectionService.findBycandidateId(cId));
+		//System.out.println("選考日程リスト" + selectionService.findBycandidateId(cId).size());
 		return "candidate/update_input";
 	}
 
-	//	public String updateCandidate(@ModelAttribute Candidate candidate, RedirectAttributes redirectAttributes) {
-	//		//候補者情報を変更
-	//		candidateService.update(candidate);
-	//		redirectAttributes.addAttribute("candidateId", candidate.getCandidateId());
-	//		return "redirect:/recruit/candidates/update";
-	//	}
 	/**
 	 * 候補者情報を変更
-	 *07/14 鶴 フォームクラスの導入
+	 *
 	 *
 	 * @param id 候補者ID
 	 * @param candidate 候補者情報
 	 * @return 候補者情報変更入力画面
 	 */
 	@PostMapping("update")
-	public String updateCandidate(@ModelAttribute CandidateForm candidateForm, RedirectAttributes redirectAttributes) {
+	public String updateCandidate(@ModelAttribute CandidateForm candidateForm, @RequestParam("slcDate") String slcDate,
+			RedirectAttributes redirectAttributes) {
 		//候補者情報をエンティティにコピー
-		Candidate candidate = BeanCopy.copyFormToEntuty(candidateForm);
+		Candidate candidate = BeanCopy.copyFormToEntity(candidateForm);
 		//候補者情報を変更
 		candidateService.update(candidate);
+		//選考情報を登録
+		selectionService.update(candidate.getCandidateId(), candidate.getSlcStatus().getSlcStatusId(), slcDate);
 		redirectAttributes.addAttribute("candidateId", candidate.getCandidateId());
-		return "redirect:/recruit/candidates/update";
+		return "redirect:/recruit/candidates/update/" + candidate.getCandidateId();
 	}
 
 	/**
@@ -191,9 +228,13 @@ public class RecruitmentManagementController {
 		model.addAttribute("slcDateString", DateFormatter.toString(slc.getSlcDate()));
 		//選考結果を候補者情報から取得、格納
 		model.addAttribute("slcResult", candidate.getSlcStatusDtl().getSlcStatusDtlId());
+		//検索ドロップダウン用のリスト（選考ステータス、詳細）を格納
+		model.addAttribute("slcStatusList", slcStatusService.findAll());
+		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
+		model.addAttribute("slcReferrerList", selectionReferrerService.findAll());
 
 		// 日程が登録された候補者情報を取得、格納
-		model.addAttribute("candidatesHasSlcDate", candidatesViewService.findByIsRegisteredSlcDate());
+		//model.addAttribute("candidatesHasSlcDate", candidatesViewService.findByIsRegisteredSlcDate());
 
 		return "selection/update_input";
 	}
@@ -208,9 +249,10 @@ public class RecruitmentManagementController {
 	 */
 	@PostMapping("selection")
 	public String updateSlcInfo(@RequestParam("slcResult") Integer slcResult, @ModelAttribute Selection slc,
-			@RequestParam("slcDateString") String slcDateString, RedirectAttributes redirectAttributes) {
+			@RequestParam("slcDateString") String slcDateString, RedirectAttributes redirectAttributes, Integer slcStatus) {
+		//System.out.println("登録ステータス:" + slcStatus);
 		//選考情報を変更
-		selectionService.update(slc, slcDateString);
+		selectionService.update(slc.getSlcPK().getCandidateId(), slcStatus ,slcDateString);
 		//選考ステータスを変更
 		candidateService.updateSlcStatusDtl(slc.getSlcPK().getCandidateId(), slcResult, slcDateString);
 		redirectAttributes.addAttribute("candidateId", slc.getSlcPK().getCandidateId());
@@ -233,55 +275,4 @@ public class RecruitmentManagementController {
 		return "redirect:/recruit/candidates/selection";
 	}
 
-	/**
-	 * 一括更新画面への遷移
-	 *
-	 * @param cId 候補者ID（配列）
-	 * @param muForm 一括更新のフォーム
-	 * @param model
-	 * @return 一括更新画面
-	 */
-	@GetMapping("multiple")
-	public String transitionToMultipleUpdateScreen(@RequestParam("candidateId") Integer[] cId,
-			@ModelAttribute("multipleUpdateForm") MultipleUpdateForm muForm, Model model) {
-		//複数の候補者IDから候補者情報を取得、格納
-		model.addAttribute("candidates", candidatesViewService.findByCandidateId(cId));
-		//一括更新ドロップダウン用のリスト（選考ステータス、詳細、エージェント、紹介元）を格納
-		model.addAttribute("slcStatusList", slcStatusService.findAll());
-		model.addAttribute("slcStatusDtlList", slcStatusDtlService.findAll());
-		model.addAttribute("agentList", agentService.findAll());
-		model.addAttribute("referrerList", referrerService.findAll());
-		return "multiple/update_input";
-	}
-
-	/**
-	 *
-	 * @param cId 候補者ID（配列）
-	 * @param muForm 一括更新のフォーム
-	 * @param model
-	 * @return 一覧画面
-	 */
-	@PostMapping("multiple")
-	public String updateCandidateList(@RequestParam("candidateId") Integer[] cId,
-			@ModelAttribute("multipleUpdateForm") MultipleUpdateForm muForm, Model model) {
-		//候補者情報の一括保存、更新
-		List<Candidate> cList = candidateService.updateList(cId, muForm);
-		selectionService.updateList(cList, muForm.getSlcDateString());
-		return "redirect:/recruit/candidates";
-	}
-
-	/**
-	 * 候補者情報の一括削除
-	 *
-	 * @param cId 候補者ID（配列）
-	 * @param model
-	 * @return 一覧画面
-	 */
-	@PostMapping("multiple/delete")
-	public String deleteCandidateList(@RequestParam("candidateId") Integer[] cId, Model model) {
-		//候補者情報、選考情報の一括削除
-		candidateService.deleteList(cId);
-		selectionService.deleteList(cId);
-		return "redirect:/recruit/candidates";
-	}
 }

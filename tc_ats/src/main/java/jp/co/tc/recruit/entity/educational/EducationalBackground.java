@@ -56,7 +56,7 @@ public class EducationalBackground extends AbstractEntity implements Serializabl
 	@Column(name = "delete_flag")
 	private Integer deleteFlag;
 
-	@OneToMany(mappedBy="educationalBackground", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="educationalBackground",cascade = CascadeType.ALL)
 	private List<Candidate> candidate;
 
 	/**

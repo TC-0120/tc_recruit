@@ -95,6 +95,98 @@
 
 	}
 
+	//選考ステータス詳細（全件）
+	var slcStatusDtlAll = [];
+	var slcReferrerAll = [];
+	/**
+	 * ロード時、選考ステータス詳細検索のドロップダウンの初期設定
+	 *
+	 */
+	 function setFirstSlcStatusDtl() {
+		//選考ステータス詳細の情報を取得
+		[# th:each="slcStatusDtl: ${slcStatusDtlList}"]
+			var slcStatusDtl = {id:/*[[${slcStatusDtl.slcStatusDtlId}]]*/, name:/*[[${slcStatusDtl.slcStatusDtlName}]]*/,
+				flag:/*[[${slcStatusDtl.slcStatusFlag}]]*/};
+
+			slcStatusDtlAll.push(slcStatusDtl);
+		[/]
+
+		//選考参照情報を取得
+		[# th:each="slcReferrer: ${slcReferrerList}"]
+			var slcReferrer = {id:/*[[${slcReferrer.selectionReferrerId}]]*/, slcId:/*[[${slcReferrer.slcStatus.slcStatusId}]]*/,
+				slcName:/*[[${slcReferrer.slcStatus.slcStatusName}]]*/, slcDtlId:/*[[${slcReferrer.slcStatusDtl.slcStatusDtlId}]]*/,
+				slcDtlName:/*[[${slcReferrer.slcStatusDtl.slcStatusDtlName}]]*/};
+
+			slcReferrerAll.push(slcReferrer);
+		[/]
+
+		//選考ステータス詳細検索のドロップダウンを設定
+		setSlcStatusDtl() ;
+
+		//選考ステータス詳細検索のドロップダウン
+		var slcStatusDtl = document.getElementById("slcResult");
+		//ドロップダウンを保持された検索条件と同じ値を選択
+		for (var i = 0; i < slcStatusDtl.length; i++) {
+			if (slcStatusDtl[i].value == /*[[${candidate.slcStatusDtl.slcStatusDtlId}]]*/) {
+				slcStatusDtl[i].selected = true;
+			}
+		}
+		//alert('動作確認');
+	}
+
+	 /**
+		 * 選考ステータス詳細検索のドロップダウンを設定
+		 *
+		 */
+		 function setSlcStatusDtl() {
+			//選考ステータス検索の選択値
+			var selectedSlcStatus = document.getElementById("slcStatus").textContent;
+			//選考ステータス詳細検索のドロップダウン
+			var slcStatusDtl = document.getElementById("slcResult");
+			//ドロップダウンの設定値（共通項目設定済）
+			var slcStatusDtlList = [];//[{id:0, name:"一覧"}];
+
+
+			/*
+			if (selectedSlcStatus == 0) {
+				//選考ステータス検索の選択値が「一覧」の場合、全ての選考ステータス詳細を追加
+				for (var i = 0; i < slcStatusDtlAll.length; i++) {
+					slcStatusDtlList.push(slcStatusDtlAll[i]);
+				}
+			}
+			if (selectedSlcStatus == 0) {
+				//選考ステータス詳細検索のドロップダウンに値を設定
+				 for (var i = 0; i < slcStatusDtlList.length; i++) {
+					var op = document.createElement("option");
+					op.value = slcStatusDtlList[i].id;
+					op.text = slcStatusDtlList[i].name;
+					slcStatusDtl.appendChild(op);
+				}
+			}else{
+			*/
+				//選考参照情報に基づいて選考ステータス詳細を設定
+				for (var i = 0; i < slcReferrerAll.length; i++) {
+					if(selectedSlcStatus == slcReferrerAll[i].slcName){
+						slcStatusDtlList.push(slcReferrerAll[i]);
+					}
+				}
+				//alert(selectedSlcStatus);
+
+			//選考ステータス詳細検索のドロップダウンを初期化
+			 slcStatusDtl.textContent = null;
+
+
+				//選考ステータス詳細検索のドロップダウンに値を設定
+				 for (var i = 0; i < slcStatusDtlList.length; i++) {
+
+						var op = document.createElement("option");
+						op.value = slcStatusDtlList[i].slcDtlId;
+						op.text = slcStatusDtlList[i].slcDtlName;
+						slcStatusDtl.appendChild(op);
+
+				}
+		}
+
 	/**
 	 * 更新確認(日程が被っていない場合)
 	 *
@@ -120,7 +212,7 @@
 	}
 </script>
 </head>
-<body th:onload="setSlcResult([[${candidate.slcStatusDtl.slcStatusDtlId}]]); window.opener.location.reload()">
+<body th:onload="setSlcResult([[${candidate.slcStatusDtl.slcStatusDtlId}]]); window.opener.location.reload();setFirstSlcStatusDtl()">
 	<header>
 		<img th:src="@{/images/TCLogo.png}">
 	</header>
@@ -140,7 +232,8 @@
 		</div>
 		<div>
 			<label>選考ステータス</label>
-			<div th:text="*{slcStatus.slcStatusName}"></div>
+			<div id="slcStatus"  th:value="*{slcStatus.slcStatusId}" th:text="*{slcStatus.slcStatusName}"></div>
+			<input type="hidden"  name="slcStatus" th:value="*{slcStatus.slcStatusId}"/>
 		</div>
 		<div>
 			<label th:if="*{slcStatus.slcStatusId <= 5}">選考日程</label>
@@ -149,21 +242,35 @@
 			<input th:if="*{slcStatusDtl.slcStatusDtlId != 9}" id="slcDate" type="datetime-local" name="slcDateString" th:value="${slcDateString}" />
 		</div>
 		<div>
-			<div th:if="*{slcStatus.slcStatusId >= 2 && slcStatus.slcStatusId <= 5}">
+			<div th:if="*{slcStatus.slcStatusId >= 1 && slcStatus.slcStatusId <= 5}">
 				<label>選考結果</label>
 				<select name="slcResult" id="slcResult">
+					<!--
 					<option value="0" selected>保留</option>
 					<option value="3">合格</option>
 					<option value="4">不合格</option>
 					<option value="5">辞退</option>
+					-->
 				</select>
 			</div>
 			<div th:if="*{slcStatus.slcStatusId == 6}">
 				<label>内定返事</label>
 				<select name="slcResult" id="slcResult">
+					<!--
 					<option value="6">承諾待ち</option>
 					<option value="7">承諾</option>
 					<option value="5">辞退</option>
+					-->
+				</select>
+			</div>
+			<div th:if="${candidate.slcStatusDtl.slcStatusDtlId == 8}">
+				<label>入社手続き状況</label>
+				<select name="slcResult" id="slcResult">
+					<!--
+					<option value="6">承諾待ち</option>
+					<option value="7">承諾</option>
+					<option value="5">辞退</option>
+					-->
 				</select>
 			</div>
 			<div th:if="*{slcStatus.slcStatusId == 1 || slcStatus.slcStatusId == 7}">

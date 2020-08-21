@@ -15,9 +15,11 @@ import javax.persistence.Table;
 
 import jp.co.tc.recruit.entity.selection.SelectionStatus;
 import jp.co.tc.recruit.entity.selection.SelectionStatusDetail;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "XXTC_DASHBOARD")
 public class Dashboard extends AbstractEntity implements Serializable {

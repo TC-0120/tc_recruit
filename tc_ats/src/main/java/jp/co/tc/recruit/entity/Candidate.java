@@ -2,6 +2,7 @@ package jp.co.tc.recruit.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +18,8 @@ import jp.co.tc.recruit.entity.educational.EducationalBackground;
 import jp.co.tc.recruit.entity.educational.UniversityRank;
 import jp.co.tc.recruit.entity.selection.SelectionStatus;
 import jp.co.tc.recruit.entity.selection.SelectionStatusDetail;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 候補者情報のエンティティ
@@ -25,7 +27,8 @@ import lombok.Data;
  * @author TC-0115
  *
  */
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="XXTC_CANDIDATE")
 public class Candidate extends AbstractEntity implements Serializable  {
@@ -52,7 +55,7 @@ public class Candidate extends AbstractEntity implements Serializable  {
 	@JoinColumn(name = "university_rank_id")
 	private UniversityRank universityRank;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="educational_background_id")
 	private EducationalBackground educationalBackground;
 

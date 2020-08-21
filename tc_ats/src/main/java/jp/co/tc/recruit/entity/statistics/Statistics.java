@@ -25,7 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "XXTC_STATISTICS_CONFIG")
+@Table(name = "XXTC_STATISTICS")
 public class Statistics extends AbstractEntity implements Serializable {
 
 	@Id
@@ -33,6 +33,9 @@ public class Statistics extends AbstractEntity implements Serializable {
 	@SequenceGenerator(name = "statistics", sequenceName = "xxtc_statistics_statistics_id_seq", allocationSize = 1)
 	@Column(name="statistics_id")
 	private Integer statisticsId;
+
+	@Column(name="statistics_name")
+	private String statisticsName;
 
 	@ManyToOne
 	@JoinColumn(name = "statistics_config_id")

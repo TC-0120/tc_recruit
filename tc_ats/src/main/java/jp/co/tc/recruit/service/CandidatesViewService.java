@@ -1,33 +1,32 @@
 package jp.co.tc.recruit.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jp.co.tc.recruit.constant.DeleteFlagConstant;
 import jp.co.tc.recruit.constant.SlcStatusDtlConstant;
-import jp.co.tc.recruit.entity.view.CandidatesView;
+import jp.co.tc.recruit.entity.User;
+import jp.co.tc.recruit.entity.view.V_Candidates;
 import jp.co.tc.recruit.form.ConditionsForm;
 import jp.co.tc.recruit.repository.CandidatesViewRepository;
+import jp.co.tc.recruit.repository.UserRepository;
 
-/**
- * 候補者情報ビューのサービスクラス
- *
- * @author TC-0115
- *
- */
 @Service
 public class CandidatesViewService {
 
 	@Autowired
-	CandidatesViewRepository repo;
+	CandidatesViewRepository candidatesViewRepository;
+	@Autowired
+	UserRepository userRepository;
 
-	public List<CandidatesView> findAll() {
-		return repo.findAll();
+	public List<V_Candidates> findAll(){
+		return candidatesViewRepository.findByDeleteFlagOrderByCandidateId(DeleteFlagConstant.NOT_DELETED);
 	}
+
 
 	/**
 	 * 候補者情報の検索
@@ -35,46 +34,38 @@ public class CandidatesViewService {
 	 * @param cf 検索条件
 	 * @return 候補者情報
 	 */
-	public List<CandidatesView> findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(ConditionsForm cf) {
-		List<CandidatesView> cv = new ArrayList<CandidatesView>();
+	public List<V_Candidates> findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(ConditionsForm cf) {
+		List<V_Candidates> cv = new ArrayList<V_Candidates>();
 
 		//検索条件から候補者情報を取得
-		cv = repo.findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(cf);
+		cv = candidatesViewRepository.findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(cf);
 
-		//ソート項目が選考日程の場合、Comparatorクラスを用いて並び替え
-		if (cf.getOrder() == ConditionsForm.SLC_DATE) {
-			Collections.sort(cv, new SlcDateComparator());
-
-			if (cf.getDirection() == ConditionsForm.DESC) {
-				Collections.reverse(cv);
+		//登録・更新者情報取得
+		for(V_Candidates v:cv) {
+			if(v.getInsertUser() == null ) {
+				User user = new User();
+				user.setLastName("DB登録");
+				v.setInsertUserData(user);
+			}else if(v.getUpdateUser() == null) {
+				User user = new User();
+				user.setLastName("DB登録");
+				v.setUpdateUserData(user);
+			}else {
+				v.setInsertUserData(userRepository.getOne(v.getInsertUser()));
+				v.setUpdateUserData(userRepository.getOne(v.getUpdateUser()));
 			}
 		}
 
+		//		//ソート項目が選考日程の場合、Comparatorクラスを用いて並び替え
+		//		if (cf.getOrder() == ConditionsForm.SLC_DATE) {
+		//			Collections.sort(cv, new SlcDateComparator());
+		//
+		//			if (cf.getDirection() == ConditionsForm.DESC) {
+		//				Collections.reverse(cv);
+		//			}
+		//		}
 
-		return cv;
-	}
 
-	/**
-	 * 複数の候補者IDによる候補者情報の検索
-	 *
-	 * @param cId 候補者ID（複数）
-	 * @return 候補者情報
-	 */
-	public List<CandidatesView> findByCandidateId(Integer[] cId) {
-		List<CandidatesView> cv = new ArrayList<CandidatesView>();
-		for (int i = 0; i < cId.length; i++) {
-			cv.add(repo.findByCandidateId(cId[i]));
-		}
-		return cv;
-	}
-
-	/**
-	 * 選考日程が登録されている候補者情報の検索
-	 *
-	 */
-	public List<CandidatesView> findByIsRegisteredSlcDate() {
-		//選考ステータス詳細が選考中、確定の候補者情報を取得
-		List<CandidatesView> cv = repo.findBySlcStatusDtlIdOrSlcStatusDtlId(SlcStatusDtlConstant.SELECTING, SlcStatusDtlConstant.CONFIRMED);
 		return cv;
 	}
 
@@ -84,8 +75,8 @@ public class CandidatesViewService {
 	 * @author TC-0115
 	 *
 	 */
-	private class SlcDateComparator implements Comparator<CandidatesView> {
-		public int compare(CandidatesView cv1, CandidatesView cv2) {
+	private class SlcDateComparator implements Comparator<V_Candidates> {
+		public int compare(V_Candidates cv1, V_Candidates cv2) {
 			Integer cvStDtl1 = cv1.getSlcStatusDtlId();
 			Integer cvStDtl2 = cv2.getSlcStatusDtlId();
 
@@ -98,7 +89,7 @@ public class CandidatesViewService {
 				if (cvStDtl2 == SlcStatusDtlConstant.SELECTING || cvStDtl2 == SlcStatusDtlConstant.WATING_ACCEPTANCE
 						|| cvStDtl2 == SlcStatusDtlConstant.CONFIRMED) {
 					return cv1.getSlcDate().compareTo(cv2.getSlcDate());
-				} else {
+					} else {
 					return -1;
 				}
 			} else {
@@ -111,5 +102,4 @@ public class CandidatesViewService {
 			}
 		}
 	}
-
 }

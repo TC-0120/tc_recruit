@@ -201,13 +201,12 @@
 		//ソート方向の値
 		var directionValue = document.conditionsForm.direction.value;
 		//カラム名
-		var sort = document.getElementsByClassName("sort");
-
+		var sort = document.getElementsByClassName("sort" + orderValue);
 		//ソート状態に応じてカラム名の横に方向を表示
 		if (directionValue == 1) {
-			sort[orderValue - 1].textContent = "▼";
+			sort[0].textContent = "▼";
 		} else if (directionValue == 2) {
-			sort[orderValue - 1].textContent = "▲";
+			sort[0].textContent = "▲";
 		}
 
 	}

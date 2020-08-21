@@ -1,5 +1,7 @@
 package jp.co.tc.recruit.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,7 +23,12 @@ public interface SelectionRepository extends JpaRepository<Selection, SelectionP
 	public Selection findBySlcPK(SelectionPK slcPK);
 
 	@Modifying
-	@Query(value="DELETE FROM XXTC_SELECTION WHERE candidate_id = :id", nativeQuery=true)
+	@Query(value="DELETE FROM XXTC_SELECTION_DATE WHERE candidate_id = :id", nativeQuery=true)
 	public Integer deleteByCandidateId(@Param("id") Integer id);
+
+	@Modifying
+	@Query(value="SELECT * FROM XXTC_SELECTION_DATE WHERE candidate_id = :id", nativeQuery=true)
+	public List<Selection> findByCandidateId(@Param("id") Integer id);
+
 
 }

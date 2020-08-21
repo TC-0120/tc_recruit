@@ -2,7 +2,7 @@ package jp.co.tc.recruit.repository;
 
 import java.util.List;
 
-import jp.co.tc.recruit.entity.view.CandidatesView;
+import jp.co.tc.recruit.entity.view.V_Candidates;
 import jp.co.tc.recruit.form.ConditionsForm;
 
 /**
@@ -12,5 +12,5 @@ import jp.co.tc.recruit.form.ConditionsForm;
  *
  */
 public interface CandidatesViewRepositoryCustom {
-	List<CandidatesView> findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(ConditionsForm cf);
+	List<V_Candidates> findBySlcStatusIdAndSlcStatudDtlIdAndSlcDate(ConditionsForm cf);
 }

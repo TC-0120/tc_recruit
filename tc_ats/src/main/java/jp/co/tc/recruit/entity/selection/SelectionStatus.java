@@ -40,7 +40,7 @@ public class SelectionStatus extends AbstractEntity implements Serializable{
 	private String slcStatusName;
 
 	@Column(name="selection_procedure")
-	private String selectionProcedure;
+	private Integer selectionProcedure;
 
 	@Column(name = "delete_flag")
 	private Integer deleteFlag;

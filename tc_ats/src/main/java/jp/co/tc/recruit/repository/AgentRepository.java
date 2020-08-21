@@ -6,14 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import jp.co.tc.recruit.entity.Agent;
 
-/**
- * 採用エージェントのリポジトリ
- *
- * @author TC-0115
- *
- */
-public interface AgentRepository extends JpaRepository<Agent, Integer> {
-	public List<Agent> findByOrderByAgentId();
+public interface AgentRepository extends JpaRepository<Agent, Integer>{
+	public List<Agent> findAllByOrderByAgentId();
 
-	public Agent findByAgentId(Integer id);
+	public Agent findByAgentIdAndDeleteFlag(Integer agentId,Integer DeleteFlagConstant);
+
+	public Agent findFirstByDeleteFlag(Integer DeleteFlagConstant);
+
+	public List<Agent> findByDeleteFlagOrderByAgentId(Integer DeleteFlagConstant);
 }

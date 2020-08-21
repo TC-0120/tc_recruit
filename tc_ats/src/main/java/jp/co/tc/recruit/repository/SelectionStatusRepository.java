@@ -15,6 +15,7 @@ import jp.co.tc.recruit.entity.selection.SelectionStatus;
  */
 public interface SelectionStatusRepository extends JpaRepository<SelectionStatus, Integer> {
 
-	public SelectionStatus findBySlcStatusId(Integer id);
+	public SelectionStatus findBySlcStatusIdAndDeleteFlag(Integer id, Integer DeleteFlagConstant);
 	public List<SelectionStatus> findAllByOrderBySlcStatusId();
+	public List<SelectionStatus> findByDeleteFlagOrderBySelectionProcedure(Integer DeleteFlagConstant);
 }

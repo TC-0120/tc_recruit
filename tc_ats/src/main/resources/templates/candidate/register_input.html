@@ -10,30 +10,66 @@
 </style>
 <script type="text/javascript" th:inline="javascript">
 	//紹介元（全件）
-	var referrerAll = [];
+	var agentAll = [];
+	//初期表示は、マスタ選択が非表示
+	function setEduBack(){
+		document.getElementById("eduBackDtl").style.display ="none";
+	}
+
+
+	//ラジオボタンの選択ごとに、表示、非表示対象を切り替える
+	function changeEduBack(){
+
+		//ラジオボタンのオブジェクト取得
+		var radioButtons = document.getElementsByName('eduBackCheck');
+		//直接記入のオブジェクト取得
+		var eduBack = document.getElementById("eduBack");
+		//マスタ選択のオブジェクト取得
+		var eduBackDtl = document.getElementById("eduBackDtl");
+
+		//直接記入欄とマスタ選択欄のCSS適用変更
+		if(radioButtons[0].checked){
+			eduBack.style.display ="block";
+			eduBackDtl.style.display ="none";
+		}else if(radioButtons[1].checked){
+			eduBack.style.display ="none";
+			eduBackDtl.style.display ="block";
+		}
+	}
+
+	function checkEduBack(){
+		//ラジオボタンのオブジェクト取得
+		var radioButton = document.getElementsByName('eduBackCheck')[1];
+		var university = document.getElementById("university");
+		var faculty = document.getElementById("faculty");
+		var department = document.getElementById("department");
+		if(radioButton.checked && (university.value == 0 || faculty.value == 0 || department == 0)){
+			alert()
+		}
+	}
 
 	/**
-	 * ロード時、紹介元のドロップダウンの初期設定
+	 * ロード時、及びエージェント選択時に紹介料表示
 	 *
 	 */
 	function setFirstReferrer() {
-		//紹介元の情報を取得
-		[# th:each="referrer: ${referrerList}"]
-			var referrer = {id:/*[[${referrer.referrerId}]]*/, name:/*[[${referrer.referrerName}]]*/,
-				fee:/*[[${referrer.referrerFee}]]*/, agentId:/*[[${referrer.agent.agentId}]]*/};
+		//エージェントの情報を取得
+		[# th:each="agent: ${agentList}"]
+			var agent = {agentId:/*[[${agent.agentId}]]*/, agentName:/*[[${agent.agentName}]]*/,
+				agentFee:/*[[${agent.agentFee}]]*/};
 
-			referrerAll.push(referrer);
+		agentAll.push(agent);
 		[/]
 
-		//紹介元のドロップダウンを設定
-		setReferrer();
+		//紹介料を設定
+		showAgentFee();
 	}
 
 
 	/**
 	 * 紹介元のドロップダウンを設定
 	 *
-	 */
+	 *
 	function setReferrer() {
 		//紹介元の選択値
 		var selectedAgentId = document.getElementById("agentId").value;
@@ -62,22 +98,22 @@
 
 		//紹介料を表示
 		showReferrerFee();
-	}
+	}*/
 
 	/**
 	 * 紹介料を表示
 	 *
 	 */
-	function showReferrerFee() {
+	function showAgentFee() {
 		//紹介料
-		var referrerFee = document.getElementById("referrerFee");
-		//選択された紹介元ID
-		var selectedReferrerId = document.getElementById("referrer").value;
+		var agentFee = document.getElementById("referrerFee");
+		//選択されたエージェントID
+		var selectedAgentId = document.getElementById("agentId").value;
 
 		//取得している紹介元（全件）の紹介元IDと選択された紹介元IDが一致する紹介料を表示
-		for (var i = 0; i < referrerAll.length; i++) {
-			if (referrerAll[i].id == selectedReferrerId) {
-				referrerFee.textContent = referrerAll[i].fee + "万円";
+		for (var i = 0; i < agentAll.length; i++) {
+			if (agentAll[i].agentId == selectedAgentId) {
+				agentFee.textContent = agentAll[i].agentFee + "万円";
 				break;
 			}
 		}
@@ -88,17 +124,42 @@
 	 *
 	 */
 	function confirmRegisterCandidate() {
-		if(window.confirm("この内容で登録しますか？")){
-			return true;
-		} else{
+		//ラジオボタンのオブジェクト取得
+		var radioButton = document.getElementsByName('eduBackCheck');
+		var university = document.getElementById("university");
+		var faculty = document.getElementById("faculty");
+		var department = document.getElementById("department");
+		var eduBack = document.getElementById("eduBack");
+		var candidateName = document.getElementById("candidateName");
+		var stringName = "";
+		stringName += candidateName.value;
+		for (var i = 0; i < candidateName.value.length; i++) {
+			stringName = stringName.replace(" ","");
+			stringName = stringName.replace("　","");
+		}
+		//alert(stringName.replace("a",""));
+		if(radioButton[1].checked && (university.value == 0 || faculty.value == 0 || department.value == 0)){
+			alert('大学・学部・学科全てを選択してください');
 			return false;
+		}else if(radioButton[0].checked && eduBack.value == ""){
+			alert('学歴を記入してください');
+			return false;
+		}else if(stringName == ""){
+			alert('候補者氏名を記入してください');
+			return false;
+		}else{
+			if(window.confirm("この内容で登録しますか？")){
+				return true;
+			} else{
+				return false;
+			}
 		}
 	}
 
 
 </script>
 </head>
-<body onload="setFirstReferrer(); window.opener.location.reload()">
+<body onload="setFirstReferrer();changeEduBack();window.opener.location.reload();">
 	<header>
 		<img th:src="@{/images/TCLogo.png}">
 	</header>
@@ -108,11 +169,11 @@
 	<form th:action="@{/recruit/candidates}" th:method="post" onsubmit="return confirmRegisterCandidate()">
 		<div>
 			<label>候補者</label>
-			<input type="text" name="candidateName" maxlength="20" required/>
+			<input id="candidateName" type="text" name="candidateName" maxlength="20" required/>
 		</div>
 		<div>
 			<label>候補者(ふりがな)</label>
-			<input type="text" name="candidateFurigana" maxlength="20" required/>
+			<input type="text" name="candidateFurigana" maxlength="20" />
 		</div>
 		<div>
 			<label>性別</label>
@@ -121,7 +182,31 @@
 		</div>
 		<div>
 			<label>学歴</label>
-			<input type="text" name="eduBack" maxlength="20" />
+			<input type="radio" name="eduBackCheck" value="1" onchange="changeEduBack();" checked="checked"/>直接記入
+			<input type="radio" name="eduBackCheck" value="2" onchange="changeEduBack();"/>マスタ選択
+			<input id="eduBack" type="text" name="eduBack" maxlength="50" />
+				<div id="eduBackDtl">
+				<label>大学</label>
+				<select id="university" name="educationalBackground.university.universityId">
+					<option th:each="university:${universityList}" th:value="${university.universityId}" th:text="${university.universityName}"></option>
+				</select>
+				<label>学部</label>
+				<select id="faculty" name="educationalBackground.faculty.facultyId">
+					<option th:each="faculty:${facultyList}" th:value="${faculty.facultyId}" th:text="${faculty.facultyName}"></option>
+				</select>
+				<label>学科</label>
+				<select id="department" name="educationalBackground.department.departmentId">
+					<option th:each="department:${departmentList}" th:value="${department.departmentId}" th:text="${department.departmentName}"></option>
+				</select>
+				</div>
+			<label>大学ランク</label>
+			<select name="universityRank.universityRankId">
+				<option th:each="universityRank:${universityRankList}" th:value="${universityRank.universityRankId}" th:text="${universityRank.universityRankName}"></option>
+			</select>
+		</div>
+		<div>
+			<label>メールアドレス</label>
+			<input type="email" name="candidateEmailAddress"/>
 		</div>
 		<div>
 			<label>選考ルート</label>
@@ -130,21 +215,34 @@
 			<input type="datetime-local" name="slcDate" />
 		</div>
 		<div>
+			<label>適性検査結果</label>
+			<select name="aptitude.aptitudeId">
+				<option th:each="aptitude:${aptitudeList}" th:value="${aptitude.aptitudeId}" th:text="${aptitude.aptitudeStatus}"></option>
+			</select>
+			<label>点数</label>
+			<input type="number" name="aptitudeScore" min="0" max="100"/>
+		</div>
+		<div>
 			<label>採用エージェント</label>
-			<select id="agentId" name="agent.agentId" onchange="setReferrer()">
+			<select id="agentId" name="agent.agentId" onchange="showAgentFee()">
 				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
 			</select>
 		</div>
+		<!--
 		<div>
 			<label>紹介元</label>
 			<select id="referrer" name="referrer.referrerId" onchange="showReferrerFee()">
 			</select>
-		</div>
+		</div><input type="hidden" name="aptitudeFlag" value="0">
+		-->
 		<div>
 			<label>紹介料</label>
 			<span id="referrerFee"/></span>
 		</div>
-		<input type="hidden" name="aptitudeFlag" value="0">
+		<div>
+			<label>備考</label>
+			<input type="text" name="remarks"/>
+		</div>
 		<input type="submit" value="登録" />
 	</form>
 
