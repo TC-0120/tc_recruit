@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	<meta charset="UTF-8" />
+	<title>移行率分析画面</title>
+	<script>
+		var date = new Date();
+		var yearList = [];
+		function setYear(){
+
+			var year = document.getElementById("year");
+			 // 現在から3ヶ月前にセット
+		    date.setMonth(date.getMonth() - 3);
+			 //2020年度から今年度までを登録
+			 for(var i = 0; i <= (date.getFullYear() - 2020);i++){
+				 yearList[i] = 2020 + i;
+			 }
+
+			 year.textContent = null;
+			 //現在年度に応じた年度を追加
+			 for(var i = 0; i < yearList.length;i++){
+				var op = document.createElement("option");
+				op.value = yearList[i];
+				op.text = yearList[i] + '年度';
+				year.appendChild(op);
+			 }
+
+			 //選択値を取得
+			yearCheck = document.getElementById("yearCheck");
+
+			 //選択年度を初期値として指定
+			 for(var i = 0; i < year.length;i++){
+				 if(year[i].value == yearCheck.value){
+					 year[i].selected = true;
+				 }
+		 	}
+		}
+	</script>
+	</head>
+	<body onload="setYear();">
+		<div th:replace="header :: header_fragment" class="header"></div>
+		<h2>移行率分析画面</h2>
+		<form th:action="@{/statistics/transitionrate}" th:method="post" >
+			<select id="year" name="year">
+			</select>
+			<input type="submit" value="選択"/>
+			<a th:href="@{/statistics}">
+			管理画面に戻る
+			</a>
+			<input id="yearCheck" type="hidden" th:value="${year}" />
+		</form>
+
+		<!--
+		<table >
+		<tr valign="top">
+		<td  >-->
+		<table border="3" align="left" th:each="month, st:${monthList}">
+			<tr >
+				<th  >
+				</th>
+				<th colspan="3"  th:text="${month}">
+				</th>
+
+			</tr>
+			<tr>
+			<th>ステータス
+				</th>
+				<th th:each="col:${colNames}" th:text="${col}">
+				</th>
+			</tr>
+			<tr th:each="tstRateByMonth:${tstRateList[st.index]}" th:object="${tstRateByMonth}">
+				<td th:text="*{rowName}" >
+				</td>
+				<td th:text="*{hitNum}" align="right">
+				</td>
+				<td th:text="*{populationRate} + ${pers}" align="right">
+				</td>
+				<td th:text="*{transitionRate} + ${pers}" th:if="*{transitionRate != null}" align="right">
+				</td>
+				<td  th:if="*{transitionRate == null}" align="right">-
+				</td>
+
+			</tr>
+		</table>
+		<br clear="all">
+		<!-- th:each="tstRate:${tstRateList}" th:each="tstRateByMonth:${tstRate}" th:object="${tstRateByMonth}"-->
+	<!--
+	</td>
+	</tr>
+	</table>-->
+	</body>
+</html>

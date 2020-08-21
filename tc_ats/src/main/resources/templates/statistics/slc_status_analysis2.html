@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>選考ステータス統計</title>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+</head>
+<script type="text/javascript" th:inline="javascript">
+	var date = new Date();
+	var yearList = [];
+	var monthList = [];
+	function setYearAndMonth(){
+
+		var year = document.getElementById("year");
+		var monthfirst = document.getElementById("monthfirst");
+		var monthend = document.getElementById("monthend");
+		 // 現在から3ヶ月前にセット
+	    date.setMonth(date.getMonth() - 3);
+		 //2020年度から今年度までを登録
+		 for(var i = 0; i <= (date.getFullYear() - 2020);i++){
+			 yearList[i] = 2020 + i;
+		 }
+
+		 year.textContent = null;
+		 //現在年度に応じた年度を追加
+		 for(var i = 0; i < yearList.length;i++){
+			var op = document.createElement("option");
+			op.value = yearList[i];
+			op.text = yearList[i] + '年度';
+			year.appendChild(op);
+		 }
+
+		 for(var i = 0; i < 12;i++){
+			 monthList[i] = i + 1;
+			 if(monthList[i] <= 9){
+				 var op = document.createElement("option");
+					op.value = monthList[i] + 3;
+					op.text = (monthList[i] + 3) + '月';
+					monthfirst.appendChild(op);
+			 }else{
+				 var op = document.createElement("option");
+				op.value = monthList[i] - 9;
+				op.text = (monthList[i] - 9) + '月';
+				monthfirst.appendChild(op);
+			 }
+
+			if(monthfirst[i].value == /*[[${monthfirst}]]*/){
+				monthfirst[i].selected = true;
+			}
+		 }
+		 for(var i = 0; i < 12;i++){
+			 if(monthList[i] <= 9){
+				 var op = document.createElement("option");
+					op.value = monthList[i] + 3;
+					op.text = (monthList[i] + 3) + '月';
+					monthend.appendChild(op);
+			 }else{
+				 var op = document.createElement("option");
+				op.value = monthList[i] - 9;
+				op.text = (monthList[i] - 9) + '月';
+				monthend.appendChild(op);
+			 }
+				if(monthend[i].value == /*[[${monthend}]]*/){
+					monthend[i].selected = true;
+				}
+		 }
+
+		 //選択値を取得
+		yearCheck = document.getElementById("yearCheck");
+
+		 //選択年度を初期値として指定
+		 for(var i = 0; i < year.length;i++){
+			 if(year[i].value == /*[[${year}]]*/){
+				 year[i].selected = true;
+			 }
+	 	}
+	}
+	function monthCheck(){//今日はここまで
+		var monthfirst = parseInt(document.getElementById("monthfirst").value);
+		var monthend = parseInt(document.getElementById("monthend").value);
+		if(1 <= monthend && monthend<= 3){
+			if((1 <= monthfirst && monthfirst<= 3) && (monthfirst > monthend)){
+				alert('対象期間が不正です');
+				return false;
+			}else{
+				return true;
+			}
+		}else{
+			if(1 <= monthfirst && monthfirst<= 3){
+				alert('対象期間が不正です');
+				return false;
+			}else if(monthfirst > monthend){
+				alert('対象期間が不正です');
+				return false;
+			}else{
+				return true;
+			}
+		}
+	}
+	function setParam(){
+		var year = document.getElementById("year");
+		var monthfirst = document.getElementById("monthfirst");
+		var monthend = document.getElementById("monthend");
+		var statisticsId = document.getElementById("statisticsId");
+		var form = document.getElementById("form");
+		form.action = '/statistics/slcstatus/' + statisticsId.value +'/' + year.value + '/' + monthfirst.value + '/' + monthend.value;
+	}
+</script>
+<body onload="setYearAndMonth()">
+	<div th:replace="header :: header_fragment" class="header"></div>
+	<h2>選考ステータス統計画面</h2>
+	<form id="form" th:action="@{/statistics}" method="get" onsubmit="setParam();return monthCheck();">
+		<!--
+		<select id="month" name="month">
+		</select>-->年度
+		<select id="year" name="year">
+		</select>表示期間
+		<select id="monthfirst" name="monthfirst">
+		</select>~
+		<select id="monthend" name="monthend">
+		</select>
+		<a th:href="@{/statistics/slcstatuslist}">
+			一覧画面に戻る
+		</a>
+		<input id="statisticsId" type="hidden" th:value="${statistics.statisticsId}"/>
+		<input id="charttitle" type="hidden" th:value="${statistics.statisticsName}" />
+
+		<div  th:each="slcStatusAnay,st: ${slcStatusAnayList}" class="monthcount">
+		<div th:id="month + ${st.count}" th:each="slcStatusBymonth:${slcStatusAnay}" th:object="${slcStatusBymonth}" >
+			<input th:name="count  + ${st.count}" type="hidden" th:value="*{count}" />
+			<input th:name="name  + ${st.count}" type="hidden" th:value="*{name}" />
+		</div>
+		</div>
+		<input type="submit" value="選択"/>
+	</form>
+	<span class="chart-container" th:id="chartshow +  ${st.count}"
+		style="display: inline-block; height: 230px; width: 420px; " th:each="slcStatusAnay,st:${slcStatusAnayList}">
+		<canvas th:id="firstPassRateChart + ${st.count}"></canvas>
+
+	</span>
+	<script type="text/javascript" th:inline="javascript">
+
+        var dataLabelPlugin = {
+        	afterDatasetsDraw: function (chart, easing) {
+        		// To only draw at the end of animation, check for easing === 1position: relative;
+        		var ctx = chart.ctx;
+
+        		chart.data.datasets.forEach(function (dataset, i) {
+        			var dataSum = 0;
+        				dataset.data.forEach(function (element){
+        					//格納した集計値を全て足して全体を求める
+        					dataSum += element;
+        				});
+
+        			var meta = chart.getDatasetMeta(i);
+
+        			if (!meta.hidden) {
+            			meta.data.forEach(function (element, index) {
+            				// Draw the text in black, with the specified font
+            				ctx.fillStyle = 'rgb(255, 255, 255)';
+
+            				var fontSize = 12;
+            				var fontStyle = 'normal';
+            				var fontFamily = 'Helvetica Neue';
+            				ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+            				// 各ラベルと各パーセンテージの格納
+            				var labelString = chart.data.labels[index];
+            				var dataString = (Math.round(dataset.data[index] / dataSum * 1000)/10).toString() + "%";
+
+            				// Make sure alignment settings are correct
+            				ctx.textAlign = 'center';
+            				ctx.textBaseline = 'middle';
+
+            				var padding = 5;
+            				var position = element.tooltipPosition();
+            				// 各ラベルと各パーセンテージを表示
+            				ctx.fillText(labelString, position.x, position.y - (fontSize / 2) - padding);
+            				ctx.fillText(dataString, position.x, position.y + (fontSize / 2) - padding);
+         			});
+                    }
+                });
+            }
+         };
+
+
+                    var monthcount = document.getElementsByClassName('monthcount');
+                    //タイトル取得
+                   var charttitle = document.getElementById("charttitle");
+
+                    var monthfirst = parseInt(/*[[${monthfirst}]]*/);
+                    var jfmcount = 1;
+                    //表示件数分グラフを表示する
+                	for(var i = 1; i <= monthcount.length;i++){
+                		//表示件数に応じてグラフサイズ変更
+                		var chartshow = document.getElementById("chartshow" + i);
+                		 if(monthcount.length >= 7){
+                         	chartshow.style.height = '250px';
+                         	chartshow.style.width = '320px';
+                         }else if(monthcount.length <= 2){
+                        	 chartshow.style.height = '400px';
+                          	chartshow.style.width = '600px';
+                         }else if(3 <= monthcount.length && monthcount.length <= 6){
+                        	chartshow.style.height = '320px';
+                           	chartshow.style.width = '420px';
+                         }
+                		 //タイトルに何月文のデータかを明記
+                		var title = charttitle.value;
+                		if(monthfirst <= 12){
+                			title += '(' + monthfirst + '月)';
+                			monthfirst++;
+                		}else{
+                			title += '(' + jfmcount + '月)';
+                			jfmcount++;
+                		}
+                    	//ラベル名称取得
+                        var names = document.getElementsByName('name' + i);
+                        //集計値取得
+                        var counts = document.getElementsByName('count' + i);
+                        //chart代入用配列
+                        var countn = new Array(names.length);
+                        var count = new Array(counts.length);
+                        for(var int = 0; int < names.length;int++){
+                        	countn[int] = names[int].value;
+                        	count[int] = parseInt(counts[int].value);
+                        	//alert(countn[i] + count[i]);
+                        }
+                    	// Chart
+                        var firstPassRateChart = "firstPassRateChart" + i;
+                    	//alert(firstPassRateChart);
+                        var chart = new Chart(firstPassRateChart, {
+                            type: 'pie',
+                            data: {
+                                labels:countn,
+                                datasets: [{
+                                    backgroundColor: ["#00bfff", "#b6b79d", "#D9CF59"],
+                                    //集計データ格納場所68a69e#
+                                    data:count,
+                                }]
+                            },
+                            options: {
+                                title: {
+                                	//タイトルを表示する
+                                    display: true,
+                                    text: title,
+                                },
+                                //横幅固定
+                                legend:{
+                                },
+                                maintainAspectRatio: false,
+                            },
+                            plugins: [dataLabelPlugin],
+                        });
+                    }
+</script>
+</body>
+</html>

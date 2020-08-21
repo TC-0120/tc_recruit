@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>選考ステータス統計</title>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+</head>
+<script type="text/javascript" th:inline="javascript">
+	var date = new Date();
+	var yearList = [];
+	var monthList = [];
+	function setYearAndMonth(){
+
+		var year = document.getElementById("year");
+		var month = document.getElementById("month");
+		 // 現在から3ヶ月前にセット
+	    date.setMonth(date.getMonth() - 3);
+		 //2020年度から今年度までを登録
+		 for(var i = 0; i <= (date.getFullYear() - 2020);i++){
+			 yearList[i] = 2020 + i;
+		 }
+
+		 year.textContent = null;
+		 //現在年度に応じた年度を追加
+		 for(var i = 0; i < yearList.length;i++){
+			var op = document.createElement("option");
+			op.value = yearList[i];
+			op.text = yearList[i] + '年度';
+			year.appendChild(op);
+		 }
+		 for(var i = 0; i < 12;i++){
+			 monthList[i] = i + 1;
+			 var op = document.createElement("option");
+			op.value = monthList[i];
+			op.text = monthList[i] + '月';
+			month.appendChild(op);
+			if(month[i].value == /*[[${month}]]*/){
+				month[i].selected = true;
+			}
+		 }
+
+		 //選択値を取得
+		yearCheck = document.getElementById("yearCheck");
+
+		 //選択年度を初期値として指定
+		 for(var i = 0; i < year.length;i++){
+			 if(year[i].value == /*[[${year}]]*/){
+				 year[i].selected = true;
+			 }
+	 	}
+	}
+	function setParam(){
+		var year = document.getElementById("year");
+		var month = document.getElementById("month");
+		var statisticsId = document.getElementById("statisticsId");
+		var form = document.getElementById("form");
+		form.action = '/statistics/slcstatus/' + statisticsId.value +'/' + year.value + '/' + month.value;
+	}
+</script>
+<body onload="setYearAndMonth()">
+	<div th:replace="header :: header_fragment" class="header"></div>
+	<h2>選考ステータス統計画面</h2>
+	<form id="form" th:action="@{/statistics}" method="get" onsubmit="setParam();">
+		<select id="month" name="month">
+		</select>
+		<select id="year" name="year">
+		</select>
+		<a th:href="@{/statistics/slcstatuslist}">
+			一覧画面に戻る
+		</a>
+		<input id="statisticsId" type="hidden" th:value="${statistics.statisticsId}"/>
+		<input id="charttitle" type="hidden" th:value="${statistics.statisticsName}" />
+		<div th:each="slcStatusAnay: ${slcStatusAnayList}"
+			th:object="${slcStatusAnay}">
+			<input name="count" type="hidden" th:value="*{count}" />
+			<input name="name" type="hidden" th:value="*{name}" />
+		</div>
+		<input type="submit" value="選択"/>
+	</form>
+	<div class="chart-container"
+		style="position: relative; height: 50vh; width: 100vw">
+		<canvas id="firstPassRateChart"></canvas>
+
+	</div>
+	<script type="text/javascript">
+
+        var dataLabelPlugin = {
+        	afterDatasetsDraw: function (chart, easing) {
+        		// To only draw at the end of animation, check for easing === 1
+        		var ctx = chart.ctx;
+
+        		chart.data.datasets.forEach(function (dataset, i) {
+        			var dataSum = 0;
+        				dataset.data.forEach(function (element){
+        					//格納した集計値を全て足して全体を求める
+        					dataSum += element;
+        				});
+
+        			var meta = chart.getDatasetMeta(i);
+
+        			if (!meta.hidden) {
+            			meta.data.forEach(function (element, index) {
+            				// Draw the text in black, with the specified font
+            				ctx.fillStyle = 'rgb(255, 255, 255)';
+
+            				var fontSize = 12;
+            				var fontStyle = 'normal';
+            				var fontFamily = 'Helvetica Neue';
+            				ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+            				// 各ラベルと各パーセンテージの格納
+            				var labelString = chart.data.labels[index];
+            				var dataString = (Math.round(dataset.data[index] / dataSum * 1000)/10).toString() + "%";
+
+            				// Make sure alignment settings are correct
+            				ctx.textAlign = 'center';
+            				ctx.textBaseline = 'middle';
+
+            				var padding = 5;
+            				var position = element.tooltipPosition();
+            				// 各ラベルと各パーセンテージを表示
+            				ctx.fillText(labelString, position.x, position.y - (fontSize / 2) - padding);
+            				ctx.fillText(dataString, position.x, position.y + (fontSize / 2) - padding);
+         			});
+                    }
+                });
+            }
+         };
+
+                    // Chart
+                    var firstPassRateChart = "firstPassRateChart";
+                    //ラベル名称取得
+                    var names = document.getElementsByName('name');
+                    //集計値取得
+                    var counts = document.getElementsByName('count');
+                    //タイトル取得
+                    var charttitle = document.getElementById("charttitle");
+
+                    //chart代入用配列
+                    var countn = new Array(names.length);
+                    var count = new Array(counts.length);
+                    for(var i = 0; i < names.length;i++){
+                    	countn[i] = names[i].value;
+                    	count[i] = parseInt(counts[i].value);
+                    	//alert(countn[i]);
+                    }
+                    var chart = new Chart(firstPassRateChart, {
+                        type: 'pie',
+                        data: {
+                            labels:countn,//[1,2,3]
+                            datasets: [{
+                                backgroundColor: ["#68a69e", "#b6b79d", "#D9CF59"],
+                                //集計データ格納場所
+                                data:count,
+                            }]//[10,20,30]
+                        },
+                        options: {
+                            title: {
+                            	//タイトルを表示する
+                                display: true,
+                                text: charttitle.value,
+                            },
+                            //横幅固定
+                            legend:{
+                            },
+                            maintainAspectRatio: false,
+                        },
+                        plugins: [dataLabelPlugin],
+                    });
+</script>
+</body>
+</html>

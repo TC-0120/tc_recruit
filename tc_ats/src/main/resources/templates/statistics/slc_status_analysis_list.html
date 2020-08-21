@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	<meta charset="UTF-8" />
+	<title>選考ステータス分析一覧</title>
+	<script>
+	</script>
+	</head>
+	<body>
+	<div th:replace="header :: header_fragment" class="header"></div>
+		<h2>選考ステータス分析一覧画面</h2>
+		<a th:href="@{/statistics}">
+			管理画面に戻る
+			</a>
+		<div th:each="statistic:${statisticList}">
+		<p>
+		<a
+			th:href="@{/statistics/slcstatus/{statisticsId}/{year}/{month}(statisticsId=${statistic.statisticsId},year=${year},month=${month})}"
+			th:text="${statistic.statisticsName}"> </a>
+		</p>
+	</div>
+	</body>
+</html>

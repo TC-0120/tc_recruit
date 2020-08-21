@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	<meta charset="UTF-8" />
+	<title>統計管理画面</title>
+	<script>
+		var date = new Date();
+		function setYear(){
+			var year1 = document.getElementById("year1");
+			var year2 = document.getElementById("year2");
+			var year3 = document.getElementById("year3");
+			var year4 = document.getElementById("year4");
+			 // 現在から3ヶ月前にセット
+		    date.setMonth(date.getMonth() - 3);
+			 //今年度をvalueに代入
+			year1.value = date.getFullYear();
+			year2.value = date.getFullYear();
+			year3.value = date.getFullYear();
+			year4.value = date.getFullYear();
+		}
+	</script>
+	</head>
+	<body>
+		<div th:replace="header :: header_fragment" class="header"></div>
+		<h2>統計管理画面</h2>
+		<form th:action="@{/statistics/transitionrate}" th:method="post" onsubmit="setYear();">
+			<input id="year1" type="hidden" name="year"><p>
+			<button type="submit" name="aaa" value="aaa">移行率分析画面</button></p>
+		</form>
+		<form th:action="@{/statistics/transitionrate/agent}" th:method="post" onsubmit="setYear();">
+			<input id="year2" type="hidden" name="year"><p>
+			<button type="submit" name="aaa" value="aaa">エージェント毎移行率分析</button></p>
+		</form>
+		<form th:action="@{/statistics/transitionrate/university}" th:method="post" onsubmit="setYear();">
+			<input id="year3" type="hidden" name="year"><p>
+			<button type="submit" name="aaa" value="aaa">大学ランク毎移行率分析</button></p>
+		</form>
+		<form th:action="@{/statistics/slcstatuslist}" th:method="get" onsubmit="setYear();">
+			<input id="year4" type="hidden" name="year"><p>
+			<button type="submit" name="aaa" value="aaa">選考ステータス分析一覧</button></p>
+		</form>
+	</body>
+</html>
