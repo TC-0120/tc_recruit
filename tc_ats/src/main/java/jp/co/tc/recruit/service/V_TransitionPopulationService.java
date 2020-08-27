@@ -61,21 +61,11 @@ public class V_TransitionPopulationService {
 	 * @return
 	 */
 	public List<List<TransitionRateBean>> findByStatisticsTransitionrateAgent(Integer year, Integer agentId) {
-		System.out.println("初期エージェントID：" + agentId);
 		if (agentId == null) {
 			agentId = (agentRepository.findFirstByDeleteFlag(DeleteFlagConstant.NOT_DELETED)).getAgentId();
 		}
-		System.out.println("修正エージェントID：" + agentId);
 		List<List<V_TransitionPopulation>> transitionPopulation = sortByMonth(
-				transitionPopulationRepository.findByInsertYearAndAgent(year,agentId));
-//		for(List<V_TransitionPopulation> v: transitionPopulation) {
-//			for(V_TransitionPopulation w : v) {
-//				System.out.print("候補者ID：" + w.getCandidateId());
-//				System.out.print(" エージェントID：" + w.getAgentId());
-//				System.out.print(" 登録月：" + w.getInsertMonth());
-//				System.out.println(" 登録年：" + w.getInsertYear());
-//			}
-//		}
+				transitionPopulationRepository.findByInsertYearAndAgent(year, agentId));
 		return countExecute(transitionPopulation);
 	}
 
@@ -85,15 +75,22 @@ public class V_TransitionPopulationService {
 	 * @param universityRankId
 	 * @return
 	 */
-	public List<List<TransitionRateBean>> findByStatisticsTransitionrateUniversityRank(Integer year, Integer universityRankId) {
-		if(universityRankId == null) {
-			universityRankId = universityRankRepository.findFirstByDeleteFlagOrderByUniversityRankId(DeleteFlagConstant.NOT_DELETED).getUniversityRankId();
+	public List<List<TransitionRateBean>> findByStatisticsTransitionrateUniversityRank(Integer year,
+			Integer universityRankId) {
+		if (universityRankId == null) {
+			universityRankId = universityRankRepository
+					.findFirstByDeleteFlagOrderByUniversityRankId(DeleteFlagConstant.NOT_DELETED).getUniversityRankId();
 		}
 		List<List<V_TransitionPopulation>> transitionPopulation = sortByMonth(
 				transitionPopulationRepository.findByInsertYearAndUniversityRank(year, universityRankId));
 		return countExecute(transitionPopulation);
 	}
 
+	/**
+	 * 月別の集計を実行
+	 * @param transitionPopulation
+	 * @return
+	 */
 	public List<List<TransitionRateBean>> countExecute(List<List<V_TransitionPopulation>> transitionPopulation) {
 		List<List<TransitionRateBean>> transitionRateResult = new ArrayList<>();
 		//月別の集計結果を画面表示用Beanクラスに格納

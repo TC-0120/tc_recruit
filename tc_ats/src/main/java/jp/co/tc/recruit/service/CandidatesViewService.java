@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import jp.co.tc.recruit.constant.DeleteFlagConstant;
 import jp.co.tc.recruit.constant.SlcStatusDtlConstant;
+import jp.co.tc.recruit.entity.Dashboard;
 import jp.co.tc.recruit.entity.User;
 import jp.co.tc.recruit.entity.view.V_Candidates;
 import jp.co.tc.recruit.form.ConditionsForm;
@@ -25,6 +26,39 @@ public class CandidatesViewService {
 
 	public List<V_Candidates> findAll(){
 		return candidatesViewRepository.findByDeleteFlagOrderByCandidateId(DeleteFlagConstant.NOT_DELETED);
+	}
+
+	public List<Integer> showDashboard(List<Dashboard> dashboard){
+		List<Integer> countList = new ArrayList<>();
+		for(Dashboard v : dashboard) {
+			countList.add(countAllList(v.getSlcStatus().getSlcStatusId(), v.getSlcStatusDtl().getSlcStatusDtlId()));
+		}
+		return countList;
+	}
+
+	public int countAllList(Integer slcStatusId, Integer slcstatusDtlId){
+		if( slcStatusId == 0 && slcstatusDtlId == 0) {
+			return countAllStatus();
+		}else if(slcStatusId != 0 && slcstatusDtlId == 0){
+			return candidatesViewRepository.findBySlcStatusIdAndDeleteFlag(slcStatusId, DeleteFlagConstant.NOT_DELETED).size();
+		}else if( slcStatusId == 0 && slcstatusDtlId != 0) {
+			return candidatesViewRepository.findBySlcStatusDtlIdAndDeleteFlag(slcstatusDtlId, DeleteFlagConstant.NOT_DELETED).size();
+		}else {
+			return candidatesViewRepository.findBySlcStatusIdAndSlcStatusDtlIdAndDeleteFlag(slcStatusId, slcstatusDtlId, DeleteFlagConstant.NOT_DELETED).size();
+		}
+	}
+
+	public int countAllStatus() {
+		List<V_Candidates> allList = findAll();
+		int count = 0;
+		for(V_Candidates v : allList) {
+			if(v.getSlcStatusDtlId() == 4 || v.getSlcStatusDtlId() == 5 || v.getSlcStatusDtlId() == 9) {
+				continue;
+			}else {
+				count++;
+			}
+		}
+		return count;
 	}
 
 
@@ -46,12 +80,14 @@ public class CandidatesViewService {
 				User user = new User();
 				user.setLastName("DB登録");
 				v.setInsertUserData(user);
-			}else if(v.getUpdateUser() == null) {
+			}else {
+				v.setInsertUserData(userRepository.getOne(v.getInsertUser()));
+			}
+			if(v.getUpdateUser() == null) {
 				User user = new User();
 				user.setLastName("DB登録");
 				v.setUpdateUserData(user);
 			}else {
-				v.setInsertUserData(userRepository.getOne(v.getInsertUser()));
 				v.setUpdateUserData(userRepository.getOne(v.getUpdateUser()));
 			}
 		}

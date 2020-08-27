@@ -28,14 +28,14 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 		<div th:replace="header :: header_fragment" class="header"></div>
 
 		<div class="ttlSlc">
-			<div class="inline" th:each="ttlSlcAll:${ttlSlcAlls}">
+			<div class="inline" th:each="ttlSlcAll,st:${ttlSlcAlls}">
 				<form th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}" >
 					<input type="hidden" th:name="slcStatusId" th:value="${ttlSlcAll.slcStatus.slcStatusId}" />
 					<input type="hidden" th:name="slcStatusDtlId" th:value="${ttlSlcAll.slcStatusDtl.slcStatusDtlId}" />
 						<button class="slc_btn" type="submit" name="aaa" value="aaa">
 							<div class="tex" th:text="${ttlSlcAll.statusMessage}"></div>
-							<div class="text" th:text="${ttlSlcAllCount}"></div>
-							<!--  <img th:src="${ttlSlcAll.icon}">-->
+							<div class="text" th:text="${ttlSlcAllCount[st.index]}"></div>
+							<img th:src="${ttlSlcAll.icon}">
 						</button>
 				</form>
 			</div>

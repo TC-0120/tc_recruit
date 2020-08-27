@@ -299,7 +299,7 @@ public class StatisticsService {
 	public List<StatisticsBean> countByFirstInterview() {
 		List<StatisticsBean> firstInterview = new ArrayList<>();
 		StatisticsBean passing = new StatisticsBean();
-		passing.setCount(informalOfferCounts);
+		passing.setCount(firstInterviewPassingCounts);
 		passing.setName("合格");
 		firstInterview.add(passing);
 		StatisticsBean failure = new StatisticsBean();

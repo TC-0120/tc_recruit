@@ -10,12 +10,17 @@
   		display: block;
 	}
 	.candidateTable tbody {
- 		height: 280px;
+ 		height: 350px;
 	}
 	.scrollbar {
 		overflow-x: hidden;
   		overflow-y: scroll;
   	}
+  	.scrollbar2{
+  	}
+  	/*hidden margin: 50px auto 20px;
+		padding: 25px;width: 300px;
+		height: 200px;border: 2px solid #ccc;*/
 
 	.table_checkbox {
 		width: 20px;
@@ -24,10 +29,10 @@
 		width: 45px;
 	}
 	.candidate_name {
-		width: 140px;
+		width: 100px;
 	}
 	.gender {
-		width: 60px;
+		width: 55px;
 	}
 	.edu_back {
 		width: 200px;
@@ -43,12 +48,85 @@
 		width: 100px;
 	}
 	.slc_status_dtl {
-		width: 80px;
+		width: 60px;
 	}
 	.slc_date {
 		width: 160px;
 	}
-
+	.user{
+		width: 80px;
+	}
+	.candidate_name_furigana{
+		width: 120px;
+	}
+	.email{
+		width: 200px;
+		overflow-wrap : break-word;
+	}
+	.aptitude{
+		width: 90px;
+	}
+	.score{
+		width: 55px;
+	}
+	.remarks{
+		width: 160px;
+	}
+	.delete_flag{
+		width: 120px;
+	}
+	.delete_flag_button{
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		border-color:#fff;
+		height: 26px;
+		width: 120px;
+	}
+	.remarks_button{
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 160px;
+	}
+	.score_button{
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 55px;
+	}
+	.aptitude_button{
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 90px;
+	}
+	.email_button{
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		height: 26px;
+		width: 200px;
+	}
+	.candidate_name_furigana_button{
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		border-color:#fff;
+		height: 26px;
+		width: 120px;
+	}
+	.user_button{
+		font-weight: bold;
+		background-color: #fff;
+		border-style: none;
+		border-color:#fff;
+		height: 26px;
+		width: 80px;
+	}
 	.candidate_id_button {
 		font-weight: bold;
 		background-color: #fff;
@@ -63,14 +141,14 @@
 		background-color: #fff;
 		border-style: none;
 		height: 26px;
-		width: 140px;
+		width: 100px;
 	}
 	.gender_button {
 		font-weight: bold;
 		background-color: #fff;
 		border-style: none;
 		height: 26px;
-		width: 60px;
+		width: 55px;
 	}
 	.edu_back_button {
 		font-weight: bold;
@@ -105,7 +183,7 @@
 		background-color: #fff;
 		border-style: none;
 		height: 26px;
-		width: 80px;
+		width: 60px;
 	}
 	.slc_date_button {
 		font-weight: bold;

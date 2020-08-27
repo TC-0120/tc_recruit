@@ -100,13 +100,17 @@ public class User implements UserDetails {
 	@Column(name = "update_date")
 	private Date updateDate;
 
+	@Column(name = "delete_flag")
+	private Integer deleteFlag;
+
 	@PrePersist
 	public void prePersist() {
 		//登録社ID・更新者IDを設定
 		//Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		//UserDetails principal = (UserDetails) auth.getPrincipal();
 		//insertUser = (userRepository.findByUsername(principal.getUsername())).getId();
-		updateUser = insertUser;
+		//updateUser = insertUser;
+		deleteFlag = 0;
 		// 登録日、更新日を設定
 		Date date = new Date();
 		insertDate = date;

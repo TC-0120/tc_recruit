@@ -233,7 +233,7 @@ public class CandidateService {
 			}
 
 			if (muForm.getSlcStatusId() != 0) {
-				candidate.setSlcStatus(slcStatusRepo.findBySlcStatusId(muForm.getSlcStatusId()));
+				//candidate.setSlcStatus(slcStatusRepo.findBySlcStatusId(muForm.getSlcStatusId()));
 			}
 
 			if (muForm.getSlcStatusDtlId() != 0) {
@@ -241,7 +241,7 @@ public class CandidateService {
 			}
 
 			if (muForm.getAgentId() != 0) {
-				candidate.setAgent(agentRepo.findByAgentId(muForm.getAgentId()));
+				//candidate.setAgent(agentRepo.findByAgentId(muForm.getAgentId()));
 			}
 
 			//			if (muForm.getReferrerId() != 0) {

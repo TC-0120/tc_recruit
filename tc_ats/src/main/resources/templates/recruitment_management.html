@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <link th:href="@{/css/recruitmentManagement.css}" rel="stylesheet"></link>
-<title>Login page</title>
+<title>候補者一覧画面</title>
 <style>
 .alert-danger {
 	color: red;
@@ -153,18 +153,39 @@
 		[# th:if="${#lists.size(candidates)} <= 10"]
 			document.getElementById("candidates_tbody").classList.remove("scrollbar");
 		[/]
+		/*
+			var buttons = document.getElementsByTagName("button");
+			var th = document.getElementsByTagName("th");
+			var pxcount = 0;
+			for(var int = 0; int < buttons.length;int++){
+				var cssStyleDeclaration = getComputedStyle( th[int], null ) ;
+				var a = cssStyleDeclaration.getPropertyValue( "width" ) ;
+				pxcount += parseInt(a);
+			}
+			var tbody = document.getElementById("candidates_tbody");
+			tbody.style.width = pxcount + "px";
+			*/
+			//スクロールバー位置調整
+			var tbody = document.getElementById("candidates_tbody");
+			var tr = document.getElementsByTagName("tr");
+			var cssStyleDeclaration = getComputedStyle( tr[0], null ) ;
+			var b = cssStyleDeclaration.getPropertyValue( "width" ) ;
+			tbody.style.width = (parseInt(b) + 20) + 'px';
 	}
-
+	function count(){
+		var tr = document.getElementsByTagName("tr");
+		alert((tr.length - 1) + '件のデータがあります');
+	}
 </script>
 </head>
 <body onload="loadRecruitmentManagement()">
 	<div th:replace="header :: header_fragment"></div>
 	<h2>候補者一覧画面</h2>
 	<a href="#" onclick="window.open('/recruit/candidates/register', 'register_window', 'width=500, height=500')">新規登録</a><br/><br/>
-
+	<details>
+	<summary>検索条件入力</summary>
 	<form name="conditionsForm" th:action="@{/recruit/candidates}" th:method="get" th:object="${conditionsForm}">
 		<fieldset id="input">
-		<legend>検索条件入力</legend>
 		<!--  <div>-->
 			<label>選考ステータス</label>
 			<select id="slcStatus" th:field="*{slcStatusId}" onchange="setSlcStatusDtl();">
@@ -188,7 +209,7 @@
 				<option value="3" th:if="${candidateList.eduBack == 1}">学歴</option>
 				<option value="4" th:if="${candidateList.agent == 1}">エージェント</option>
 				<option value="5" th:if="${candidateList.aptitude == 1}">適性検査</option>
-				<option value="6">削除ステータス</option>
+				<option value="6" th:if="${candidateList.deleteFlagFlag == 1}" sec:authorize="hasAuthority('ROLE_ADMIN')">削除ステータス</option>
 			</select>
 			<input id="freeSearchWord" type="text" th:field="*{freeSearchWord}" required="required" disabled="disabled">
 			<br/>
@@ -204,11 +225,12 @@
 	<form th:action="@{/recruit/candidates}" class="clear_button">
 		<input type="submit" value="クリア" >
 	</form>
-
+	</details>
+	<button onclick="count();">件数</button>
 	<form name="updateForm" th:method="get">
 		<input id="candidateButton" type="hidden" disabled onclick="submitAndOpenUpdateWindow('/update')"/>
 		<button id="selectionButton" type="button" disabled onclick="submitAndOpenUpdateWindow('/selection')">選考情報変更</button>
-		<button id="multipleButton" type="button" disabled onclick="submitAndOpenUpdateWindow('/multiple')">一括管理</button>
+		<input id="multipleButton" type="hidden" disabled onclick="submitAndOpenUpdateWindow('/multiple')" />
 	<table class="candidateTable">
 		<thead>
 		<tr>
@@ -225,8 +247,8 @@
 					氏名<span class="sort2"></span>
 				</button>
 			</th>
-			<th class="gender" th:if="${candidateList.candidateFurigana == 1}">
-				<button class="gender_button" type="button" onclick="sort(3)">
+			<th class="candidate_name_furigana" th:if="${candidateList.candidateFurigana == 1}">
+				<button class="candidate_name_furigana_button" type="button" onclick="sort(3)">
 					氏名(ふりがな)<span class="sort3"></span>
 				</button>
 			</th>
@@ -240,8 +262,8 @@
 					学歴<span class="sort5"></span>
 				</button>
 			</th>
-			<th class="edu_back" th:if="${candidateList.candidateEmailAddress == 1}">
-				<button class="edu_back_button" type="button" onclick="sort(6)">
+			<th class="email" th:if="${candidateList.candidateEmailAddress == 1}">
+				<button class="email_button" type="button" onclick="sort(6)">
 					メールアドレス<span class="sort6"></span>
 				</button>
 			</th>
@@ -261,13 +283,13 @@
 					紹介料(万円)<span class="sort8"></span>
 				</button>
 			</th>
-			<th class="agent" th:if="${candidateList.aptitude == 1}">
-				<button  class="agent_button" type="button" onclick="sort(9)">
+			<th class="aptitude" th:if="${candidateList.aptitude == 1}">
+				<button  class="aptitude_button" type="button" onclick="sort(9)">
 					適性検査<span class="sort9"></span>
 				</button>
 			</th>
-			<th class="agent" th:if="${candidateList.aptitudeScore == 1}">
-				<button  class="agent_button" type="button" onclick="sort(10)">
+			<th class="score" th:if="${candidateList.aptitudeScore == 1}">
+				<button  class="score_button" type="button" onclick="sort(10)">
 					点数<span class="sort10"></span>
 				</button>
 			</th>
@@ -286,13 +308,13 @@
 					選考日程<span class="sort13"></span>
 				</button>
 			</th>
-			<th class="slc_date" th:if="${candidateList.remarks == 1}">
-				<button class="slc_date_button" type="button" onclick="sort(14)">
+			<th class="remarks" th:if="${candidateList.remarks == 1}">
+				<button class="remarks_button" type="button" onclick="sort(14)">
 					備考<span class="sort14"></span>
 				</button>
 			</th>
-			<th class="slc_date" th:if="${candidateList.insertUserFlag == 1}">
-				<button class="slc_date_button" type="button" onclick="sort(15)">
+			<th class="user" th:if="${candidateList.insertUserFlag == 1}">
+				<button class="user_button" type="button" onclick="sort(15)">
 					登録者<span class="sort15"></span>
 				</button>
 			</th>
@@ -301,8 +323,8 @@
 					登録日<span class="sort16"></span>
 				</button>
 			</th>
-			<th class="slc_date" th:if="${candidateList.updateUserFlag == 1}">
-				<button class="slc_date_button" type="button" onclick="sort(17)">
+			<th class="user" th:if="${candidateList.updateUserFlag == 1}">
+				<button class="user_button" type="button" onclick="sort(17)">
 					更新者<span class="sort17"></span>
 				</button>
 			</th>
@@ -311,39 +333,39 @@
 					更新日<span class="sort18"></span>
 				</button>
 			</th>
-			<th class="slc_date" th:if="${candidateList.deleteFlagFlag == 1}" sec:authorize="hasAuthority('ROLE_ADMIN')">
-				<button class="slc_date_button" type="button" onclick="sort(19)">
+			<th class="delete_flag" th:if="${candidateList.deleteFlagFlag == 1}" sec:authorize="hasAuthority('ROLE_ADMIN')">
+				<button class="delete_flag_button" type="button" onclick="sort(19)">
 					削除ステータス<span class="sort19"></span>
 				</button>
 			</th>
 		</tr>
 		</thead>
-		<tbody id="candidates_tbody" class="scrollbar">
+		<tbody id="candidates_tbody" class="scrollbar scrollbar2" >
 		<tr th:each="candidate: ${candidates}" th:object="${candidate}">
 			<td class="table_checkbox">
-				<input type="checkbox" id="checkbox" name="candidateId" th:value="*{candidateId}" onchange="switchActivityOfUpdateButton()">
+				<input type="checkbox" id="checkbox" name="candidateId" th:value="*{candidateId}" onchange="switchActivityOfUpdateButton()"/>
 			</td>
-			<td class="candidate_id" th:text="*{candidateId}" th:if="${candidateList.candidateId == 1}"></td>
-			<td class="candidate_name"  th:if="${candidateList.candidateName == 1}">
+			<td class="candidate_id" th:text="*{candidateId}" th:if="${candidateList.candidateId == 1}" align="center"></td>
+			<td class="candidate_name"  th:if="${candidateList.candidateName == 1}" align="left">
 			<a th:href="@{/recruit/candidates/update/{candidateId}(candidateId=${candidate.candidateId})}" th:text="*{candidateName}" onclick="submitUpdate(this);return false;"></a></td>
-			<td class="candidate_name" th:text="*{candidateFurigana}" th:if="${candidateList.candidateFurigana == 1}"></td>
-			<td class="gender" th:text="*{gender == 1} ? 男性 : 女性" th:if="${candidateList.gender == 1}"></td>
-			<td class="edu_back" th:text="*{eduBack}" th:if="${candidate.eduBackId == 0 && candidateList.eduBack == 1}"></td>
-			<td class="edu_back" th:text="*{universityName + facultyName + departmentName}" th:if="${candidate.eduBackId != 0 && candidateList.eduBack == 1}"></td>
-			<td class="agent" th:text="*{candidateEmailAddress}" th:if="${candidateList.candidateEmailAddress == 1}"></td>
-			<td class="agent" th:text="*{agentName}" th:if="${candidateList.agent == 1}"></td>
-			<td class="referrer" th:text="*{agentFee}" th:if="${candidateList.agent == 1}"></td>
-			<td class="agent" th:text="*{aptitudeStatus}"  th:if="${candidateList.aptitude == 1}"></td>
-			<td class="slc_status" th:text="*{aptitudeScore}"  th:if="${candidateList.aptitudeScore == 1}"></td>
-			<td class="slc_status" th:text="*{slcStatusName}" th:if="${candidateList.slcStatus == 1}"></td>
-			<td class="slc_status_dtl" th:text="*{slcStatusDtlName}"  th:if="${candidateList.slcStatusDtl == 1}"></td>
-			<td class="slc_date"><div  th:text="*{slcDate}"></div></td>
-			<td class="slc_date" th:text="*{remarks}" th:if="${candidateList.remarks == 1}"></td>
-			<td class="slc_date" th:text="*{insertUserData.lastName}" th:if="${candidateList.insertUserFlag == 1}"></td>
-			<td class="slc_date" th:text="*{insertDate}" th:if="${candidateList.insertDateFlag == 1}"></td>
-			<td class="slc_date" th:text="*{updateUserData.lastName}" th:if="${candidateList.updateUserFlag == 1}"></td>
-			<td class="slc_date" th:text="*{updateDate}" th:if="${candidateList.updateDateFlag == 1}"></td>
-			<td class="slc_date" th:text="*{deleteFlag == 0} ? 未削除 : 削除済み" th:if="${candidateList.deleteFlagFlag == 1}" sec:authorize="hasAuthority('ROLE_ADMIN')"></td>
+			<td class="candidate_name_furigana" th:text="*{candidateFurigana}" th:if="${candidateList.candidateFurigana == 1}" align="left"></td>
+			<td class="gender" th:text="*{gender == 1} ? 男性 : 女性" th:if="${candidateList.gender == 1}" align="left"></td>
+			<td class="edu_back" th:text="*{eduBack}" th:if="${candidate.eduBackId == 0 && candidateList.eduBack == 1}" align="left"></td>
+			<td class="edu_back" th:text="*{universityName + facultyName + departmentName}" th:if="${candidate.eduBackId != 0 && candidateList.eduBack == 1}" align="left"></td>
+			<td class="email" th:text="*{candidateEmailAddress}" th:if="${candidateList.candidateEmailAddress == 1}" align="left"></td>
+			<td class="agent" th:text="*{agentName}" th:if="${candidateList.agent == 1}" align="left"></td>
+			<td class="referrer" th:text="*{agentFee}" th:if="${candidateList.agent == 1}" align="right"></td>
+			<td class="aptitude" th:text="*{aptitudeStatus}"  th:if="${candidateList.aptitude == 1}" align="left"></td>
+			<td class="score" th:text="*{aptitudeScore}"  th:if="${candidateList.aptitudeScore == 1}" align="right"></td>
+			<td class="slc_status" th:text="*{slcStatusName}" th:if="${candidateList.slcStatus == 1}" align="left"></td>
+			<td class="slc_status_dtl" th:text="*{slcStatusDtlName}"  th:if="${candidateList.slcStatusDtl == 1}" align="left"></td>
+			<td class="slc_date"><div  th:text="*{slcDate}" align="right"></div></td>
+			<td class="slc_date" th:text="*{remarks}" th:if="${candidateList.remarks == 1}" align="left"></td>
+			<td class="user" th:text="*{insertUserData.lastName}" th:if="${candidateList.insertUserFlag == 1}" align="left"></td>
+			<td class="slc_date" th:text="*{insertDate}" th:if="${candidateList.insertDateFlag == 1}" align="right"></td>
+			<td class="user" th:text="*{updateUserData.lastName}" th:if="${candidateList.updateUserFlag == 1}" align="left"></td>
+			<td class="slc_date" th:text="*{updateDate}" th:if="${candidateList.updateDateFlag == 1}" align="right"></td>
+			<td class="delete_flag" th:text="*{deleteFlag == 0} ? 未削除 : 削除済み" th:if="${candidateList.deleteFlagFlag == 1}" sec:authorize="hasAuthority('ROLE_ADMIN')" align="left"></td>
 		</tr>
 		</tbody>
 	</table>

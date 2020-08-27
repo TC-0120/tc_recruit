@@ -1,10 +1,14 @@
 package jp.co.tc.recruit.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import jp.co.tc.recruit.entity.Dashboard;
+import jp.co.tc.recruit.service.CandidatesViewService;
 import jp.co.tc.recruit.service.DashboardService;
 import jp.co.tc.recruit.service.TransitionPopulationViewService;
 
@@ -21,15 +25,17 @@ public class DashBoardController {
 	DashboardService dashboardService;
 	@Autowired
 	TransitionPopulationViewService transitionPopulationViewService;
+	@Autowired
+	CandidatesViewService candidatesViewService;
 
 	@GetMapping("/dashboard")
 	public String getDashBoard(Model model) {
-		//System.out.println("表示名" + dashboardService.findAll().get(0).getStatusMessage());
-		model.addAttribute("ttlSlcAlls",dashboardService.findAll());
+		List<Dashboard> dashboard = dashboardService.findAll();
+		model.addAttribute("ttlSlcAlls",dashboard);
 		/* 選考中候補者データ */
 		//model.addAttribute("ttlSlcList", ttlSlcList);
 		/* 選考中(ALL)の候補者全数 */
-		model.addAttribute("ttlSlcAllCount", transitionPopulationViewService.CountBySlcIdAndSlcDtlId(0, 0));
+		model.addAttribute("ttlSlcAllCount", candidatesViewService.showDashboard(dashboard));
 		return "dashboard";
 	}
 

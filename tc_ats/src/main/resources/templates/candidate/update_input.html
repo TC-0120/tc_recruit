@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
-<title>Login page</title>
+<title>候補者情報変更画面</title>
 <style>
 .alert-danger {
 	color: red;
@@ -215,9 +215,16 @@
 		var faculty = document.getElementById("faculty");
 		var department = document.getElementById("department");
 		var eduBack = document.getElementById("eduBack");
+		var universityRank = document.getElementById("universityRank");
 		var candidateName = document.getElementById("candidateName");
+		var stringeduBack = "";
+		stringeduBack += eduBack.value;
 		var stringName = "";
 		stringName += candidateName.value;
+		for (var i = 0; i < eduBack.value.length; i++) {
+			stringeduBack = stringeduBack.replace(" ","");
+			stringeduBack = stringeduBack.replace("　","");
+		}
 		for (var i = 0; i < candidateName.value.length; i++) {
 			stringName = stringName.replace(" ","");
 			stringName = stringName.replace("　","");
@@ -226,11 +233,14 @@
 		if(radioButton[1].checked && (university.value == 0 || faculty.value == 0 || department.value == 0)){
 			alert('大学・学部・学科全てを選択してください');
 			return false;
-		}else if(radioButton[0].checked && eduBack.value == ""){
+		}else if(radioButton[0].checked && stringeduBack == ""){
 			alert('学歴を記入してください');
 			return false;
 		}else if(stringName == ""){
 			alert('候補者氏名を記入してください');
+			return false;
+		}else if(universityRank.value == 0){
+			alert('大学ランクを選択してください');
 			return false;
 		}else{
 			if(window.confirm("この内容で更新しますか？")){
@@ -279,7 +289,7 @@
 		</div>
 		<div>
 			<label>候補者(ふりがな):</label> <input type="text"
-				th:field="*{candidateFurigana}" maxlength="20" required />
+				th:field="*{candidateFurigana}" maxlength="40" required />
 		</div>
 		<div>
 			<label>性別:</label> <input type="radio" name="gender" value="1"
@@ -292,7 +302,7 @@
 				onchange="changeEduBack();" />直接記入
 			 <input type="radio"
 				name="eduBackCheck" value="2" onchange="changeEduBack();" />マスタ選択 <input
-				type="text" th:field="*{eduBack}" maxlength="20" />
+				type="text" th:field="*{eduBack}" maxlength="100" />
 			<div id="eduBackDtl">
 				<label>大学:</label>
 				 <select id="university" name="educationalBackground.university.universityId">
@@ -314,7 +324,7 @@
 				</select>
 			</div>
 			<label>大学ランク:</label>
-			<select name="universityRank.universityRankId">
+			<select id="universityRank" name="universityRank.universityRankId">
 				<option th:each="universityRank:${universityRankList}"
 					th:value="${universityRank.universityRankId}"
 					th:text="${universityRank.universityRankName}"
@@ -344,7 +354,7 @@
 		</div>
 		<div>
 			<label>メールアドレス:</label> <input type="email"
-				th:field="*{candidateEmailAddress}" />
+				th:field="*{candidateEmailAddress}" maxlength="64" pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" placeholder="****@ドメイン名" autocomplete="email"/>
 		</div>
 		<!--
 		<div th:if="*{slcStatus.slcStatusId == 1}">

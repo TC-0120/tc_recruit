@@ -23,5 +23,11 @@ public interface CandidatesViewRepository extends JpaRepository<V_Candidates, In
 	public List<V_Candidates> findAllBySlcDateLessThan(Date date);
 
 	public List<V_Candidates> findByDeleteFlagOrderByCandidateId(Integer DeleteFlagConstant);
+
+	public List<V_Candidates> findBySlcStatusIdAndDeleteFlag(Integer slcStatusId, Integer DeleteFlagConstant);
+
+	public List<V_Candidates> findBySlcStatusDtlIdAndDeleteFlag(Integer slcStatusDtlId, Integer DeleteFlagConstant);
+
+	public List<V_Candidates> findBySlcStatusIdAndSlcStatusDtlIdAndDeleteFlag(Integer slcStatusId, Integer slcStatusDtlId,Integer DeleteFlagConstant);
 }
 

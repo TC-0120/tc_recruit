@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
-<title>Login page</title>
+<title>候補者情報登録画面</title>
 <style>
 .alert-danger {
 	color: red;
@@ -130,9 +130,16 @@
 		var faculty = document.getElementById("faculty");
 		var department = document.getElementById("department");
 		var eduBack = document.getElementById("eduBack");
+		var universityRank = document.getElementById("universityRank");
 		var candidateName = document.getElementById("candidateName");
+		var stringeduBack = "";
+		stringeduBack += eduBack.value;
 		var stringName = "";
 		stringName += candidateName.value;
+		for (var i = 0; i < eduBack.value.length; i++) {
+			stringeduBack = stringeduBack.replace(" ","");
+			stringeduBack = stringeduBack.replace("　","");
+		}
 		for (var i = 0; i < candidateName.value.length; i++) {
 			stringName = stringName.replace(" ","");
 			stringName = stringName.replace("　","");
@@ -141,11 +148,14 @@
 		if(radioButton[1].checked && (university.value == 0 || faculty.value == 0 || department.value == 0)){
 			alert('大学・学部・学科全てを選択してください');
 			return false;
-		}else if(radioButton[0].checked && eduBack.value == ""){
+		}else if(radioButton[0].checked && stringeduBack == ""){
 			alert('学歴を記入してください');
 			return false;
 		}else if(stringName == ""){
 			alert('候補者氏名を記入してください');
+			return false;
+		}else if(universityRank.value == 0){
+			alert('大学ランクを選択してください');
 			return false;
 		}else{
 			if(window.confirm("この内容で登録しますか？")){
@@ -169,11 +179,11 @@
 	<form th:action="@{/recruit/candidates}" th:method="post" onsubmit="return confirmRegisterCandidate()">
 		<div>
 			<label>候補者</label>
-			<input id="candidateName" type="text" name="candidateName" maxlength="20" required/>
+			<input id="candidateName" type="text" name="candidateName" maxlength="20" autofocus required/>
 		</div>
 		<div>
 			<label>候補者(ふりがな)</label>
-			<input type="text" name="candidateFurigana" maxlength="20" />
+			<input type="text" name="candidateFurigana" maxlength="40" />
 		</div>
 		<div>
 			<label>性別</label>
@@ -184,7 +194,7 @@
 			<label>学歴</label>
 			<input type="radio" name="eduBackCheck" value="1" onchange="changeEduBack();" checked="checked"/>直接記入
 			<input type="radio" name="eduBackCheck" value="2" onchange="changeEduBack();"/>マスタ選択
-			<input id="eduBack" type="text" name="eduBack" maxlength="50" />
+			<input id="eduBack" type="text" name="eduBack" maxlength="100" />
 				<div id="eduBackDtl">
 				<label>大学</label>
 				<select id="university" name="educationalBackground.university.universityId">
@@ -200,13 +210,13 @@
 				</select>
 				</div>
 			<label>大学ランク</label>
-			<select name="universityRank.universityRankId">
+			<select id="universityRank" name="universityRank.universityRankId">
 				<option th:each="universityRank:${universityRankList}" th:value="${universityRank.universityRankId}" th:text="${universityRank.universityRankName}"></option>
 			</select>
 		</div>
 		<div>
 			<label>メールアドレス</label>
-			<input type="email" name="candidateEmailAddress"/>
+			<input type="email" name="candidateEmailAddress" maxlength="64" pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" placeholder="****@ドメイン名" autocomplete="email"/>
 		</div>
 		<div>
 			<label>選考ルート</label>
@@ -216,15 +226,15 @@
 		</div>
 		<div>
 			<label>適性検査結果</label>
-			<select name="aptitude.aptitudeId">
+			<select name="aptitude.aptitudeId" required="required">
 				<option th:each="aptitude:${aptitudeList}" th:value="${aptitude.aptitudeId}" th:text="${aptitude.aptitudeStatus}"></option>
 			</select>
 			<label>点数</label>
-			<input type="number" name="aptitudeScore" min="0" max="100"/>
+			<input type="number" name="aptitudeScore" min="0" max="100" size="3"/>
 		</div>
 		<div>
 			<label>採用エージェント</label>
-			<select id="agentId" name="agent.agentId" onchange="showAgentFee()">
+			<select id="agentId" name="agent.agentId" onchange="showAgentFee()" required="required">
 				<option th:each="agent: ${agentList}" th:value="${agent.agentId}" th:text="${agent.agentName}">
 			</select>
 		</div>
@@ -241,7 +251,7 @@
 		</div>
 		<div>
 			<label>備考</label>
-			<input type="text" name="remarks"/>
+			<input type="text" name="remarks" maxlength="400"/>
 		</div>
 		<input type="submit" value="登録" />
 	</form>

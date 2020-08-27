@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.co.tc.recruit.Bean.StatisticsBean;
-import jp.co.tc.recruit.Bean.TransitionRateBean;
 import jp.co.tc.recruit.constant.DeleteFlagConstant;
 import jp.co.tc.recruit.repository.educational.UniversityRankRepository;
 import jp.co.tc.recruit.service.AgentService;
@@ -77,15 +76,26 @@ public class StatisticsController {
 		return "statistics/slc_status_analysis";
 	}
 
+	/**
+	 * 指定期間に応じて複数のグラフを表示
+	 * @param model
+	 * @param statisticsId
+	 * @param year
+	 * @param monthfirst
+	 * @param monthend
+	 * @return
+	 */
 	@GetMapping("slcstatus/{statisticsId}/{year}/{monthfirst}/{monthend}")
 	public String slcStatusCustom(Model model, @PathVariable Integer statisticsId, @PathVariable Integer year,
 			@PathVariable Integer monthfirst, @PathVariable Integer monthend) {
 		model.addAttribute("slcStatusAnayList", statisticsService.analysisSlcStatusByMonth(statisticsId, year, monthfirst, monthend));
-//		List<StatisticsBean> statiaticsResult = (List<StatisticsBean>) model.getAttribute("slcStatusAnayList");
-//		for (StatisticsBean v : statiaticsResult) {
-//			System.out.println(v.getName() + " " + v.getCount());
+//		List<List<StatisticsBean>> a = statisticsService.analysisSlcStatusByMonth(statisticsId, year, monthfirst, monthend);
+//		for(List<StatisticsBean> v: a){
+//			for(StatisticsBean w:v) {
+//				System.out.println(w.getName() + ":" + w.getCount() + "人");
+//			}
 //		}
-		System.out.println("表示期間" + monthfirst + "月～" + monthend + "月");
+
 		model.addAttribute("year", year);
 		model.addAttribute("monthfirst", monthfirst);
 		model.addAttribute("monthend", monthend);
@@ -116,19 +126,6 @@ public class StatisticsController {
 		colName.add("人数");
 		colName.add("対母集団率");
 		colName.add("移行率");
-		int count = 0;
-		List<List<TransitionRateBean>> transitionRateResult = transitionPopulationService
-				.findByStatisticsTransitionrate(2020);
-		for (List<TransitionRateBean> v : transitionRateResult) {
-			count++;
-			System.out.println(count + "月");
-			for (TransitionRateBean x : v) {
-				System.out.print(x.getRowName());
-				System.out.print("　" + x.getHitNum());
-				System.out.print("　" + x.getPopulationRate());
-				System.out.println("　" + x.getTransitionRate());
-			}
-		}
 		model.addAttribute("colNames", colName);
 		model.addAttribute("monthList", monthName);
 		model.addAttribute("pers", "%");
@@ -136,6 +133,13 @@ public class StatisticsController {
 		return "statistics/transitionrate";
 	}
 
+	/**
+	 * エージェント毎の移行率を分析
+	 * @param model
+	 * @param year
+	 * @param agentId
+	 * @return
+	 */
 	@PostMapping("/transitionrate/agent")
 	public String showTransitionrateByAgent(Model model, Integer year, Integer agentId) {
 		model.addAttribute("tstRateList",
@@ -166,6 +170,13 @@ public class StatisticsController {
 		return "statistics/transitionrate_by_agent";
 	}
 
+	/**
+	 * 大学ランクごとの移行率を分析
+	 * @param model
+	 * @param year
+	 * @param universityRankId
+	 * @return
+	 */
 	@PostMapping("/transitionrate/university")
 	public String showTransitionrateByUnivaesity(Model model, Integer year, Integer universityRankId) {
 		model.addAttribute("tstRateList",

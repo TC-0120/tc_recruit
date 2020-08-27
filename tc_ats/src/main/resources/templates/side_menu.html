@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="utf-8">
 <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
@@ -20,14 +20,15 @@
 		<div id="sidebarMenu">
 			<div class="sidebarMenuInner">
 						<a th:href="@{/maintenance}">
-							<button class="side_btn" type="button">マスタメンテナンス</button>
+							<button class="side_btn" type="button" sec:authorize="hasAuthority('ROLE_ADMIN')">マスタメンテナンス</button>
 						</a>
 						<a th:href="@{/setting}">
 							<button class="side_btn" type="button">画面設定</button>
 						</a>
+						<!--
 						<a th:href="@{/chart}">
 							<button class="side_btn" type="button">集計グラフ</button>
-						</a>
+						</a>-->
 						<a th:href="@{/statistics}">
 							<button class="side_btn" type="button">統計管理</button>
 						</a>
